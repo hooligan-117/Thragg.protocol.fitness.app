@@ -2,1536 +2,1703 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="apple-touch-icon" href="https://hooligan-117.github.io/Thragg.protocol.fitness.app/IMG_0068.jpeg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>THRAGG PROTOCOL</title>
+<title>THRAGG Protocol</title>
+<link rel="apple-touch-icon" href="IMG_0068.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
 <style>
+/* ============================================================
+   IRON REGENT PALETTE
+   ============================================================ */
 :root {
-  --blood: #8b0000;
-  --blood-bright: #cc0000;
-  --ember: #ff4400;
-  --ember-dim: #993300;
-  --ash: #1a0a0a;
-  --char: #0d0505;
-  --bone: #c8b89a;
-  --bone-dim: #7a6a58;
-  --void: #050202;
-  --durable: #c0392b;
-  --strong: #e67e22;
-  --fast: #f1c40f;
-  --mobility: #27ae60;
-  --glow-red: 0 0 20px rgba(139,0,0,0.8), 0 0 40px rgba(139,0,0,0.4);
-  --glow-ember: 0 0 15px rgba(255,68,0,0.6);
+  --bg:        #0E0C0B;
+  --surface:   #161311;
+  --surface2:  #1C1917;
+  --forge:     #211E1B;
+  --ivory:     #F0EAE0;
+  --armor:     #C0B8B0;
+  --steel:     #8A8278;
+  --iron:      #58504A;
+  --dim:       #2E2A27;
+  --blood:     #7A1200;
+  --accent:    #C8310A;
+  --accent2:   #E04418;
+  --strong-c:  #8A8278;
+  --durable-c: #C8310A;
+  --fast-c:    #C0B8B0;
+  --mobility-c:#6A7A6A;
+  --border:    rgba(138,130,120,0.12);
+  --border2:   rgba(138,130,120,0.22);
+  --border3:   rgba(200,49,10,0.25);
+  --glow-accent: 0 0 20px rgba(200,49,10,0.35), 0 0 60px rgba(200,49,10,0.12);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-  background: var(--void);
-  color: var(--bone);
-  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg);
+  color: var(--armor);
+  font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* === BACKGROUND === */
+/* Metal grain + ambient */
 body::before {
   content: '';
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,0,0,0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 60% at 80% 80%, rgba(80,0,0,0.12) 0%, transparent 60%),
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,68,0,0.015) 2px, rgba(255,68,0,0.015) 3px);
-  pointer-events: none;
-  z-index: 0;
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(138,130,120,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 55% at 90% 90%, rgba(80,50,40,0.08) 0%, transparent 55%);
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.5;
 }
 
-/* === HEADER === */
-#header {
-  position: relative;
-  text-align: center;
-  padding: 28px 20px 20px;
-  border-bottom: 1px solid rgba(139,0,0,0.5);
-  background: linear-gradient(180deg, rgba(139,0,0,0.15) 0%, transparent 100%);
-  z-index: 10;
+/* === TOPBAR === */
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border2);
+  background: rgba(14,12,11,0.94);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  position: sticky; top: 0; z-index: 200;
 }
-
-#header h1 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(1.4rem, 5vw, 2.8rem);
-  font-weight: 900;
-  color: var(--blood-bright);
-  text-shadow: var(--glow-red);
-  letter-spacing: 0.1em;
-  line-height: 1.1;
+.brand { display: flex; align-items: baseline; gap: 12px; }
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  font-weight: 900; letter-spacing: 0.04em; color: var(--ivory);
 }
-
-#header .subtitle {
-  font-family: 'Cinzel', serif;
-  font-size: 0.7rem;
-  color: var(--bone-dim);
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  margin-top: 6px;
+.brand-name em { color: var(--accent); font-style: italic; }
+.brand-divider { width:1px; height:14px; background:var(--border2); align-self:center; }
+.brand-tag { font-size:0.55rem; color:var(--iron); letter-spacing:0.22em; text-transform:uppercase; }
+.topbar-right { display:flex; align-items:center; gap:12px; }
+.index-chip {
+  display:flex; align-items:center; gap:8px; padding:5px 14px;
+  background:var(--surface); border:1px solid var(--border2); border-radius:100px;
+  transition: border-color 0.2s; cursor:default;
 }
-
-.thragg-eyes {
-  display: inline-block;
-  width: 8px; height: 8px;
-  background: var(--ember);
-  border-radius: 50%;
-  box-shadow: var(--glow-ember);
-  animation: pulse-eye 2s ease-in-out infinite;
-  margin: 0 6px;
+.index-chip:hover { border-color: var(--border3); }
+.chip-pip {
+  width:6px; height:6px; border-radius:50%; background:var(--accent);
+  box-shadow: 0 0 8px var(--accent), 0 0 16px rgba(200,49,10,0.4);
+  animation: pip-pulse 2.5s ease-in-out infinite;
 }
-.thragg-eyes:last-child { animation-delay: 0.3s; }
-@keyframes pulse-eye { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+@keyframes pip-pulse {
+  0%,100%{ opacity:1; box-shadow:0 0 8px var(--accent),0 0 16px rgba(200,49,10,0.4); }
+  50%    { opacity:0.6; box-shadow:0 0 4px var(--accent); }
+}
+.chip-num  { font-family:'DM Mono',monospace; font-size:0.8rem; font-weight:500; color:var(--armor); }
+.chip-label{ font-size:0.52rem; color:var(--iron); letter-spacing:0.14em; text-transform:uppercase; }
+.supabase-status { display:flex; align-items:center; gap:6px; font-size:0.58rem; color:var(--iron); letter-spacing:0.1em; }
+.sb-dot { width:5px; height:5px; border-radius:50%; background:var(--iron); }
+.sb-dot.connected { background:#6A9A6A; box-shadow:0 0 6px rgba(106,154,106,0.6); }
 
 /* === NAV === */
-#nav {
-  display: flex;
-  background: rgba(10,3,3,0.95);
-  border-bottom: 1px solid rgba(139,0,0,0.3);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+nav {
+  display:flex; background:var(--surface); border-bottom:1px solid var(--border);
+  padding: 0 24px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  position:sticky; top:53px; z-index:100;
 }
+.tab {
+  background:none; border:none; border-bottom:2px solid transparent;
+  padding:12px 18px; color:var(--iron);
+  font-family:'DM Sans',sans-serif; font-size:0.7rem; font-weight:500;
+  letter-spacing:0.06em; cursor:pointer;
+  transition: color 0.2s, border-color 0.2s; white-space:nowrap;
+  display:flex; align-items:center; gap:6px;
+}
+.tab:hover { color:var(--armor); }
+.tab.active { color:var(--ivory); border-bottom-color:var(--accent); }
+.tab-dot { width:5px; height:5px; border-radius:50%; background:currentColor; opacity:0.4; transition:opacity 0.2s; }
+.tab.active .tab-dot { opacity:1; background:var(--accent); }
 
-.nav-btn {
-  flex: 1;
-  min-width: 80px;
-  padding: 12px 8px;
-  background: none;
-  border: none;
-  color: var(--bone-dim);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
+/* === CONTENT === */
+.content {
+  flex:1; position:relative; z-index:1;
+  padding: 28px 20px; max-width:1060px; width:100%; margin:0 auto;
 }
-.nav-btn:hover { color: var(--bone); background: rgba(139,0,0,0.1); }
-.nav-btn.active { color: var(--blood-bright); border-bottom-color: var(--blood-bright); }
+.panel { display:none; }
+.panel.active { display:block; animation: panelIn 0.3s cubic-bezier(0.2,0,0,1); }
+@keyframes panelIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
-/* === MAIN === */
-#main {
-  position: relative;
-  z-index: 1;
-  padding: 16px;
-  max-width: 1100px;
-  margin: 0 auto;
+/* === PAGE HEAD === */
+.page-head { margin-bottom:28px; }
+.page-head h2 {
+  font-family:'Playfair Display',serif;
+  font-size: clamp(1.6rem,5vw,2.4rem);
+  font-weight:900; line-height:1.05; color:var(--ivory); letter-spacing:-0.01em;
 }
+.page-head h2 em { color:var(--accent); font-style:italic; }
+.page-head p { margin-top:6px; font-size:0.75rem; color:var(--iron); letter-spacing:0.02em; line-height:1.6; max-width:520px; }
 
-.panel { display: none; }
-.panel.active { display: block; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+/* === SEC LABEL === */
+.sec-label {
+  font-size:0.58rem; font-weight:600; letter-spacing:0.28em; text-transform:uppercase;
+  color:var(--steel); margin-bottom:14px; display:flex; align-items:center; gap:10px;
+}
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border2); }
 
-/* === CARDS === */
-.card {
-  background: linear-gradient(135deg, rgba(26,10,10,0.9) 0%, rgba(13,5,5,0.95) 100%);
-  border: 1px solid rgba(139,0,0,0.35);
-  border-radius: 4px;
-  padding: 18px;
-  margin-bottom: 14px;
-  position: relative;
-  overflow: hidden;
+/* === METRIC CARDS === */
+.metrics-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:12px; }
+.mc {
+  background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  padding:20px 18px; position:relative; overflow:hidden;
+  transition: border-color 0.25s, transform 0.25s; cursor:default;
 }
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--blood), transparent);
+.mc:hover { border-color:var(--border2); transform:translateY(-2px); }
+.mc::before {
+  content:''; position:absolute; top:0; left:20px; right:20px; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(138,130,120,0.3),transparent);
 }
+.mc.accent-card { border-color:var(--border3); }
+.mc.accent-card::before { background:linear-gradient(90deg,transparent,rgba(200,49,10,0.5),transparent); }
+.mc.accent-card:hover { border-color:rgba(200,49,10,0.4); }
+.mc.accent-card::after {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(200,49,10,0.05) 0%,transparent 65%);
+  pointer-events:none;
+}
+.mc.met-card { border-color:rgba(106,122,106,0.3); }
+.mc.met-card::before { background:linear-gradient(90deg,transparent,rgba(106,122,106,0.45),transparent); }
+.mc-eyebrow { font-size:0.56rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--iron); margin-bottom:8px; display:flex; align-items:center; gap:7px; }
+.mc-tag { padding:1px 7px; border-radius:100px; font-size:0.48rem; font-weight:600; letter-spacing:0.1em; }
+.tag-behind { background:rgba(200,49,10,0.15); color:var(--accent2); border:1px solid rgba(200,49,10,0.25); }
+.tag-met    { background:rgba(106,122,106,0.18); color:#8A9A8A; border:1px solid rgba(106,122,106,0.3); }
+.mc-value { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; line-height:1; color:var(--ivory); margin-bottom:4px; letter-spacing:-0.02em; }
+.mc.met-card .mc-value { font-size:1.3rem; color:var(--armor); }
+.mc-goal { font-size:0.64rem; color:var(--iron); letter-spacing:0.02em; }
+.mc-bar-wrap { height:2px; background:var(--dim); border-radius:100px; margin-top:14px; overflow:hidden; }
+.mc-bar { height:100%; border-radius:100px; transition:width 1s cubic-bezier(0.2,0,0,1); }
+.bar-accent { background:linear-gradient(90deg,var(--blood),var(--accent)); }
+.bar-met    { background:linear-gradient(90deg,#4a6a4a,#6A7A6A); }
+.mc.locked-card { border-style:dashed; border-color:var(--border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; min-height:120px; }
+.locked-icon { font-size:1.4rem; margin-bottom:7px; opacity:0.35; }
+.locked-label { font-size:0.58rem; color:var(--iron); letter-spacing:0.14em; text-transform:uppercase; }
+.locked-sub { font-size:0.58rem; color:var(--dim); margin-top:3px; letter-spacing:0.06em; }
 
-.card-title {
-  font-family: 'Cinzel', serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--blood-bright);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* === PILLAR CARDS === */
+.pillars-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:12px; }
+.pc {
+  background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  padding:22px 18px; position:relative; overflow:hidden;
+  transition: border-color 0.25s, transform 0.25s;
 }
-.card-title::after { content: ''; flex: 1; height: 1px; background: rgba(139,0,0,0.3); }
+.pc:hover { transform:translateY(-2px); }
+.pc::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+.pc-strong::after  { background:linear-gradient(90deg,transparent,var(--strong-c),transparent); }
+.pc-durable::after { background:linear-gradient(90deg,transparent,var(--durable-c),transparent); }
+.pc-fast::after    { background:linear-gradient(90deg,transparent,var(--fast-c),transparent); }
+.pc-strong  { border-color:rgba(138,130,120,0.18); }
+.pc-durable { border-color:rgba(200,49,10,0.2); }
+.pc-fast    { border-color:rgba(192,184,176,0.15); }
+.pc-strong:hover  { border-color:rgba(138,130,120,0.32); }
+.pc-durable:hover { border-color:rgba(200,49,10,0.35); }
+.pc-fast:hover    { border-color:rgba(192,184,176,0.28); }
+.pc-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.pc-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--ivory); }
+.pc-score { font-family:'DM Mono',monospace; font-size:1.8rem; font-weight:500; line-height:1; }
+.pc-strong  .pc-score { color:var(--steel); }
+.pc-durable .pc-score { color:var(--accent); text-shadow:0 0 20px rgba(200,49,10,0.35); }
+.pc-fast    .pc-score { color:var(--armor); }
+.pc-icon { opacity:0.7; }
+.pc-desc { font-size:0.68rem; color:var(--iron); line-height:1.5; margin-bottom:16px; }
+.pc-track { height:3px; background:var(--dim); border-radius:100px; overflow:hidden; }
+.pc-fill { height:100%; border-radius:100px; transition:width 1s cubic-bezier(0.2,0,0,1); }
+.pc-strong  .pc-fill { background:linear-gradient(90deg,#5a5450,var(--strong-c)); }
+.pc-durable .pc-fill { background:linear-gradient(90deg,var(--blood),var(--accent)); }
+.pc-fast    .pc-fill { background:linear-gradient(90deg,#787070,var(--armor)); }
 
-/* === FITNESS SCORE === */
-.score-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
+/* === THRESHOLD BAND === */
+.threshold-band {
+  background:var(--surface); border:1px solid var(--border3); border-radius:10px;
+  padding:20px 22px; display:flex; align-items:center; gap:20px; margin-bottom:12px;
+  position:relative; overflow:hidden;
 }
-@media (min-width: 600px) { .score-grid { grid-template-columns: repeat(4, 1fr); } }
+.threshold-band::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(200,49,10,0.6),transparent);
+}
+.threshold-band::after {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(200,49,10,0.06) 0%,transparent 65%);
+  pointer-events:none;
+}
+.tb-icon { flex-shrink:0; opacity:0.9; position:relative; z-index:1; }
+.tb-body { flex:1; position:relative; z-index:1; }
+.tb-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:900; color:var(--ivory); margin-bottom:3px; }
+.tb-title em { color:var(--accent); font-style:italic; }
+.tb-sub { font-size:0.68rem; color:var(--iron); }
+.tb-status { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--iron); letter-spacing:0.1em; position:relative; z-index:1; }
+.tb-status.unlocked { color:#8A9A8A; }
 
-.score-orb {
-  text-align: center;
-  padding: 16px 8px;
-  border: 1px solid rgba(139,0,0,0.3);
-  border-radius: 4px;
-  background: rgba(5,2,2,0.6);
-  position: relative;
-  cursor: default;
-  transition: border-color 0.2s;
+/* === CHART WRAP === */
+.chart-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  padding:20px; margin-bottom:12px;
 }
-.score-orb:hover { border-color: rgba(139,0,0,0.7); }
+.chart-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+.chart-title { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; color:var(--ivory); }
+.chart-tabs { display:flex; gap:4px; }
+.ctab {
+  padding:4px 12px; border-radius:100px; font-size:0.58rem; font-weight:500;
+  background:none; border:1px solid var(--border2); color:var(--iron); cursor:pointer; transition:all 0.15s;
+}
+.ctab:hover { color:var(--armor); }
+.ctab.active { background:rgba(200,49,10,0.12); border-color:rgba(200,49,10,0.35); color:var(--accent2); }
+.chart-wrap { position:relative; height:220px; }
 
-.score-ring {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 10px;
-}
-.score-ring svg { transform: rotate(-90deg); }
-.score-ring-bg { fill: none; stroke: rgba(139,0,0,0.15); stroke-width: 5; }
-.score-ring-fill { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
-.score-ring-val {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-.score-label {
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--bone-dim);
-}
+/* === TIMELINE STATS === */
+.timeline-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+.tstat { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 14px; text-align:center; }
+.ts-val { font-family:'Playfair Display',serif; font-size:1.7rem; font-weight:700; color:var(--ivory); display:block; line-height:1; }
+.ts-label { font-size:0.56rem; color:var(--iron); letter-spacing:0.16em; text-transform:uppercase; margin-top:5px; display:block; }
 
-.score-orb.overall .score-ring-fill { stroke: var(--blood-bright); }
-.score-orb.overall .score-ring-val { color: var(--blood-bright); }
-.score-orb.durable .score-ring-fill { stroke: var(--durable); }
-.score-orb.durable .score-ring-val { color: var(--durable); }
-.score-orb.strong .score-ring-fill { stroke: var(--strong); }
-.score-orb.strong .score-ring-val { color: var(--strong); }
-.score-orb.fast .score-ring-fill { stroke: var(--fast); }
-.score-orb.fast .score-ring-val { color: var(--fast); }
+/* === MILESTONE LIST === */
+.milestone-list { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.milestone {
+  display:flex; gap:14px; align-items:center; padding:13px 18px;
+  border-bottom:1px solid var(--border); transition:background 0.15s; cursor:default;
+}
+.milestone:hover { background:rgba(138,130,120,0.03); }
+.milestone:last-child { border-bottom:none; }
+.m-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; border:1px solid; }
+.m-dot.strong  { background:rgba(138,130,120,0.3); border-color:var(--steel); }
+.m-dot.durable { background:rgba(200,49,10,0.4); border-color:var(--accent); box-shadow:0 0 6px rgba(200,49,10,0.4); }
+.m-dot.fast    { background:rgba(192,184,176,0.25); border-color:var(--armor); }
+.m-info { flex:1; }
+.m-title { font-size:0.8rem; font-weight:500; color:var(--armor); margin-bottom:2px; }
+.m-sub { font-size:0.62rem; color:var(--iron); line-height:1.4; }
+.m-delta { font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:500; color:#8A9A8A; white-space:nowrap; }
+.m-delta.baseline { color:var(--iron); }
 
-/* === PROGRESS BARS === */
-.benchmark-bar {
-  margin-bottom: 12px;
+/* === PROGRAM === */
+.priority-controls { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:12px; }
+.priority-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+.prio-item { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:14px; }
+.prio-name { font-size:0.6rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; margin-bottom:8px; }
+.prio-name.strong  { color:var(--steel); }
+.prio-name.durable { color:var(--accent); }
+.prio-name.fast    { color:var(--armor); }
+.prio-select {
+  width:100%; background:var(--surface); border:1px solid var(--border2); color:var(--armor);
+  font-family:'DM Sans',sans-serif; font-size:0.72rem; padding:6px 8px; border-radius:6px;
+  cursor:pointer; outline:none; appearance:none;
 }
-.bm-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-  font-size: 0.75rem;
+.prio-select:focus { border-color:rgba(200,49,10,0.4); }
+option { background:#1a1614; }
+.regen-btn {
+  margin-top:14px; padding:9px 22px; background:rgba(200,49,10,0.15); border:1px solid rgba(200,49,10,0.35);
+  color:var(--accent2); font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:500;
+  letter-spacing:0.06em; border-radius:8px; cursor:pointer; transition:all 0.15s;
+  display:flex; align-items:center; gap:8px;
 }
-.bm-label { font-family: 'Cinzel', serif; letter-spacing: 0.1em; }
-.bm-val { font-family: 'Share Tech Mono', monospace; color: var(--bone-dim); font-size: 0.7rem; }
-.bm-track {
-  height: 6px;
-  background: rgba(139,0,0,0.15);
-  border-radius: 3px;
-  overflow: hidden;
-  position: relative;
-}
-.bm-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 1s ease;
-  position: relative;
-}
-.bm-fill::after {
-  content: '';
-  position: absolute;
-  right: 0; top: 0; bottom: 0;
-  width: 4px;
-  background: rgba(255,255,255,0.5);
-  border-radius: 2px;
-}
+.regen-btn:hover { background:rgba(200,49,10,0.25); border-color:var(--accent); }
+.regen-spinner { display:none; width:14px; height:14px; border:2px solid rgba(200,49,10,0.2); border-top-color:var(--accent); border-radius:50%; animation:spin 0.6s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.week-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; margin-bottom:6px; overflow:hidden; }
+.wc-head { display:flex; justify-content:space-between; align-items:center; padding:13px 18px; cursor:pointer; transition:background 0.15s; }
+.wc-head:hover { background:rgba(138,130,120,0.04); }
+.wc-num { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--armor); }
+.wc-phase { font-size:0.55rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; padding:2px 9px; border-radius:100px; border:1px solid; }
+.ph-base   { color:var(--iron);   border-color:var(--border2);             background:rgba(88,80,74,0.08); }
+.ph-build  { color:var(--steel);  border-color:rgba(138,130,120,0.3);      background:rgba(138,130,120,0.08); }
+.ph-peak   { color:var(--accent2);border-color:rgba(200,49,10,0.3);        background:rgba(200,49,10,0.08); }
+.ph-deload { color:var(--dim);    border-color:rgba(46,42,39,0.5);         background:transparent; }
+.wc-body { display:none; padding:0 18px 12px; }
+.wc-body.open { display:block; }
+.day-row { display:flex; gap:12px; padding:6px 0; border-bottom:1px solid var(--border); font-size:0.7rem; align-items:baseline; }
+.day-row:last-child { border-bottom:none; }
+.dr-day  { min-width:34px; color:var(--iron); font-family:'DM Mono',monospace; font-size:0.6rem; }
+.dr-work { color:var(--armor); line-height:1.4; }
 
-/* === TIMELINE CHART === */
-.chart-wrap {
-  position: relative;
-  height: 260px;
-  margin: 10px 0;
+/* === LOG === */
+.filter-bar { display:flex; gap:5px; margin-bottom:18px; flex-wrap:wrap; }
+.fpill { padding:5px 13px; border-radius:100px; font-size:0.63rem; font-weight:500; letter-spacing:0.06em; background:var(--surface); border:1px solid var(--border2); color:var(--iron); cursor:pointer; transition:all 0.15s; }
+.fpill:hover { color:var(--armor); border-color:rgba(138,130,120,0.35); }
+.fpill.active { background:rgba(200,49,10,0.12); border-color:rgba(200,49,10,0.35); color:var(--accent2); }
+.workout-table { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.wt-row {
+  display:grid; grid-template-columns:90px 1fr auto auto;
+  gap:12px; align-items:center; padding:12px 18px;
+  border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s;
 }
+.wt-row:last-child { border-bottom:none; }
+.wt-row:hover { background:rgba(138,130,120,0.04); }
+.wt-row.expanded { background:rgba(138,130,120,0.03); }
+.wt-date  { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--iron); }
+.wt-title { font-size:0.82rem; font-weight:500; color:var(--armor); }
+.wt-notes { font-size:0.62rem; color:var(--iron); margin-top:2px; }
+.wt-dur   { font-family:'DM Mono',monospace; font-size:0.66rem; color:var(--iron); white-space:nowrap; }
+.pillar-badge { padding:2px 9px; border-radius:100px; font-size:0.56rem; font-weight:500; letter-spacing:0.07em; white-space:nowrap; border:1px solid; }
+.pb-strong   { background:rgba(138,130,120,0.12); color:var(--steel);   border-color:rgba(138,130,120,0.3); }
+.pb-durable  { background:rgba(200,49,10,0.12);   color:var(--accent2); border-color:rgba(200,49,10,0.3); }
+.pb-fast     { background:rgba(192,184,176,0.1);   color:var(--armor);   border-color:rgba(192,184,176,0.25); }
+.pb-mobility { background:rgba(106,122,106,0.1);   color:#8A9A8A;        border-color:rgba(106,122,106,0.25); }
+.wt-detail {
+  display:none; grid-column:1/-1; padding:10px 0 4px;
+  border-top:1px solid var(--border);
+}
+.wt-detail.open { display:block; }
+.sets-table { width:100%; border-collapse:collapse; font-size:0.68rem; font-family:'DM Mono',monospace; }
+.sets-table th { color:var(--iron); font-size:0.55rem; letter-spacing:0.14em; text-align:left; padding:0 8px 7px; border-bottom:1px solid var(--border2); }
+.sets-table td { padding:5px 8px; color:var(--armor); border-bottom:1px solid var(--border); }
+.sets-table tr:last-child td { border-bottom:none; }
+.laps-wrap { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.lap-chip { background:rgba(192,184,176,0.08); border:1px solid rgba(192,184,176,0.2); color:var(--armor); padding:3px 8px; border-radius:4px; font-size:0.62rem; font-family:'DM Mono',monospace; }
+.empty-state { padding:40px 20px; text-align:center; font-size:0.72rem; color:var(--iron); letter-spacing:0.06em; }
 
-/* === PROGRAM VIEW === */
-.program-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  align-items: center;
+/* === LOG WORKOUT FORM === */
+.log-form-card {
+  background:var(--surface); border:1px solid var(--border3); border-radius:10px;
+  padding:22px; margin-bottom:14px; position:relative; overflow:hidden;
 }
+.log-form-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(200,49,10,0.5),transparent);
+}
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.form-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
+.form-field label { display:block; font-size:0.56rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--iron); margin-bottom:5px; }
+.form-input, .form-select, .form-textarea {
+  width:100%; background:var(--surface2); border:1px solid var(--border2);
+  color:var(--armor); font-family:'DM Sans',sans-serif; font-size:0.78rem;
+  padding:8px 12px; border-radius:6px; outline:none; transition:border-color 0.15s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color:rgba(200,49,10,0.4); }
+.form-textarea { resize:vertical; min-height:60px; }
+.sets-editor { margin-bottom:14px; }
+.set-row { display:grid; grid-template-columns:2fr 1fr 1fr 1fr 28px; gap:6px; align-items:center; margin-bottom:6px; }
+.set-row .form-input { padding:6px 8px; font-size:0.72rem; }
+.set-add-btn {
+  padding:7px 14px; background:rgba(138,130,120,0.1); border:1px dashed var(--border2);
+  color:var(--iron); font-family:'DM Sans',sans-serif; font-size:0.65rem;
+  border-radius:6px; cursor:pointer; transition:all 0.15s; width:100%;
+}
+.set-add-btn:hover { color:var(--armor); border-color:rgba(138,130,120,0.4); }
+.set-remove { background:none; border:none; color:var(--iron); cursor:pointer; font-size:1rem; padding:2px 4px; transition:color 0.15s; }
+.set-remove:hover { color:var(--accent); }
+.laps-editor { margin-bottom:14px; }
+.lap-row { display:grid; grid-template-columns:auto 1fr 1fr 28px; gap:6px; align-items:center; margin-bottom:6px; }
+.lap-row .form-input { padding:6px 8px; font-size:0.72rem; }
+.lap-num { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--iron); text-align:center; }
+.form-actions { display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; }
+.btn-save {
+  padding:9px 24px; background:rgba(200,49,10,0.2); border:1px solid rgba(200,49,10,0.45);
+  color:var(--accent2); font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:500;
+  border-radius:8px; cursor:pointer; transition:all 0.15s;
+}
+.btn-save:hover { background:rgba(200,49,10,0.32); border-color:var(--accent); }
+.btn-cancel {
+  padding:9px 18px; background:none; border:1px solid var(--border2); color:var(--iron);
+  font-family:'DM Sans',sans-serif; font-size:0.72rem; border-radius:8px; cursor:pointer; transition:all 0.15s;
+}
+.btn-cancel:hover { color:var(--armor); border-color:var(--border2); }
+.log-add-btn {
+  display:flex; align-items:center; gap:8px; padding:9px 20px;
+  background:rgba(200,49,10,0.12); border:1px solid rgba(200,49,10,0.3);
+  color:var(--accent2); font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:500;
+  border-radius:8px; cursor:pointer; transition:all 0.15s; margin-bottom:16px;
+}
+.log-add-btn:hover { background:rgba(200,49,10,0.2); border-color:var(--accent); }
 
-.pillar-priority {
-  background: rgba(5,2,2,0.8);
-  border: 1px solid rgba(139,0,0,0.3);
-  border-radius: 4px;
-  padding: 14px;
-  margin-bottom: 10px;
+/* === UPLOAD === */
+.upload-card {
+  background:var(--surface); border:1px dashed var(--border2); border-radius:10px;
+  padding:36px 24px; text-align:center; cursor:pointer; margin-bottom:14px;
+  transition:border-color 0.2s,background 0.2s; position:relative; overflow:hidden;
 }
-.pillar-priority-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
+.upload-card::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(200,49,10,0.04) 0%,transparent 60%);
+  pointer-events:none; opacity:0; transition:opacity 0.2s;
 }
-.pillar-name {
-  font-family: 'Cinzel', serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-.priority-select {
-  background: rgba(139,0,0,0.15);
-  border: 1px solid rgba(139,0,0,0.4);
-  color: var(--bone);
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.9rem;
-  padding: 4px 8px;
-  border-radius: 3px;
-  cursor: pointer;
-  outline: none;
-}
-.priority-select:focus { border-color: var(--blood-bright); }
-option { background: #1a0a0a; }
+.upload-card:hover { border-color:rgba(200,49,10,0.4); }
+.upload-card:hover::before { opacity:1; }
+.upload-card.drag { border-color:var(--accent); background:rgba(200,49,10,0.04); }
+.uc-icon { display:block; margin:0 auto 12px; opacity:0.7; }
+.uc-title { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--ivory); margin-bottom:5px; }
+.uc-sub { font-size:0.68rem; color:var(--iron); }
+.upload-actions { display:flex; gap:8px; justify-content:center; margin-top:16px; }
+.btn-ghost { padding:8px 20px; background:none; border:1px solid var(--border2); color:var(--iron); font-family:'DM Sans',sans-serif; font-size:0.7rem; font-weight:500; border-radius:8px; cursor:pointer; transition:all 0.15s; }
+.btn-ghost:hover { color:var(--armor); border-color:rgba(138,130,120,0.4); }
+.btn-primary { padding:8px 20px; background:rgba(200,49,10,0.18); border:1px solid rgba(200,49,10,0.4); color:var(--accent2); font-family:'DM Sans',sans-serif; font-size:0.7rem; font-weight:500; border-radius:8px; cursor:pointer; transition:all 0.15s; }
+.btn-primary:hover { background:rgba(200,49,10,0.28); border-color:var(--accent); }
+#file-input { display:none; }
+.ok-strip { display:none; background:rgba(106,122,106,0.1); border:1px solid rgba(106,122,106,0.25); border-radius:8px; padding:9px 16px; font-size:0.68rem; color:#8A9A8A; margin-bottom:14px; letter-spacing:0.04em; }
 
-.week-block {
-  background: rgba(5,2,2,0.6);
-  border: 1px solid rgba(139,0,0,0.2);
-  border-radius: 4px;
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-.week-header {
-  padding: 10px 14px;
-  background: rgba(139,0,0,0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  font-family: 'Cinzel', serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  border-bottom: 1px solid rgba(139,0,0,0.2);
-  user-select: none;
-}
-.week-header:hover { background: rgba(139,0,0,0.18); }
-.week-content { padding: 12px; display: none; }
-.week-content.open { display: block; }
-
-.day-row {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(139,0,0,0.1);
-}
-.day-row:last-child { border-bottom: none; }
-.day-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.65rem;
-  color: var(--bone-dim);
-  min-width: 32px;
-  padding-top: 2px;
-}
-.day-workouts { flex: 1; }
-.workout-pill {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 2px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  margin: 2px 3px 2px 0;
-}
-.pill-strong { background: rgba(230,126,34,0.2); border: 1px solid rgba(230,126,34,0.5); color: var(--strong); }
-.pill-durable { background: rgba(192,57,43,0.2); border: 1px solid rgba(192,57,43,0.5); color: var(--durable); }
-.pill-fast { background: rgba(241,196,15,0.2); border: 1px solid rgba(241,196,15,0.5); color: var(--fast); }
-.pill-mobility { background: rgba(39,174,96,0.2); border: 1px solid rgba(39,174,96,0.5); color: var(--mobility); }
-.pill-rest { background: rgba(100,100,100,0.1); border: 1px solid rgba(100,100,100,0.2); color: #666; }
-
-/* === LOG VIEW === */
-.upload-zone {
-  border: 2px dashed rgba(139,0,0,0.4);
-  border-radius: 6px;
-  padding: 30px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 14px;
-}
-.upload-zone:hover, .upload-zone.drag { border-color: var(--blood-bright); background: rgba(139,0,0,0.08); }
-.upload-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
-.upload-text { font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.15em; color: var(--bone-dim); }
-#file-input { display: none; }
-
-.workout-entry {
-  background: rgba(5,2,2,0.7);
-  border: 1px solid rgba(139,0,0,0.2);
-  border-radius: 4px;
-  padding: 12px 14px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-.workout-entry:hover { border-color: rgba(139,0,0,0.5); }
-.we-header { display: flex; justify-content: space-between; align-items: center; }
-.we-title { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.1em; }
-.we-meta { font-size: 0.65rem; color: var(--bone-dim); font-family: 'Share Tech Mono', monospace; margin-top: 4px; }
-.we-detail { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(139,0,0,0.2); }
-.we-detail.open { display: block; }
-
-.sets-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.72rem;
-  font-family: 'Share Tech Mono', monospace;
-}
-.sets-table th {
-  color: var(--blood-bright);
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-align: left;
-  padding: 4px 8px 8px;
-  border-bottom: 1px solid rgba(139,0,0,0.3);
-}
-.sets-table td { padding: 5px 8px; color: var(--bone-dim); border-bottom: 1px solid rgba(139,0,0,0.1); }
-.sets-table tr:last-child td { border-bottom: none; }
-
-.laps-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-.lap-chip {
-  background: rgba(241,196,15,0.1);
-  border: 1px solid rgba(241,196,15,0.3);
-  color: var(--fast);
-  padding: 3px 8px;
-  border-radius: 2px;
-  font-size: 0.65rem;
-  font-family: 'Share Tech Mono', monospace;
-}
-
-/* === BUTTONS === */
-.btn {
-  padding: 10px 20px;
-  border: 1px solid rgba(139,0,0,0.5);
-  background: rgba(139,0,0,0.15);
-  color: var(--bone);
-  font-family: 'Cinzel', serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 3px;
-  transition: all 0.2s;
-}
-.btn:hover { background: rgba(139,0,0,0.35); border-color: var(--blood-bright); color: white; }
-.btn-primary { background: rgba(139,0,0,0.4); border-color: var(--blood-bright); }
-.btn-primary:hover { background: var(--blood); }
-
-/* === THRESHOLD DISPLAY === */
-.threshold-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.threshold-item {
-  text-align: center;
-  padding: 16px 8px;
-  border: 1px solid rgba(139,0,0,0.25);
-  border-radius: 4px;
-  background: rgba(5,2,2,0.5);
-  position: relative;
-  overflow: hidden;
-}
-.threshold-item.met { border-color: rgba(0,180,0,0.5); }
-.threshold-item.met::after {
-  content: '✓';
-  position: absolute;
-  top: 4px; right: 8px;
-  color: #0f0;
-  font-size: 0.9rem;
-  text-shadow: 0 0 8px #0f0;
-}
-.threshold-val {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 1.3rem;
-  color: var(--blood-bright);
-  display: block;
-  margin-bottom: 4px;
-}
-.threshold-label {
-  font-family: 'Cinzel', serif;
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  color: var(--bone-dim);
-  text-transform: uppercase;
-}
-
-/* === ALERT / STATUS === */
-.status-bar {
-  padding: 10px 14px;
-  border-radius: 3px;
-  font-size: 0.75rem;
-  font-family: 'Rajdhani', sans-serif;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
-}
-.status-info { background: rgba(139,0,0,0.1); border: 1px solid rgba(139,0,0,0.3); }
-.status-success { background: rgba(0,100,0,0.15); border: 1px solid rgba(0,180,0,0.3); color: #6f6; }
-
-/* === MISC === */
-.divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139,0,0,0.5), transparent);
-  margin: 14px 0;
-}
-
-.mono { font-family: 'Share Tech Mono', monospace; }
-.dim { color: var(--bone-dim); }
-.red { color: var(--blood-bright); }
-.ember { color: var(--ember); }
-
-.flex-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.mt-8 { margin-top: 8px; }
-.mb-4 { margin-bottom: 4px; }
-
-/* === REGEN SPINNER === */
-.regen-spinner {
-  display: none;
-  width: 16px; height: 16px;
-  border: 2px solid rgba(139,0,0,0.3);
-  border-top-color: var(--blood-bright);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  margin-left: 8px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* === TOOLTIP === */
-.tooltip { position: relative; }
-.tooltip-text {
-  display: none;
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(10,3,3,0.97);
-  border: 1px solid rgba(139,0,0,0.5);
-  color: var(--bone);
-  font-size: 0.65rem;
-  padding: 6px 10px;
-  border-radius: 3px;
-  white-space: nowrap;
-  z-index: 1000;
-  margin-bottom: 4px;
-  font-family: 'Rajdhani', sans-serif;
-}
-.tooltip:hover .tooltip-text { display: block; }
+/* === SUPABASE CONFIG === */
+.sb-config-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:12px; }
+.sb-config-title { font-size:0.62rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--steel); margin-bottom:12px; }
+.sb-config-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.sb-test-btn { padding:7px 16px; background:rgba(138,130,120,0.1); border:1px solid var(--border2); color:var(--steel); font-family:'DM Sans',sans-serif; font-size:0.68rem; border-radius:6px; cursor:pointer; transition:all 0.15s; }
+.sb-test-btn:hover { color:var(--armor); border-color:rgba(138,130,120,0.4); }
+.sb-status-msg { font-size:0.64rem; color:var(--iron); margin-top:6px; min-height:18px; font-family:'DM Mono',monospace; }
+.sb-status-msg.ok  { color:#8A9A8A; }
+.sb-status-msg.err { color:var(--accent); }
 
 /* === SCROLLBAR === */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: var(--void); }
-::-webkit-scrollbar-thumb { background: rgba(139,0,0,0.5); border-radius: 2px; }
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:rgba(88,80,74,0.5); border-radius:2px; }
+
+/* === RESPONSIVE === */
+@media (max-width:600px) {
+  .topbar { padding:12px 14px; }
+  .content { padding:18px 14px; }
+  nav { padding:0 14px; top:49px; }
+  .brand-divider,.brand-tag { display:none; }
+  .metrics-row,.pillars-row,.timeline-stats { grid-template-columns:1fr 1fr; }
+  .form-grid,.form-grid-3 { grid-template-columns:1fr; }
+  .priority-grid { grid-template-columns:1fr; }
+  .set-row { grid-template-columns:1fr 1fr 1fr 28px; }
+  .set-row .form-input:first-child { grid-column:1/-2; }
+  .wt-row { grid-template-columns:1fr auto; }
+  .wt-date,.wt-dur { display:none; }
+}
 </style>
 </head>
 <body>
 
-<div id="header">
-  <h1>THRAGG <span class="thragg-eyes"></span><span class="thragg-eyes"></span> PROTOCOL</h1>
-  <div class="subtitle">Grand Regent of Viltrum · Strength · Durability · Speed</div>
-</div>
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-name">THRAGG <em>Protocol</em></span>
+    <div class="brand-divider"></div>
+    <span class="brand-tag">Grand Regent of Viltrum</span>
+  </div>
+  <div class="topbar-right">
+    <div class="supabase-status" id="sb-status-indicator" title="Supabase connection status">
+      <div class="sb-dot" id="sb-dot"></div>
+      <span id="sb-status-label">offline</span>
+    </div>
+    <div class="index-chip">
+      <div class="chip-pip"></div>
+      <span class="chip-num" id="chip-score">—</span>
+      <span class="chip-label">Index</span>
+    </div>
+  </div>
+</header>
 
-<nav id="nav">
-  <button class="nav-btn active" onclick="switchPanel('score', this)">⚡ Score</button>
-  <button class="nav-btn" onclick="switchPanel('timeline', this)">📈 Timeline</button>
-  <button class="nav-btn" onclick="switchPanel('program', this)">📋 Program</button>
-  <button class="nav-btn" onclick="switchPanel('log', this)">📂 Log</button>
+<!-- NAV -->
+<nav>
+  <button class="tab active" onclick="go('score',this)"><span class="tab-dot"></span>Score</button>
+  <button class="tab" onclick="go('timeline',this)"><span class="tab-dot"></span>Timeline</button>
+  <button class="tab" onclick="go('program',this)"><span class="tab-dot"></span>Program</button>
+  <button class="tab" onclick="go('log',this)"><span class="tab-dot"></span>Log</button>
+  <button class="tab" onclick="go('settings',this)"><span class="tab-dot"></span>Settings</button>
 </nav>
 
-<div id="main">
+<div class="content">
 
-  <!-- ============ SCORE PANEL ============ -->
-  <div class="panel active" id="panel-score">
-
-    <div class="card">
-      <div class="card-title">Thragg Fitness Index</div>
-      <div class="score-grid">
-        <div class="score-orb overall tooltip">
-          <div class="score-ring">
-            <svg viewBox="0 0 80 80" width="80" height="80">
-              <circle class="score-ring-bg" cx="40" cy="40" r="33"/>
-              <circle class="score-ring-fill" cx="40" cy="40" r="33" id="ring-overall"
-                stroke-dasharray="207.3" stroke-dashoffset="207.3"/>
-            </svg>
-            <div class="score-ring-val" id="val-overall">—</div>
-          </div>
-          <div class="score-label">Overall</div>
-          <span class="tooltip-text">Weighted by pillar priorities</span>
-        </div>
-        <div class="score-orb durable tooltip">
-          <div class="score-ring">
-            <svg viewBox="0 0 80 80" width="80" height="80">
-              <circle class="score-ring-bg" cx="40" cy="40" r="33"/>
-              <circle class="score-ring-fill" cx="40" cy="40" r="33" id="ring-durable"
-                stroke-dasharray="207.3" stroke-dashoffset="207.3"/>
-            </svg>
-            <div class="score-ring-val" id="val-durable">—</div>
-          </div>
-          <div class="score-label">Durable</div>
-          <span class="tooltip-text">Murph readiness + conditioning load</span>
-        </div>
-        <div class="score-orb strong tooltip">
-          <div class="score-ring">
-            <svg viewBox="0 0 80 80" width="80" height="80">
-              <circle class="score-ring-bg" cx="40" cy="40" r="33"/>
-              <circle class="score-ring-fill" cx="40" cy="40" r="33" id="ring-strong"
-                stroke-dasharray="207.3" stroke-dashoffset="207.3"/>
-            </svg>
-            <div class="score-ring-val" id="val-strong">—</div>
-          </div>
-          <div class="score-label">Strong</div>
-          <span class="tooltip-text">4/3/2 plate progress + training load</span>
-        </div>
-        <div class="score-orb fast tooltip">
-          <div class="score-ring">
-            <svg viewBox="0 0 80 80" width="80" height="80">
-              <circle class="score-ring-bg" cx="40" cy="40" r="33"/>
-              <circle class="score-ring-fill" cx="40" cy="40" r="33" id="ring-fast"
-                stroke-dasharray="207.3" stroke-dashoffset="207.3"/>
-            </svg>
-            <div class="score-ring-val" id="val-fast">—</div>
-          </div>
-          <div class="score-label">Fast</div>
-          <span class="tooltip-text">Sub-6:00 mile progress + running load</span>
-        </div>
-      </div>
-      <div id="score-status" class="status-bar status-info dim" style="font-size:0.7rem">
-        Load a training log to compute your live scores.
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Thragg Threshold</div>
-      <div class="threshold-grid">
-        <div class="threshold-item" id="th-deadlift">
-          <span class="threshold-val" id="th-dl-val">—</span>
-          <span class="threshold-label">Deadlift · 405 lb</span>
-        </div>
-        <div class="threshold-item" id="th-squat">
-          <span class="threshold-val" id="th-sq-val">—</span>
-          <span class="threshold-label">Squat · 315 lb</span>
-        </div>
-        <div class="threshold-item" id="th-bench">
-          <span class="threshold-val" id="th-bn-val">—</span>
-          <span class="threshold-label">Bench · 225 lb</span>
-        </div>
-        <div class="threshold-item" id="th-murph">
-          <span class="threshold-val" id="th-mu-val">—</span>
-          <span class="threshold-label">Murph Complete</span>
-        </div>
-        <div class="threshold-item" id="th-mile">
-          <span class="threshold-val" id="th-mi-val">—</span>
-          <span class="threshold-label">Mile &lt; 6:00</span>
-        </div>
-        <div class="threshold-item" id="th-overall">
-          <span class="threshold-val" id="th-ov-val" style="font-size:0.8rem">LOCKED</span>
-          <span class="threshold-label">Thragg Threshold</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Benchmark Progress</div>
-      <div id="benchmark-bars">
-        <div class="dim" style="font-size:0.75rem">Load training data to see benchmark progress.</div>
-      </div>
-    </div>
-
+<!-- ══════════════ SCORE ══════════════ -->
+<div class="panel active" id="panel-score">
+  <div class="page-head">
+    <h2>Thragg <em>Fitness Index</em></h2>
+    <p>Progress toward the Thragg Threshold — all three standards met simultaneously.</p>
   </div>
 
-  <!-- ============ TIMELINE PANEL ============ -->
-  <div class="panel" id="panel-timeline">
-    <div class="card">
-      <div class="card-title">Progress to Thragg Threshold</div>
-      <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
-        <button class="btn" onclick="setTimelineView('overall')" id="tl-btn-overall">Overall</button>
-        <button class="btn" onclick="setTimelineView('durable')" id="tl-btn-durable">Durable</button>
-        <button class="btn" onclick="setTimelineView('strong')" id="tl-btn-strong">Strong</button>
-        <button class="btn" onclick="setTimelineView('fast')" id="tl-btn-fast">Fast</button>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="timeline-chart"></canvas>
-      </div>
-      <div style="display:flex;gap:16px;margin-top:10px;font-size:0.65rem;flex-wrap:wrap;">
-        <span><span style="color:var(--blood-bright)">■</span> Actual Score</span>
-        <span><span style="color:rgba(255,68,0,0.6)">■</span> Projected</span>
-        <span><span style="color:rgba(200,184,154,0.3)">■</span> Thragg Standard (100)</span>
-      </div>
+  <div class="sec-label">Strength Benchmarks</div>
+  <div class="metrics-row" id="strength-metrics">
+    <div class="mc accent-card">
+      <div class="mc-eyebrow">Deadlift <span class="mc-tag tag-behind" id="dl-tag">—</span></div>
+      <div class="mc-value" id="dl-val">—</div>
+      <div class="mc-goal" id="dl-goal">Goal: 405 lb</div>
+      <div class="mc-bar-wrap"><div class="mc-bar bar-accent" id="bar-dl" style="width:0%"></div></div>
     </div>
-    <div class="card">
-      <div class="card-title">Training Load History</div>
-      <div class="chart-wrap" style="height:180px">
-        <canvas id="load-chart"></canvas>
-      </div>
+    <div class="mc accent-card">
+      <div class="mc-eyebrow">Squat <span class="mc-tag tag-behind" id="sq-tag">—</span></div>
+      <div class="mc-value" id="sq-val">—</div>
+      <div class="mc-goal" id="sq-goal">Goal: 315 lb</div>
+      <div class="mc-bar-wrap"><div class="mc-bar bar-accent" id="bar-sq" style="width:0%"></div></div>
+    </div>
+    <div class="mc accent-card">
+      <div class="mc-eyebrow">Bench <span class="mc-tag tag-behind" id="bn-tag">—</span></div>
+      <div class="mc-value" id="bn-val">—</div>
+      <div class="mc-goal" id="bn-goal">Goal: 225 lb</div>
+      <div class="mc-bar-wrap"><div class="mc-bar bar-accent" id="bar-bn" style="width:0%"></div></div>
     </div>
   </div>
 
-  <!-- ============ PROGRAM PANEL ============ -->
-  <div class="panel" id="panel-program">
+  <div class="sec-label">Pillar Scores</div>
+  <div class="pillars-row">
+    <div class="pc pc-strong">
+      <div class="pc-header">
+        <span class="pc-name">Strong</span>
+        <span class="pc-score" id="sc-strong">—</span>
+      </div>
+      <div class="pc-desc">4 / 3 / 2 plate standard. Deadlift, squat, bench.</div>
+      <div class="pc-track"><div class="pc-fill" id="pf-strong" style="width:0%"></div></div>
+    </div>
+    <div class="pc pc-durable">
+      <div class="pc-header">
+        <span class="pc-name">Durable</span>
+        <span class="pc-score" id="sc-durable">—</span>
+      </div>
+      <div class="pc-desc">Murph challenge. Run — pull — push — squat — run.</div>
+      <div class="pc-track"><div class="pc-fill" id="pf-durable" style="width:0%"></div></div>
+    </div>
+    <div class="pc pc-fast">
+      <div class="pc-header">
+        <span class="pc-name">Fast</span>
+        <span class="pc-score" id="sc-fast">—</span>
+      </div>
+      <div class="pc-desc">Sub 6:00 mile. Standalone time trial on flat ground.</div>
+      <div class="pc-track"><div class="pc-fill" id="pf-fast" style="width:0%"></div></div>
+    </div>
+  </div>
 
-    <div class="card">
-      <div class="card-title">Pillar Priorities</div>
-      <p class="dim mb-4" style="font-size:0.72rem;margin-bottom:12px">
-        Adjust priority rankings (1 = highest). Equal values allowed. Regenerating the program re-weights
-        training frequency and intensity curves accordingly.
+  <div class="threshold-band" id="threshold-band">
+    <div class="tb-icon">
+      <svg viewBox="0 0 64 64" width="40" height="40" fill="none">
+        <path d="M32 6 L56 20 L56 44 C56 52 44 58 32 60 C20 58 8 52 8 44 L8 20 Z" stroke="#C8310A" stroke-width="1.5" fill="rgba(200,49,10,0.08)"/>
+        <path d="M32 14 L50 24 L50 42 C50 48 41 53 32 55 C23 53 14 48 14 42 L14 24 Z" stroke="rgba(200,49,10,0.35)" stroke-width="0.8" fill="none"/>
+        <path d="M22 32 L28 38 L42 26" stroke="#C8310A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="tb-body">
+      <div class="tb-title">Thragg <em>Threshold</em></div>
+      <div class="tb-sub" id="threshold-sub">All three standards not yet met. Load training data to track progress.</div>
+    </div>
+    <div class="tb-status" id="threshold-status">LOCKED</div>
+  </div>
+
+  <div class="sec-label">Speed &amp; Durability</div>
+  <div class="metrics-row">
+    <div class="mc accent-card">
+      <div class="mc-eyebrow">Mile Time <span class="mc-tag tag-behind" id="mile-tag">—</span></div>
+      <div class="mc-value" id="mile-val" style="font-size:1.8rem">—</div>
+      <div class="mc-goal">Goal: sub 6:00</div>
+      <div class="mc-bar-wrap"><div class="mc-bar bar-accent" id="bar-mile" style="width:0%"></div></div>
+    </div>
+    <div class="mc accent-card">
+      <div class="mc-eyebrow">Murph <span class="mc-tag" id="murph-tag" style="display:none"></span></div>
+      <div class="mc-value" id="murph-val" style="font-size:1.3rem">—</div>
+      <div class="mc-goal">Complete w/ 20 lb vest</div>
+      <div class="mc-bar-wrap"><div class="mc-bar bar-accent" id="bar-murph" style="width:0%"></div></div>
+    </div>
+    <div class="mc locked-card" id="threshold-card">
+      <div class="locked-icon">
+        <svg viewBox="0 0 64 64" width="28" height="28" fill="none">
+          <path d="M32 4 L36 26 L58 26 L40 40 L46 60 L32 46 L18 60 L24 40 L6 26 L28 26 Z" stroke="#C8310A" stroke-width="1.5" fill="rgba(200,49,10,0.1)" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="6" fill="rgba(200,49,10,0.4)" stroke="#C8310A" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="locked-label">Thragg Threshold</div>
+      <div class="locked-sub" id="threshold-card-sub">All three standards required</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TIMELINE ══════════════ -->
+<div class="panel" id="panel-timeline">
+  <div class="page-head">
+    <h2>Progress <em>Timeline</em></h2>
+    <p>Weekly fitness score history with projected trajectory toward the Thragg Threshold.</p>
+  </div>
+
+  <div class="timeline-stats">
+    <div class="tstat"><span class="ts-val" id="ts-workouts">0</span><span class="ts-label">Sessions</span></div>
+    <div class="tstat"><span class="ts-val" id="ts-weeks">0</span><span class="ts-label">Weeks</span></div>
+    <div class="tstat"><span class="ts-val" id="ts-volume">0</span><span class="ts-label">Hours</span></div>
+    <div class="tstat"><span class="ts-val" id="ts-prs">0</span><span class="ts-label">PRs Set</span></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-head">
+      <span class="chart-title">Score Trajectory</span>
+      <div class="chart-tabs">
+        <button class="ctab active" onclick="setTLView('overall',this)">Overall</button>
+        <button class="ctab" onclick="setTLView('strong',this)">Strong</button>
+        <button class="ctab" onclick="setTLView('durable',this)">Durable</button>
+        <button class="ctab" onclick="setTLView('fast',this)">Fast</button>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="timeline-chart"></canvas></div>
+    <div style="display:flex;gap:14px;margin-top:10px;font-size:0.6rem;color:var(--iron);flex-wrap:wrap">
+      <span><span style="color:var(--accent)">■</span> Actual</span>
+      <span><span style="color:rgba(200,49,10,0.4)">■</span> Projected</span>
+      <span><span style="color:rgba(192,184,176,0.2)">■</span> Standard (100)</span>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-head"><span class="chart-title">Weekly Training Load</span></div>
+    <div class="chart-wrap" style="height:160px"><canvas id="load-chart"></canvas></div>
+  </div>
+
+  <div class="sec-label">PR &amp; Milestone Log</div>
+  <div class="milestone-list" id="milestone-list">
+    <div class="empty-state">No milestones recorded yet. Load training data to populate.</div>
+  </div>
+</div>
+
+<!-- ══════════════ PROGRAM ══════════════ -->
+<div class="panel" id="panel-program">
+  <div class="page-head">
+    <h2>12-Week <em>Training Block</em></h2>
+    <p>Periodized across Base, Build, Peak, and Deload. Adjust pillar priorities to regenerate the plan.</p>
+  </div>
+
+  <div class="priority-controls">
+    <div class="sec-label" style="margin-bottom:10px">Pillar Priority</div>
+    <div class="priority-grid">
+      <div class="prio-item">
+        <div class="prio-name strong">Strong</div>
+        <select class="prio-select" id="prio-strong" onchange="updatePriority()">
+          <option value="1">Priority 1 — Highest</option>
+          <option value="2" selected>Priority 2</option>
+          <option value="3">Priority 3 — Lowest</option>
+        </select>
+      </div>
+      <div class="prio-item">
+        <div class="prio-name durable">Durable</div>
+        <select class="prio-select" id="prio-durable" onchange="updatePriority()">
+          <option value="1">Priority 1 — Highest</option>
+          <option value="2">Priority 2</option>
+          <option value="3" selected>Priority 3 — Lowest</option>
+        </select>
+      </div>
+      <div class="prio-item">
+        <div class="prio-name fast">Fast</div>
+        <select class="prio-select" id="prio-fast" onchange="updatePriority()">
+          <option value="1" selected>Priority 1 — Highest</option>
+          <option value="2">Priority 2</option>
+          <option value="3">Priority 3 — Lowest</option>
+        </select>
+      </div>
+    </div>
+    <button class="regen-btn" onclick="regenerateProgram()">
+      <svg viewBox="0 0 20 20" width="14" height="14" fill="none"><path d="M4 10 A6 6 0 1 0 10 4" stroke="#E04418" stroke-width="1.5" stroke-linecap="round"/><path d="M10 4 L7 1 M10 4 L13 1" stroke="#E04418" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Regenerate Program
+      <div class="regen-spinner" id="regen-spinner"></div>
+    </button>
+  </div>
+
+  <div id="program-list"></div>
+</div>
+
+<!-- ══════════════ LOG ══════════════ -->
+<div class="panel" id="panel-log">
+  <div class="page-head">
+    <h2>Workout <em>Log</em></h2>
+    <p>All training sessions. Log manually, upload JSON, or sync with Supabase.</p>
+  </div>
+
+  <!-- Manual log form -->
+  <button class="log-add-btn" id="log-add-btn" onclick="toggleLogForm()">
+    <svg viewBox="0 0 20 20" width="14" height="14" fill="none"><line x1="10" y1="3" x2="10" y2="17" stroke="#E04418" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="10" x2="17" y2="10" stroke="#E04418" stroke-width="1.8" stroke-linecap="round"/></svg>
+    Log a Workout
+  </button>
+
+  <div class="log-form-card" id="log-form" style="display:none">
+    <div class="sec-label" style="margin-bottom:14px">New Session</div>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Date</label>
+        <input type="date" class="form-input" id="f-date">
+      </div>
+      <div class="form-field">
+        <label>Title</label>
+        <input type="text" class="form-input" id="f-title" placeholder="e.g. Heavy Deadlift">
+      </div>
+    </div>
+    <div class="form-grid-3">
+      <div class="form-field">
+        <label>Type</label>
+        <select class="form-select" id="f-type" onchange="onTypeChange()">
+          <option value="strength">Strength</option>
+          <option value="run">Run</option>
+          <option value="conditioning">Conditioning</option>
+          <option value="mobility">Mobility</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Pillar</label>
+        <select class="form-select" id="f-pillar">
+          <option value="strong">Strong</option>
+          <option value="durable">Durable</option>
+          <option value="fast">Fast</option>
+          <option value="mobility">Mobility</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Duration (min)</label>
+        <input type="number" class="form-input" id="f-duration" placeholder="60" min="1">
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Session #</label>
+        <select class="form-select" id="f-session">
+          <option value="1">Session 1</option>
+          <option value="2">Session 2 (two-a-day)</option>
+        </select>
+      </div>
+      <div class="form-field" id="f-vest-wrap" style="display:none">
+        <label>Vest Weight (lbs, 0 = none)</label>
+        <input type="number" class="form-input" id="f-vest" placeholder="0" min="0" value="0">
+      </div>
+      <div class="form-field" id="f-mile-wrap" style="display:none">
+        <label>Mile Time (MM:SS)</label>
+        <input type="text" class="form-input" id="f-mile" placeholder="6:30">
+      </div>
+    </div>
+    <div class="form-field" style="margin-bottom:14px">
+      <label>Notes</label>
+      <textarea class="form-textarea" id="f-notes" placeholder="How it felt, PRs, conditions..."></textarea>
+    </div>
+
+    <!-- Sets editor -->
+    <div class="sets-editor" id="sets-editor">
+      <div class="sec-label" style="margin-bottom:10px">Sets</div>
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 28px;gap:6px;margin-bottom:6px">
+        <span style="font-size:0.55rem;color:var(--iron);letter-spacing:0.1em;text-transform:uppercase">Exercise</span>
+        <span style="font-size:0.55rem;color:var(--iron);letter-spacing:0.1em;text-transform:uppercase">Sets</span>
+        <span style="font-size:0.55rem;color:var(--iron);letter-spacing:0.1em;text-transform:uppercase">Reps</span>
+        <span style="font-size:0.55rem;color:var(--iron);letter-spacing:0.1em;text-transform:uppercase">Wt (lb)</span>
+        <span></span>
+      </div>
+      <div id="sets-rows"></div>
+      <button class="set-add-btn" onclick="addSetRow()">+ Add Set</button>
+    </div>
+
+    <!-- Laps editor -->
+    <div class="laps-editor" id="laps-editor" style="display:none">
+      <div class="sec-label" style="margin-bottom:10px">Laps / Splits</div>
+      <div style="display:grid;grid-template-columns:auto 1fr 1fr 28px;gap:6px;margin-bottom:6px">
+        <span style="font-size:0.55rem;color:var(--iron);letter-spacing:0.1em;text-transform:uppercase">#</span>
+        <span style="font-size:0.55rem;color:var(--iron);letter-spacing:0.1em;text-transform:uppercase">Distance (mi)</span>
+        <span style="font-size:0.55rem;color:var(--iron);letter-spacing:0.1em;text-transform:uppercase">Time (MM:SS)</span>
+        <span></span>
+      </div>
+      <div id="laps-rows"></div>
+      <button class="set-add-btn" onclick="addLapRow()">+ Add Lap</button>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="toggleLogForm()">Cancel</button>
+      <button class="btn-save" onclick="saveWorkout()">Save Workout</button>
+    </div>
+  </div>
+
+  <!-- Upload -->
+  <div class="upload-card" id="upload-zone" onclick="document.getElementById('file-input').click()">
+    <svg class="uc-icon" viewBox="0 0 64 64" width="36" height="36" fill="none">
+      <rect x="12" y="36" width="40" height="18" rx="2" stroke="rgba(138,130,120,0.5)" stroke-width="1.2" fill="rgba(138,130,120,0.05)" stroke-dasharray="5 3"/>
+      <path d="M32 8 L32 34" stroke="#C8310A" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M22 18 L32 8 L42 18" stroke="#C8310A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="44" cy="48" r="4" fill="rgba(200,49,10,0.2)" stroke="#C8310A" stroke-width="1"/>
+    </svg>
+    <div class="uc-title">Upload Training Log</div>
+    <div class="uc-sub">Drop thragg_log.json here, or tap to browse · merges with existing data</div>
+    <div class="upload-actions" onclick="event.stopPropagation()">
+      <button class="btn-ghost" onclick="document.getElementById('file-input').click()">Browse files</button>
+    </div>
+  </div>
+  <input type="file" id="file-input" accept=".json">
+  <div class="ok-strip" id="ok-strip"></div>
+
+  <div class="filter-bar">
+    <button class="fpill active" onclick="filterLog('all',this)">All</button>
+    <button class="fpill" onclick="filterLog('strong',this)">Strong</button>
+    <button class="fpill" onclick="filterLog('durable',this)">Durable</button>
+    <button class="fpill" onclick="filterLog('fast',this)">Fast</button>
+    <button class="fpill" onclick="filterLog('mobility',this)">Mobility</button>
+  </div>
+  <div class="workout-table" id="workout-table">
+    <div class="empty-state">No workouts logged yet. Add one above or upload a JSON file.</div>
+  </div>
+</div>
+
+<!-- ══════════════ SETTINGS ══════════════ -->
+<div class="panel" id="panel-settings">
+  <div class="page-head">
+    <h2>Settings &amp; <em>Integrations</em></h2>
+    <p>Configure Supabase for persistent cloud storage. Without it, data lives only in this browser session.</p>
+  </div>
+
+  <div class="sb-config-card">
+    <div class="sb-config-title">Supabase Connection</div>
+    <div class="sb-config-row">
+      <div class="form-field">
+        <label>Project URL</label>
+        <input type="text" class="form-input" id="sb-url" placeholder="https://xxxx.supabase.co">
+      </div>
+      <div class="form-field">
+        <label>Anon Key</label>
+        <input type="password" class="form-input" id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIs...">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="sb-test-btn" onclick="testSupabase()">Test Connection</button>
+      <button class="btn-primary" onclick="saveSupabaseConfig()">Save &amp; Connect</button>
+    </div>
+    <div class="sb-status-msg" id="sb-msg"></div>
+  </div>
+
+  <div class="sb-config-card">
+    <div class="sb-config-title">Supabase Setup Guide</div>
+    <div style="font-size:0.7rem;color:var(--iron);line-height:1.8">
+      <p style="margin-bottom:8px">Add a <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;font-family:'DM Mono',monospace;color:var(--armor)">supabase.js</code> file to your GitHub repo with this structure:</p>
+      <pre style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:0.62rem;font-family:'DM Mono',monospace;color:var(--armor);overflow-x:auto;line-height:1.7">// supabase.js
+// Add this script tag to index.html BEFORE closing &lt;/body&gt;:
+// &lt;script src="supabase.js"&gt;&lt;/script&gt;
+
+const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+const SUPABASE_KEY = 'YOUR_ANON_KEY';
+
+// Tables needed in your Supabase project:
+// actual_workouts  — main workout records
+// set_logs         — embedded sets (FK: workout_id)
+// lap_logs         — embedded laps (FK: workout_id)
+// pr_ledger        — personal records
+// milestones       — milestone events
+
+// The app reads SUPABASE_URL and SUPABASE_KEY from window scope.
+// It will attempt to connect on load if both are present.</pre>
+      <p style="margin-top:10px;font-size:0.65rem;color:var(--iron)">
+        SQL schema file: add <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;font-family:'DM Mono',monospace;color:var(--armor)">schema.sql</code> to your repo root.
+        A starter schema is generated below based on the Thragg data model.
       </p>
-      <div id="priority-controls"></div>
-      <div style="display:flex;align-items:center;margin-top:12px;gap:10px;">
-        <button class="btn btn-primary" onclick="regenerateProgram()">⚔ Regenerate Program</button>
-        <div class="regen-spinner" id="regen-spinner"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">12-Week Training Program</div>
-      <div id="program-weeks"></div>
-    </div>
-
-  </div>
-
-  <!-- ============ LOG PANEL ============ -->
-  <div class="panel" id="panel-log">
-
-    <div class="card">
-      <div class="card-title">Load Training Data</div>
-      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
-        <span class="upload-icon">🩸</span>
-        <div class="upload-text">Drop JSON log file here or tap to select</div>
-        <div class="dim mt-8" style="font-size:0.65rem;margin-top:8px">thragg_log.json · Merges with existing data</div>
-      </div>
-      <input type="file" id="file-input" accept=".json">
-      <div id="upload-status"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Workout Log</div>
-      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-        <button class="btn" onclick="filterLog('all')" id="log-btn-all">All</button>
-        <button class="btn" onclick="filterLog('strong')" id="log-btn-strong">Strong</button>
-        <button class="btn" onclick="filterLog('durable')" id="log-btn-durable">Durable</button>
-        <button class="btn" onclick="filterLog('fast')" id="log-btn-fast">Fast</button>
-        <button class="btn" onclick="filterLog('mobility')" id="log-btn-mobility">Mobility</button>
-      </div>
-      <div id="workout-list">
-        <div class="dim" style="font-size:0.75rem">No workouts loaded. Drop a JSON file above.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">JSON Format Reference</div>
-      <pre style="font-size:0.6rem;color:var(--bone-dim);line-height:1.6;overflow-x:auto;font-family:'Share Tech Mono',monospace">{
-  "workouts": [
-    {
-      "id": "w100",
-      "date": "2025-04-01",
-      "session": 1,
-      "type": "strength",
-      "pillar": "strong",
-      "title": "Deadlift Day",
-      "duration": 65,
-      "notes": "Optional notes",
-      "sets": [
-        { "exercise": "Deadlift", "sets": 3, "reps": 5, "weight": 315 }
-      ],
-      "laps": [
-        { "lap": 1, "distance_mi": 1.0, "time_sec": 480 }
-      ]
-    }
-  ]
-}</pre>
     </div>
   </div>
 
-</div><!-- /main -->
+  <div class="sb-config-card">
+    <div class="sb-config-title">Starter SQL Schema (copy into Supabase SQL editor)</div>
+    <pre style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:0.6rem;font-family:'DM Mono',monospace;color:var(--armor);overflow-x:auto;line-height:1.8;white-space:pre-wrap">-- THRAGG PROTOCOL — Supabase Schema v2
+-- Run this in your Supabase project SQL editor
+
+create table if not exists actual_workouts (
+  id               text primary key,
+  planned_workout_id text,
+  program_id       text,
+  date             date not null,
+  session          int default 1,
+  type             text not null,  -- strength|run|conditioning|mobility
+  pillar           text not null,  -- strong|durable|fast|mobility
+  title            text,
+  duration         int,
+  notes            text,
+  vest_weight_lbs  int default 0,
+  mile_time_sec    int,
+  deviation_from_plan text default 'none',
+  sets             jsonb default '[]',
+  laps             jsonb default '[]',
+  created_at       timestamptz default now()
+);
+
+create table if not exists pr_ledger (
+  id               text primary key,
+  workout_id       text references actual_workouts(id),
+  metric           text not null,  -- deadlift|squat|bench|mile_time|murph_time
+  value            float not null,
+  date             date not null,
+  vest_worn        boolean default false,
+  previous_pr      float,
+  created_at       timestamptz default now()
+);
+
+create table if not exists milestones (
+  id               text primary key,
+  workout_id       text references actual_workouts(id),
+  type             text not null,  -- threshold_met|phase_complete|pr_set|streak
+  pillar           text,
+  label            text not null,
+  date             date not null,
+  threshold_value  float,
+  created_at       timestamptz default now()
+);
+
+-- Enable Row Level Security (RLS) — single user, no auth needed for personal use
+alter table actual_workouts enable row level security;
+alter table pr_ledger       enable row level security;
+alter table milestones      enable row level security;
+
+-- Allow all operations from anon key (personal use only)
+create policy "allow_all" on actual_workouts for all using (true) with check (true);
+create policy "allow_all" on pr_ledger       for all using (true) with check (true);
+create policy "allow_all" on milestones      for all using (true) with check (true);</pre>
+  </div>
+
+  <div class="sb-config-card">
+    <div class="sb-config-title">Data Management</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-ghost" onclick="exportJSON()">Export JSON</button>
+      <button class="btn-ghost" onclick="clearLocalData()">Clear Local Data</button>
+    </div>
+    <div style="font-size:0.62rem;color:var(--iron);margin-top:8px">
+      Export downloads your current session data as a JSON file compatible with the log uploader.
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
 
 <script>
-// ============================================================
-// STATE
-// ============================================================
+// ══════════════════════════════════════════════════════════════
+// THRAGG PROTOCOL v2 — Core State
+// ══════════════════════════════════════════════════════════════
+const GOALS = { deadlift:405, squat:315, bench:225, mileSec:360 };
+
 let state = {
   workouts: [],
-  priorities: { durable: 2, strong: 1, fast: 3 },
+  priorities: { strong:2, durable:3, fast:1 },
   program: [],
-  scores: { overall: 0, durable: 0, strong: 0, fast: 0 },
-  prs: { deadlift: 0, squat: 0, bench: 0, mileSec: 0, murphDone: false },
-  timelineView: 'overall',
+  scores: { overall:0, strong:0, durable:0, fast:0 },
+  prs: { deadlift:0, squat:0, bench:0, mileSec:0, murphDone:false, murphTime:0, pullUps:0 },
+  prHistory: [],
+  milestones: [],
+  tlView: 'overall',
   logFilter: 'all',
+  supabase: { url:'', key:'', connected:false },
 };
 
-const GOALS = { deadlift: 405, squat: 315, bench: 225, mileSec: 360 }; // 6:00
+// ── Supabase config (optionally injected by supabase.js) ──────
+if (typeof SUPABASE_URL !== 'undefined') state.supabase.url = SUPABASE_URL;
+if (typeof SUPABASE_KEY !== 'undefined') state.supabase.key = SUPABASE_KEY;
 
-// ============================================================
+// ══════════════════════════════════════════════════════════════
 // NAV
-// ============================================================
-function switchPanel(name, btn) {
+// ══════════════════════════════════════════════════════════════
+function go(panel, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (name === 'timeline') renderTimeline();
-  if (name === 'score') animateRings();
-  if (name === 'program') renderProgram();
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + panel).classList.add('active');
+  btn.classList.add('active');
+  if (panel === 'timeline') { buildTimeline(); buildLoadChart(); buildMilestoneList(); }
+  if (panel === 'program' && !state.program.length) regenerateProgram(true);
 }
 
-// ============================================================
-// FILE LOADING
-// ============================================================
+// ══════════════════════════════════════════════════════════════
+// SCORES
+// ══════════════════════════════════════════════════════════════
+function computeScores() {
+  if (!state.workouts.length) return;
+  state.prs = extractPRs();
+  detectMilestones();
+
+  const dlPct  = state.prs.deadlift > 0 ? Math.min(state.prs.deadlift / GOALS.deadlift, 1) : 0;
+  const sqPct  = state.prs.squat    > 0 ? Math.min(state.prs.squat    / GOALS.squat,    1) : 0;
+  const bnPct  = state.prs.bench    > 0 ? Math.min(state.prs.bench    / GOALS.bench,    1) : 0;
+  const miPct  = state.prs.mileSec  > 0 ? Math.min(GOALS.mileSec / state.prs.mileSec,   1) : 0;
+  const muPct  = state.prs.murphDone ? 1.0 : Math.min(state.prs.pullUps / 100 * 0.7, 0.9);
+
+  const ctl = computeCTL();
+  const ctlNorm = v => Math.min(v / 80, 1);
+
+  state.scores.strong  = Math.round(((dlPct*0.4 + sqPct*0.35 + bnPct*0.25)*0.65 + ctlNorm(ctl.strong)*0.35)  * 100);
+  state.scores.durable = Math.round((muPct * 0.65 + ctlNorm(ctl.durable) * 0.35) * 100);
+  state.scores.fast    = Math.round((miPct * 0.65 + ctlNorm(ctl.fast)    * 0.35) * 100);
+
+  const w = priorityWeights();
+  state.scores.overall = Math.round(
+    state.scores.strong  * w.strong  +
+    state.scores.durable * w.durable +
+    state.scores.fast    * w.fast
+  );
+}
+
+function computeCTL() {
+  const now = new Date();
+  const buckets = { strong:0, durable:0, fast:0, mobility:0 };
+  state.workouts.forEach(w => {
+    const days = (now - new Date(w.date)) / 86400000;
+    if (days < 120) {
+      const tss = ((w.duration||45)/60) * (w.type==='run'?1.2:w.type==='conditioning'?1.1:w.type==='strength'?1.0:0.6) * 100;
+      buckets[w.pillar] = (buckets[w.pillar]||0) + tss * Math.exp(-days/42);
+    }
+  });
+  return buckets;
+}
+
+function priorityWeights() {
+  const inv = v => 1/(v||1);
+  const { strong:s, durable:d, fast:f } = state.priorities;
+  const sum = inv(s)+inv(d)+inv(f);
+  return { strong:inv(s)/sum, durable:inv(d)/sum, fast:inv(f)/sum };
+}
+
+function extractPRs() {
+  let dl=0, sq=0, bn=0, mi=9999, murph=false, murphTime=0, pu=0;
+  state.workouts.forEach(w => {
+    (w.sets||[]).forEach(s => {
+      const ex = (s.exercise||'').toLowerCase();
+      const wt = s.weight||0;
+      if (!s.is_warmup) {
+        if ((ex==='deadlift'||ex==='conventional deadlift') && wt > dl) dl = wt;
+        if (ex.includes('back squat') && wt > sq) sq = wt;
+        if (ex.includes('bench press') && !ex.includes('incline') && !ex.includes('close') && wt > bn) bn = wt;
+        if (ex.includes('pull-up')||ex.includes('pullup')) pu += (s.sets||1)*(s.reps||0);
+      }
+    });
+    if (w.mile_time_sec && w.mile_time_sec < mi) mi = w.mile_time_sec;
+    if ((w.type==='conditioning'||w.type==='run') && w.laps?.length>=2) {
+      const totalSec = w.laps.slice(0,4).reduce((a,l)=>a+l.time_sec,0);
+      const totalDist = w.laps.slice(0,4).reduce((a,l)=>a+l.distance_mi,0);
+      if (Math.abs(totalDist-1.0)<0.05 && totalSec < mi) mi = totalSec;
+    }
+    const title = (w.title||'').toLowerCase();
+    if (title.includes('murph') && w.duration>=40) {
+      murph = true;
+      if (!murphTime || w.duration < murphTime) murphTime = w.duration;
+    }
+  });
+  return { deadlift:dl, squat:sq, bench:bn, mileSec:mi===9999?0:mi, murphDone:murph, murphTime, pullUps:pu };
+}
+
+function detectMilestones() {
+  const ms = [];
+  const p = state.prs;
+  if (p.deadlift >= 315) ms.push({ type:'pr_set', pillar:'strong', label:`Deadlift PR — ${p.deadlift} lb`, date: lastDateForLift('deadlift') });
+  if (p.squat    >= 225) ms.push({ type:'pr_set', pillar:'strong', label:`Squat PR — ${p.squat} lb`,    date: lastDateForLift('squat') });
+  if (p.bench    >= 185) ms.push({ type:'pr_set', pillar:'strong', label:`Bench PR — ${p.bench} lb`,    date: lastDateForLift('bench') });
+  if (p.murphDone) ms.push({ type:'pr_set', pillar:'durable', label:`Murph Completed — ${p.murphTime} min`, date: lastMurphDate() });
+  if (p.mileSec > 0) ms.push({ type:'pr_set', pillar:'fast', label:`Mile Time Trial — ${fmtTime(p.mileSec)}`, date: lastMileDate() });
+  state.milestones = ms.sort((a,b) => b.date.localeCompare(a.date));
+}
+
+function lastDateForLift(lift) {
+  const ex = lift==='deadlift' ? 'deadlift' : lift==='squat' ? 'back squat' : 'bench press';
+  const w = [...state.workouts].reverse().find(w => (w.sets||[]).some(s => (s.exercise||'').toLowerCase().includes(ex) && !s.is_warmup && s.weight > 0));
+  return w ? w.date : '';
+}
+function lastMurphDate() { const w = [...state.workouts].reverse().find(w => (w.title||'').toLowerCase().includes('murph') && w.duration>=40); return w ? w.date : ''; }
+function lastMileDate()  { const w = [...state.workouts].reverse().find(w => w.mile_time_sec); return w ? w.date : ''; }
+function fmtTime(s) { if(!s) return '—'; return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
+
+// ══════════════════════════════════════════════════════════════
+// SCORE PANEL UPDATE
+// ══════════════════════════════════════════════════════════════
+function updateScorePanel() {
+  const p = state.prs;
+  const s = state.scores;
+
+  // Chip
+  document.getElementById('chip-score').textContent = s.overall || '—';
+
+  // Strength metrics
+  setMetric('dl',  p.deadlift, GOALS.deadlift, 'lb');
+  setMetric('sq',  p.squat,    GOALS.squat,    'lb');
+  setMetric('bn',  p.bench,    GOALS.bench,    'lb');
+
+  // Pillar cards
+  ['strong','durable','fast'].forEach(k => {
+    const sc = s[k] || 0;
+    document.getElementById('sc-'+k).textContent = sc;
+    setTimeout(() => { document.getElementById('pf-'+k).style.width = sc + '%'; }, 100);
+  });
+
+  // Speed & durability
+  const mileEl = document.getElementById('mile-val');
+  mileEl.textContent = p.mileSec > 0 ? fmtTime(p.mileSec) : '—';
+  const milePct = p.mileSec > 0 ? Math.min(GOALS.mileSec / p.mileSec, 1) * 100 : 0;
+  const mileGap = p.mileSec > 0 ? fmtTime(p.mileSec - GOALS.mileSec) : '—';
+  document.getElementById('mile-tag').textContent = p.mileSec > 0 ? (p.mileSec <= GOALS.mileSec ? '✓ MET' : `+${mileGap}`) : '—';
+  document.getElementById('mile-tag').className = 'mc-tag ' + (p.mileSec <= GOALS.mileSec && p.mileSec>0 ? 'tag-met' : 'tag-behind');
+  setTimeout(() => { document.getElementById('bar-mile').style.width = milePct + '%'; }, 100);
+
+  const murphEl = document.getElementById('murph-val');
+  murphEl.textContent = p.murphDone ? (p.murphTime ? p.murphTime + ' min' : 'Done') : 'Incomplete';
+  document.getElementById('bar-murph').style.width = p.murphDone ? '100%' : Math.min(p.pullUps/100*70, 90) + '%';
+  const murphTag = document.getElementById('murph-tag');
+  if (p.murphDone) { murphTag.textContent = '✓ MET'; murphTag.className = 'mc-tag tag-met'; murphTag.style.display=''; }
+
+  // Threshold
+  const allMet = p.deadlift >= GOALS.deadlift && p.squat >= GOALS.squat && p.bench >= GOALS.bench && p.mileSec > 0 && p.mileSec <= GOALS.mileSec && p.murphDone;
+  document.getElementById('threshold-status').textContent = allMet ? 'UNLOCKED' : 'LOCKED';
+  document.getElementById('threshold-status').className = 'tb-status' + (allMet ? ' unlocked' : '');
+  document.getElementById('threshold-sub').textContent = allMet
+    ? 'All three standards achieved. Thragg would not be impressed. That is the point.'
+    : buildThresholdSub();
+  document.getElementById('threshold-card-sub').textContent = allMet ? 'ACHIEVED' : 'All three standards required';
+}
+
+function setMetric(id, cur, goal, unit) {
+  const pct = cur > 0 ? Math.min(cur/goal, 1)*100 : 0;
+  const gap = goal - cur;
+  document.getElementById(id+'-val').textContent = cur > 0 ? cur : '—';
+  document.getElementById(id+'-goal').textContent = `Goal: ${goal} ${unit} · ${Math.round(pct)}% there`;
+  document.getElementById(id+'-tag').textContent = cur > 0 ? (cur >= goal ? '✓ MET' : `−${gap} ${unit}`) : '—';
+  document.getElementById(id+'-tag').className = 'mc-tag ' + (cur >= goal ? 'tag-met' : 'tag-behind');
+  setTimeout(() => { document.getElementById('bar-'+id).style.width = pct + '%'; }, 100);
+  if (cur >= goal) {
+    document.getElementById(id+'-val').closest('.mc').classList.remove('accent-card');
+    document.getElementById(id+'-val').closest('.mc').classList.add('met-card');
+    document.getElementById('bar-'+id).className = 'mc-bar bar-met';
+  }
+}
+
+function buildThresholdSub() {
+  const p = state.prs;
+  const remaining = [];
+  if (p.deadlift < GOALS.deadlift) remaining.push(`Deadlift ${GOALS.deadlift - p.deadlift} lb short`);
+  if (p.squat    < GOALS.squat)    remaining.push(`Squat ${GOALS.squat - p.squat} lb short`);
+  if (p.bench    < GOALS.bench)    remaining.push(`Bench ${GOALS.bench - p.bench} lb short`);
+  if (!p.murphDone) remaining.push('Murph not completed');
+  if (!p.mileSec || p.mileSec > GOALS.mileSec) remaining.push(`Mile ${p.mileSec > 0 ? fmtTime(p.mileSec - GOALS.mileSec) + ' over target' : 'not tested'}`);
+  return remaining.join(' · ') || 'Loading...';
+}
+
+// ══════════════════════════════════════════════════════════════
+// TIMELINE
+// ══════════════════════════════════════════════════════════════
+let tlChart = null, loadChart = null;
+
+function setTLView(v, btn) {
+  state.tlView = v;
+  document.querySelectorAll('.ctab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildTimeline();
+}
+
+function buildTimeline() {
+  // Stats
+  const totalHrs = Math.round(state.workouts.reduce((a,w) => a+(w.duration||0), 0) / 60 * 10) / 10;
+  const weeks = new Set(state.workouts.map(w => w.date.slice(0,7))).size;
+  document.getElementById('ts-workouts').textContent = state.workouts.length;
+  document.getElementById('ts-weeks').textContent    = weeks;
+  document.getElementById('ts-volume').textContent   = totalHrs;
+  document.getElementById('ts-prs').textContent      = state.milestones.length;
+
+  const ctx = document.getElementById('timeline-chart');
+  if (!ctx) return;
+
+  const weekly = buildWeeklyScores();
+  const labels  = weekly.map(w => w.label);
+  const actual  = weekly.map(w => w[state.tlView]);
+  const proj    = projectScores(weekly, state.tlView);
+  const allLbls = [...labels, ...proj.labels];
+  const actData = [...actual,  ...Array(proj.labels.length).fill(null)];
+  const prjData = [...Array(labels.length-1).fill(null), actual[actual.length-1]||0, ...proj.values];
+
+  if (tlChart) tlChart.destroy();
+  Chart.defaults.color = '#58504A';
+  Chart.defaults.borderColor = 'rgba(138,130,120,0.1)';
+  tlChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: allLbls,
+      datasets:[
+        { label:'Actual', data:actData, borderColor:'#C8310A', backgroundColor:'rgba(200,49,10,0.06)', borderWidth:2, pointRadius:3, pointBackgroundColor:'#C8310A', tension:0.3, fill:true },
+        { label:'Projected', data:prjData, borderColor:'rgba(200,49,10,0.4)', borderWidth:1.5, borderDash:[5,4], pointRadius:2, tension:0.3, fill:false },
+        { label:'Standard', data:Array(allLbls.length).fill(100), borderColor:'rgba(192,184,176,0.15)', borderWidth:1, borderDash:[8,6], pointRadius:0, fill:false }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ backgroundColor:'rgba(14,12,11,0.97)', borderColor:'rgba(200,49,10,0.4)', borderWidth:1, titleColor:'#C8310A', bodyColor:'#C0B8B0', titleFont:{family:'Cinzel,serif',size:11} }},
+      scales:{
+        x:{ grid:{color:'rgba(138,130,120,0.07)'}, ticks:{font:{size:8},color:'#58504A'} },
+        y:{ min:0, max:110, grid:{color:'rgba(138,130,120,0.07)'}, ticks:{font:{size:8},color:'#58504A'} }
+      }
+    }
+  });
+}
+
+function buildWeeklyScores() {
+  if (!state.workouts.length) return Array.from({length:4},(_,i)=>({label:`W${i+1}`,overall:0,strong:0,durable:0,fast:0}));
+  const sorted = [...state.workouts].sort((a,b)=>a.date.localeCompare(b.date));
+  const start = new Date(sorted[0].date);
+  const end   = new Date(sorted[sorted.length-1].date);
+  const result = [];
+  const cur = new Date(start);
+  while (cur <= end) {
+    const wkEnd = new Date(cur); wkEnd.setDate(wkEnd.getDate()+7);
+    const slice = sorted.filter(w => new Date(w.date) <= wkEnd);
+    const snap = computeSnap(slice);
+    result.push({ label: cur.toLocaleDateString('en-US',{month:'short',day:'numeric'}), ...snap });
+    cur.setDate(cur.getDate()+7);
+  }
+  return result;
+}
+
+function computeSnap(workouts) {
+  if (!workouts.length) return {overall:0,strong:0,durable:0,fast:0};
+  const savedW = state.workouts, savedS = {...state.scores}, savedP = {...state.prs};
+  state.workouts = workouts;
+  computeScores();
+  const snap = {...state.scores};
+  state.workouts = savedW; state.scores = savedS; state.prs = savedP;
+  return snap;
+}
+
+function projectScores(weekly, key) {
+  if (weekly.length < 2) return {labels:[],values:[]};
+  const recent = weekly.slice(-Math.min(6,weekly.length));
+  const n = recent.length;
+  const xs = recent.map((_,i)=>i), ys = recent.map(w=>w[key]);
+  const mX = xs.reduce((a,b)=>a+b,0)/n, mY = ys.reduce((a,b)=>a+b,0)/n;
+  const slope = xs.reduce((s,x,i)=>s+(x-mX)*(ys[i]-mY),0) / (xs.reduce((s,x)=>s+(x-mX)**2,0)||1);
+  const intercept = mY - slope * mX;
+  const labels=[], values=[];
+  const last = new Date(state.workouts[state.workouts.length-1].date);
+  for (let i=1; i<=16; i++) {
+    const d = new Date(last); d.setDate(d.getDate()+i*7);
+    labels.push(d.toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+    values.push(Math.max(0,Math.min(105,Math.round((intercept+slope*(n-1+i))*10)/10)));
+  }
+  return {labels,values};
+}
+
+function buildLoadChart() {
+  const ctx = document.getElementById('load-chart');
+  if (!ctx || !state.workouts.length) return;
+  const weeks = {};
+  state.workouts.forEach(w => {
+    const d = new Date(w.date);
+    const wk = `${d.getFullYear()}-W${Math.ceil((((d - new Date(d.getFullYear(),0,1))/86400000) + new Date(d.getFullYear(),0,1).getDay()+1)/7)}`;
+    if (!weeks[wk]) weeks[wk] = {strong:0,durable:0,fast:0,mobility:0};
+    weeks[wk][w.pillar] = (weeks[wk][w.pillar]||0) + (w.duration||0);
+  });
+  const labels = Object.keys(weeks).slice(-12);
+  if (loadChart) loadChart.destroy();
+  loadChart = new Chart(ctx, {
+    type:'bar',
+    data:{ labels:labels.map(l=>l.split('-')[1]),
+      datasets:[
+        {label:'Strong',   data:labels.map(l=>weeks[l]?.strong||0),   backgroundColor:'rgba(138,130,120,0.5)', stack:'l'},
+        {label:'Durable',  data:labels.map(l=>weeks[l]?.durable||0),  backgroundColor:'rgba(200,49,10,0.55)',  stack:'l'},
+        {label:'Fast',     data:labels.map(l=>weeks[l]?.fast||0),     backgroundColor:'rgba(192,184,176,0.35)',stack:'l'},
+        {label:'Mobility', data:labels.map(l=>weeks[l]?.mobility||0), backgroundColor:'rgba(106,122,106,0.35)',stack:'l'},
+      ]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{stacked:true,grid:{display:false},ticks:{font:{size:8},color:'#58504A'}}, y:{stacked:true,grid:{color:'rgba(138,130,120,0.07)'},ticks:{font:{size:8},color:'#58504A',callback:v=>v+'m'}} }
+    }
+  });
+}
+
+function buildMilestoneList() {
+  const cont = document.getElementById('milestone-list');
+  if (!state.milestones.length) { cont.innerHTML = '<div class="empty-state">No milestones recorded yet.</div>'; return; }
+  cont.innerHTML = state.milestones.map(m => `
+    <div class="milestone">
+      <div class="m-dot ${m.pillar}"></div>
+      <div class="m-info">
+        <div class="m-title">${m.label}</div>
+        <div class="m-sub">${m.date || ''}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+// PROGRAM
+// ══════════════════════════════════════════════════════════════
+function updatePriority() {
+  state.priorities.strong  = parseInt(document.getElementById('prio-strong').value);
+  state.priorities.durable = parseInt(document.getElementById('prio-durable').value);
+  state.priorities.fast    = parseInt(document.getElementById('prio-fast').value);
+}
+
+function regenerateProgram(silent=false) {
+  const spinner = document.getElementById('regen-spinner');
+  spinner.style.display = 'inline-block';
+  setTimeout(() => {
+    updatePriority();
+    state.program = buildProgram();
+    renderProgram();
+    spinner.style.display = 'none';
+  }, silent ? 0 : 500);
+}
+
+const PHASES = ['BASE','BASE','BASE','BASE','BUILD','BUILD','BUILD','BUILD','PEAK','PEAK','PEAK','DELOAD'];
+
+function buildProgram() {
+  const w = priorityWeights();
+  const total = 5;
+  const sS = Math.max(1,Math.round(w.strong*total));
+  const dS = Math.max(1,Math.round(w.durable*total));
+  const fS = Math.max(1,Math.round(w.fast*total));
+
+  return Array.from({length:12},(_,i) => {
+    const phase = PHASES[i];
+    const intMod = i<4?0.7:i<8?0.85:i<11?1.0:0.6;
+    return { week:i+1, phase, days: buildWeekDays(sS,dS,fS,phase,intMod,i+1) };
+  });
+}
+
+function buildWeekDays(ss,ds,fs,phase,intMod,wk) {
+  const tpl = {
+    strong:{
+      BASE:['Deadlift 5×5 @60% + RDL 3×8','Squat 5×5 @60% + Pull-ups 4×6','Bench 5×5 @60% + Row 4×8'],
+      BUILD:['Deadlift 4×3 @75% + Deficit DL 3×5','Squat 4×4 @75% + Front Squat 3×5','Bench 4×4 @75% + DB Incline 3×8'],
+      PEAK:['Deadlift wave 3/2/1 @85/90/95%','Squat 3×3 @85% + Box Squat 3×3','Bench 3×3 @87% + Board Press 3×3'],
+      DELOAD:['Deadlift 3×5 @50%','Squat 3×5 @50%']
+    },
+    durable:{
+      BASE:['Murph Sim 50% — 5/10/15 ×10','Pull-up ladder + 100 push-ups + 150 squats'],
+      BUILD:['Murph Sim 75% (no vest) — 5/10/15 ×15','Vest Murph sim 50% — 5/10/15 ×10'],
+      PEAK:['Full Murph (no vest) — time trial','Full Murph with 20 lb vest'],
+      DELOAD:['30-min easy calisthenics circuit']
+    },
+    fast:{
+      BASE:['Zone 2 — 3 miles easy','4×400m @ 5K effort + strides'],
+      BUILD:['Tempo: 1mi easy + 1mi hard + 1mi easy','6×400m @ goal pace + 10 sec'],
+      PEAK:['Mile time trial','8×200m @ goal pace, 90-sec rest'],
+      DELOAD:['2mi easy jog','Strides 6×50m']
+    },
+    mobility:{ BASE:['ATG: tibialis + split squat + nordic'],BUILD:['Loaded mobility + hip 90/90'],PEAK:['Full ROM pre-lift circuit'],DELOAD:['Restorative stretch 20 min'] }
+  };
+  const pool = [];
+  for(let i=0;i<ss;i++) pool.push({pillar:'strong',  label:(tpl.strong[phase]||tpl.strong.BASE)[wk%((tpl.strong[phase]||tpl.strong.BASE).length)]});
+  for(let i=0;i<ds;i++) pool.push({pillar:'durable', label:(tpl.durable[phase]||tpl.durable.BASE)[wk%((tpl.durable[phase]||tpl.durable.BASE).length)]});
+  for(let i=0;i<fs;i++) pool.push({pillar:'fast',    label:(tpl.fast[phase]||tpl.fast.BASE)[wk%((tpl.fast[phase]||tpl.fast.BASE).length)]});
+  pool.push({pillar:'mobility', label:(tpl.mobility[phase]||tpl.mobility.BASE)[0]});
+
+  const days = Array.from({length:7},(_,i)=>({day:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i],workouts:[]}));
+  const slots = [0,2,4,1,5,3,6];
+  pool.slice(0,7).forEach((w,i) => days[slots[i]%7].workouts.push(w));
+  return days;
+}
+
+const PILLAR_COLORS = { strong:'#8A8278', durable:'#C8310A', fast:'#C0B8B0', mobility:'#6A7A6A' };
+
+function renderProgram() {
+  const cont = document.getElementById('program-list');
+  if (!state.program.length) { cont.innerHTML = ''; return; }
+  cont.innerHTML = state.program.map(wk => `
+    <div class="week-card">
+      <div class="wc-head" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="wc-num">Week ${wk.week}</span>
+        <span class="wc-phase ph-${wk.phase.toLowerCase()}">${wk.phase}</span>
+      </div>
+      <div class="wc-body">
+        ${wk.days.map(d => `
+          <div class="day-row">
+            <span class="dr-day">${d.day}</span>
+            <span class="dr-work" style="color:${d.workouts.length ? PILLAR_COLORS[d.workouts[0].pillar] : 'var(--iron)'}">
+              ${d.workouts.length ? d.workouts.map(w=>w.label).join(' + ') : 'Rest / Recovery'}
+            </span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+// LOG FORM
+// ══════════════════════════════════════════════════════════════
+let setCount = 0, lapCount = 0;
+
+function toggleLogForm() {
+  const form = document.getElementById('log-form');
+  if (form.style.display === 'none') {
+    form.style.display = 'block';
+    // Set default date to today
+    const today = new Date().toISOString().slice(0,10);
+    document.getElementById('f-date').value = today;
+    setCount = 0; lapCount = 0;
+    document.getElementById('sets-rows').innerHTML = '';
+    document.getElementById('laps-rows').innerHTML = '';
+    addSetRow();
+    onTypeChange();
+    form.scrollIntoView({behavior:'smooth',block:'start'});
+  } else {
+    form.style.display = 'none';
+  }
+}
+
+function onTypeChange() {
+  const type = document.getElementById('f-type').value;
+  const isRun = type === 'run';
+  const isCond = type === 'conditioning';
+  const isMobility = type === 'mobility';
+  document.getElementById('sets-editor').style.display = isRun ? 'none' : 'block';
+  document.getElementById('laps-editor').style.display = (isRun || isCond) ? 'block' : 'none';
+  document.getElementById('f-vest-wrap').style.display = isCond ? '' : 'none';
+  document.getElementById('f-mile-wrap').style.display = isRun ? '' : 'none';
+  // Auto-set pillar
+  const pillarMap = { strength:'strong', run:'fast', conditioning:'durable', mobility:'mobility' };
+  document.getElementById('f-pillar').value = pillarMap[type] || 'strong';
+}
+
+function addSetRow() {
+  setCount++;
+  const row = document.createElement('div');
+  row.className = 'set-row'; row.dataset.idx = setCount;
+  row.innerHTML = `
+    <input type="text"   class="form-input" placeholder="Exercise name" data-field="exercise">
+    <input type="number" class="form-input" placeholder="3" min="1" data-field="sets">
+    <input type="number" class="form-input" placeholder="5" min="1" data-field="reps">
+    <input type="number" class="form-input" placeholder="225" min="0" data-field="weight">
+    <button class="set-remove" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('sets-rows').appendChild(row);
+}
+
+function addLapRow() {
+  lapCount++;
+  const row = document.createElement('div');
+  row.className = 'lap-row'; row.dataset.lap = lapCount;
+  row.innerHTML = `
+    <span class="lap-num">${lapCount}</span>
+    <input type="number" class="form-input" placeholder="1.0" step="0.01" min="0" data-field="distance_mi">
+    <input type="text"   class="form-input" placeholder="8:30" data-field="time">
+    <button class="set-remove" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('laps-rows').appendChild(row);
+}
+
+function parseTimeInput(str) {
+  if (!str) return 0;
+  const parts = str.split(':');
+  if (parts.length === 2) return parseInt(parts[0])*60 + parseInt(parts[1]||0);
+  return parseInt(str)||0;
+}
+
+function saveWorkout() {
+  const date  = document.getElementById('f-date').value;
+  const title = document.getElementById('f-title').value.trim();
+  if (!date) { alert('Please enter a date.'); return; }
+
+  const id = 'w' + Date.now();
+  const workout = {
+    id,
+    planned_workout_id: null,
+    program_id: null,
+    date,
+    session: parseInt(document.getElementById('f-session').value),
+    type:    document.getElementById('f-type').value,
+    pillar:  document.getElementById('f-pillar').value,
+    title:   title || generateTitle(),
+    duration: parseInt(document.getElementById('f-duration').value) || 45,
+    notes:   document.getElementById('f-notes').value.trim(),
+    vest_weight_lbs: parseInt(document.getElementById('f-vest').value)||0,
+    mile_time_sec: parseTimeInput(document.getElementById('f-mile').value) || null,
+    deviation_from_plan: 'unplanned',
+    sets: [],
+    laps: []
+  };
+
+  // Collect sets
+  document.querySelectorAll('#sets-rows .set-row').forEach(row => {
+    const ex = row.querySelector('[data-field="exercise"]').value.trim();
+    if (!ex) return;
+    workout.sets.push({
+      exercise: ex,
+      sets:     parseInt(row.querySelector('[data-field="sets"]').value)||1,
+      reps:     parseInt(row.querySelector('[data-field="reps"]').value)||0,
+      weight:   parseInt(row.querySelector('[data-field="weight"]').value)||0,
+      is_warmup: false
+    });
+  });
+
+  // Collect laps
+  let lapNum = 1;
+  document.querySelectorAll('#laps-rows .lap-row').forEach(row => {
+    const dist = parseFloat(row.querySelector('[data-field="distance_mi"]').value)||0;
+    const time = parseTimeInput(row.querySelector('[data-field="time"]').value);
+    if (dist > 0 || time > 0) {
+      workout.laps.push({ lap: lapNum++, distance_mi: dist, time_sec: time });
+    }
+  });
+
+  mergeWorkouts([workout]);
+  toggleLogForm();
+  showOk(`Workout "${workout.title}" saved.`);
+  if (state.supabase.connected) pushToSupabase(workout);
+}
+
+function generateTitle() {
+  const type = document.getElementById('f-type').value;
+  const map = { strength:'Strength Session', run:'Run', conditioning:'Conditioning', mobility:'Mobility Session' };
+  return map[type] || 'Workout';
+}
+
+// ══════════════════════════════════════════════════════════════
+// FILE UPLOAD / MERGE
+// ══════════════════════════════════════════════════════════════
 const uploadZone = document.getElementById('upload-zone');
 uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
 uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
-uploadZone.addEventListener('drop', e => {
-  e.preventDefault();
-  uploadZone.classList.remove('drag');
-  const f = e.dataTransfer.files[0];
-  if (f) readFile(f);
-});
-document.getElementById('file-input').addEventListener('change', e => {
-  if (e.target.files[0]) readFile(e.target.files[0]);
-});
+uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag'); if(e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+document.getElementById('file-input').addEventListener('change', e => { if(e.target.files[0]) readFile(e.target.files[0]); });
 
 function readFile(file) {
   const reader = new FileReader();
-  reader.onload = evt => {
+  reader.onload = ev => {
     try {
-      const data = JSON.parse(evt.target.result);
-      mergeWorkouts(data.workouts || []);
-      showUploadStatus('success', `Loaded ${(data.workouts||[]).length} workouts from ${file.name}`);
-    } catch(err) {
-      showUploadStatus('error', 'Invalid JSON: ' + err.message);
-    }
+      const data = JSON.parse(ev.target.result);
+      const incoming = data.workouts || [];
+      mergeWorkouts(incoming);
+      showOk(`Loaded ${incoming.length} workouts from ${file.name}`);
+    } catch(err) { showOk('Invalid JSON: ' + err.message, true); }
   };
   reader.readAsText(file);
 }
 
 function mergeWorkouts(incoming) {
-  const existingIds = new Set(state.workouts.map(w => w.id));
+  const existing = new Set(state.workouts.map(w => w.id));
   let added = 0;
   incoming.forEach(w => {
-    if (!existingIds.has(w.id)) { state.workouts.push(w); added++; }
-    else { // update existing
-      const idx = state.workouts.findIndex(x => x.id === w.id);
-      state.workouts[idx] = w;
-    }
+    if (!existing.has(w.id)) { state.workouts.push(w); added++; }
+    else { const i = state.workouts.findIndex(x => x.id === w.id); state.workouts[i] = w; }
   });
   state.workouts.sort((a,b) => a.date.localeCompare(b.date));
   computeScores();
-  renderWorkoutList();
   updateScorePanel();
+  renderWorkoutList();
 }
 
-function showUploadStatus(type, msg) {
-  const el = document.getElementById('upload-status');
-  el.innerHTML = `<div class="status-bar ${type==='success'?'status-success':'status-info'}">${msg}</div>`;
-  setTimeout(() => el.innerHTML = '', 4000);
+function showOk(msg, isErr=false) {
+  const el = document.getElementById('ok-strip');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.color = isErr ? 'var(--accent)' : '#8A9A8A';
+  setTimeout(() => el.style.display = 'none', 4000);
 }
 
-// ============================================================
-// SCORE COMPUTATION (Strava CTL-inspired)
-// ============================================================
-function computeScores() {
-  if (!state.workouts.length) return;
-
-  // Extract PRs
-  state.prs = extractPRs();
-
-  // CTL-style fitness: exponential weighted sum of recent TSS (Training Stress Score)
-  // ATL = acute (7-day), CTL = chronic (42-day)
-  const today = new Date();
-  const sortedDates = [...new Set(state.workouts.map(w => w.date))].sort();
-
-  function tssForWorkout(w) {
-    const intensityFactor = w.type === 'run' ? 1.2 :
-      w.type === 'conditioning' ? 1.1 :
-      w.type === 'strength' ? 1.0 : 0.6;
-    return (w.duration / 60) * intensityFactor * 100;
-  }
-
-  function pillarTSS(pillar) {
-    return state.workouts.filter(w => w.pillar === pillar)
-      .map(w => ({ date: new Date(w.date), tss: tssForWorkout(w) }));
-  }
-
-  function computeCTL(entries, decayDays = 42) {
-    if (!entries.length) return 0;
-    const now = new Date();
-    let ctl = 0;
-    entries.forEach(e => {
-      const daysAgo = (now - e.date) / 86400000;
-      if (daysAgo < 120) {
-        ctl += e.tss * Math.exp(-daysAgo / decayDays);
-      }
-    });
-    return ctl;
-  }
-
-  const durCTL = computeCTL(pillarTSS('durable'), 42);
-  const strCTL = computeCTL(pillarTSS('strong'), 42);
-  const fastCTL = computeCTL(pillarTSS('fast'), 42);
-
-  // Normalize CTL to 0-100 score (based on expected CTL for goal state)
-  // Then blend with benchmark progress
-  const dlPct = Math.min(state.prs.deadlift / GOALS.deadlift, 1);
-  const sqPct = Math.min(state.prs.squat / GOALS.squat, 1);
-  const bnPct = Math.min(state.prs.bench / GOALS.bench, 1);
-  const milePct = state.prs.mileSec > 0 ? Math.min(GOALS.mileSec / state.prs.mileSec, 1) : 0; // lower is better
-  const murphPct = state.prs.murphDone ? 1.0 : estimateMurphProgress();
-
-  const strongBench = (dlPct * 0.4 + sqPct * 0.35 + bnPct * 0.25);
-  const ctlNorm = v => Math.min(v / 80, 1); // 80 CTL units ≈ goal-state fitness
-
-  state.scores.strong  = Math.round((strongBench * 0.6 + ctlNorm(strCTL) * 0.4) * 100);
-  state.scores.durable = Math.round((murphPct * 0.65 + ctlNorm(durCTL) * 0.35) * 100);
-  state.scores.fast    = Math.round((milePct * 0.65 + ctlNorm(fastCTL) * 0.35) * 100);
-
-  const { durable: pd, strong: ps, fast: pf } = state.priorities;
-  const weights = priorityWeights(pd, ps, pf);
-  state.scores.overall = Math.round(
-    state.scores.durable * weights.durable +
-    state.scores.strong  * weights.strong +
-    state.scores.fast    * weights.fast
-  );
-}
-
-function estimateMurphProgress() {
-  // Estimate based on pull-up max, push-up max, and cardio indicators
-  const pullUps = state.prs.pullUps || 0;
-  const pushUps = state.prs.pushUps || 0;
-  return Math.min((pullUps / 100 * 0.5 + pushUps / 200 * 0.3 + 0.2), 1);
-}
-
-function extractPRs() {
-  let dl = 0, sq = 0, bn = 0, mi = 9999, murph = false;
-  let pu = 0, pp = 0;
-  state.workouts.forEach(w => {
-    (w.sets || []).forEach(s => {
-      const ex = s.exercise.toLowerCase();
-      const wt = s.weight || 0;
-      if (ex.includes('deadlift') && !ex.includes('romanian') && wt > dl) dl = wt;
-      if (ex.includes('squat') && ex.includes('back') && wt > sq) sq = wt;
-      if (ex.includes('bench press') && wt > bn) bn = wt;
-      if (ex.includes('pull-up') || ex.includes('pullup')) pu += s.sets * s.reps;
-      if (ex.includes('push-up') || ex.includes('pushup')) pp += s.sets * s.reps;
-    });
-    // mile TT
-    if (w.mile_time_sec && w.mile_time_sec < mi) mi = w.mile_time_sec;
-    // detect mile TT from laps
-    if (w.type === 'run' && w.laps?.length >= 4) {
-      const total = w.laps.slice(0,4).reduce((a,l) => a + l.time_sec, 0);
-      const dist = w.laps.slice(0,4).reduce((a,l) => a + l.distance_mi, 0);
-      if (Math.abs(dist - 1.0) < 0.05 && total < mi) mi = total;
-    }
-    // Murph detection
-    const title = (w.title || '').toLowerCase();
-    if (title.includes('murph') && w.duration >= 40) murph = true;
-  });
-  return { deadlift: dl, squat: sq, bench: bn, mileSec: mi === 9999 ? 0 : mi, murphDone: murph, pullUps: pu, pushUps: pp };
-}
-
-function priorityWeights(pd, ps, pf) {
-  // Lower priority number = higher weight
-  const inv = v => 1 / (v || 1);
-  const sum = inv(pd) + inv(ps) + inv(pf);
-  return { durable: inv(pd)/sum, strong: inv(ps)/sum, fast: inv(pf)/sum };
-}
-
-// ============================================================
-// SCORE PANEL
-// ============================================================
-function updateScorePanel() {
-  animateRings();
-  updateBenchmarkBars();
-  updateThresholdDisplay();
-
-  if (state.workouts.length) {
-    document.getElementById('score-status').innerHTML =
-      `<span class="mono" style="font-size:0.68rem">${state.workouts.length} sessions loaded · Last: ${state.workouts[state.workouts.length-1].date}</span>`;
-  }
-}
-
-function animateRings() {
-  const circumference = 207.3;
-  const pairs = [
-    ['overall', 'ring-overall', 'val-overall'],
-    ['durable', 'ring-durable', 'val-durable'],
-    ['strong',  'ring-strong',  'val-strong'],
-    ['fast',    'ring-fast',    'val-fast'],
-  ];
-  pairs.forEach(([key, ringId, valId]) => {
-    const score = state.scores[key] || 0;
-    const offset = circumference - (score / 100) * circumference;
-    const ring = document.getElementById(ringId);
-    const val = document.getElementById(valId);
-    if (ring) ring.style.strokeDashoffset = offset;
-    if (val) val.textContent = score;
-  });
-}
-
-function updateBenchmarkBars() {
-  const bars = document.getElementById('benchmark-bars');
-  if (!state.workouts.length) return;
-  const prs = state.prs;
-  const data = [
-    { label: 'Deadlift', cur: prs.deadlift, goal: GOALS.deadlift, unit: 'lb', color: '#e67e22' },
-    { label: 'Squat',    cur: prs.squat,    goal: GOALS.squat,    unit: 'lb', color: '#e67e22' },
-    { label: 'Bench',    cur: prs.bench,    goal: GOALS.bench,    unit: 'lb', color: '#e67e22' },
-    { label: 'Mile',     cur: prs.mileSec, goal: GOALS.mileSec,   unit: 'sec', color: '#f1c40f', invert: true },
-  ];
-  bars.innerHTML = data.map(d => {
-    const pct = d.invert
-      ? (d.cur > 0 ? Math.min(d.goal / d.cur, 1) : 0)
-      : (d.cur > 0 ? Math.min(d.cur / d.goal, 1) : 0);
-    const curLabel = d.unit === 'sec' && d.cur > 0 ? formatTime(d.cur) : (d.cur || '—') + (d.cur ? ' lb' : '');
-    const goalLabel = d.unit === 'sec' ? '6:00' : d.goal + ' lb';
-    return `<div class="benchmark-bar">
-      <div class="bm-header">
-        <span class="bm-label">${d.label}</span>
-        <span class="bm-val">${curLabel} / ${goalLabel}</span>
-      </div>
-      <div class="bm-track">
-        <div class="bm-fill" style="width:${Math.round(pct*100)}%;background:${d.color};box-shadow:0 0 8px ${d.color}44"></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function updateThresholdDisplay() {
-  const p = state.prs;
-  setThreshold('th-deadlift', 'th-dl-val', p.deadlift, GOALS.deadlift, v => v + ' lb');
-  setThreshold('th-squat',    'th-sq-val', p.squat,    GOALS.squat,    v => v + ' lb');
-  setThreshold('th-bench',    'th-bn-val', p.bench,    GOALS.bench,    v => v + ' lb');
-  setThreshold('th-mile', 'th-mi-val', p.mileSec, GOALS.mileSec, v => v > 0 ? formatTime(v) : '—', true);
-
-  const murphEl = document.getElementById('th-murph');
-  const murphVal = document.getElementById('th-mu-val');
-  murphVal.textContent = p.murphDone ? 'DONE' : 'PENDING';
-  if (p.murphDone) murphEl.classList.add('met');
-
-  const allMet = p.deadlift >= GOALS.deadlift && p.squat >= GOALS.squat &&
-    p.bench >= GOALS.bench && p.mileSec > 0 && p.mileSec <= GOALS.mileSec && p.murphDone;
-  const ovEl = document.getElementById('th-overall');
-  const ovVal = document.getElementById('th-ov-val');
-  if (allMet) {
-    ovEl.classList.add('met');
-    ovVal.textContent = 'ACHIEVED';
-    ovVal.style.color = '#0f0';
-    ovVal.style.textShadow = '0 0 12px #0f0';
-  }
-}
-
-function setThreshold(elId, valId, cur, goal, fmt, invert = false) {
-  const el = document.getElementById(elId);
-  const val = document.getElementById(valId);
-  val.textContent = fmt(cur);
-  const met = invert ? (cur > 0 && cur <= goal) : (cur >= goal);
-  if (met) el.classList.add('met');
-  else el.classList.remove('met');
-}
-
-function formatTime(secs) {
-  if (!secs) return '—';
-  const m = Math.floor(secs / 60);
-  const s = String(secs % 60).padStart(2, '0');
-  return `${m}:${s}`;
-}
-
-// ============================================================
-// TIMELINE
-// ============================================================
-let timelineChart = null;
-let loadChart = null;
-
-function setTimelineView(v) {
-  state.timelineView = v;
-  ['overall','durable','strong','fast'].forEach(k => {
-    const b = document.getElementById('tl-btn-' + k);
-    if (b) b.classList.toggle('btn-primary', k === v);
-  });
-  renderTimeline();
-}
-
-function renderTimeline() {
-  const ctx = document.getElementById('timeline-chart');
-  if (!ctx) return;
-
-  // Build weekly score snapshots
-  const weeklyScores = buildWeeklyScores();
-  const labels = weeklyScores.map(w => w.label);
-  const actual = weeklyScores.map(w => w[state.timelineView]);
-
-  // Project forward: linear regression on last 6 data points
-  const proj = projectScores(weeklyScores, state.timelineView);
-
-  const allLabels = [...labels, ...proj.labels];
-  const actualData = [...actual, ...Array(proj.labels.length).fill(null)];
-  const projData = [...Array(labels.length - 1).fill(null), actual[actual.length - 1], ...proj.values];
-
-  if (timelineChart) timelineChart.destroy();
-
-  Chart.defaults.color = '#7a6a58';
-  Chart.defaults.borderColor = 'rgba(139,0,0,0.15)';
-
-  timelineChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: allLabels,
-      datasets: [
-        {
-          label: 'Actual',
-          data: actualData,
-          borderColor: '#cc0000',
-          backgroundColor: 'rgba(139,0,0,0.08)',
-          borderWidth: 2,
-          pointRadius: 3,
-          pointBackgroundColor: '#cc0000',
-          tension: 0.3,
-          fill: true,
-        },
-        {
-          label: 'Projected',
-          data: projData,
-          borderColor: 'rgba(255,68,0,0.6)',
-          borderWidth: 1.5,
-          borderDash: [5,4],
-          pointRadius: 2,
-          pointBackgroundColor: 'rgba(255,68,0,0.6)',
-          tension: 0.3,
-          fill: false,
-        },
-        {
-          label: 'Thragg Standard',
-          data: Array(allLabels.length).fill(100),
-          borderColor: 'rgba(200,184,154,0.2)',
-          borderWidth: 1,
-          borderDash: [8,6],
-          pointRadius: 0,
-          fill: false,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: 'rgba(10,3,3,0.95)',
-          borderColor: 'rgba(139,0,0,0.5)',
-          borderWidth: 1,
-          titleColor: '#cc0000',
-          bodyColor: '#c8b89a',
-          titleFont: { family: 'Cinzel, serif', size: 11 },
-        }
-      },
-      scales: {
-        x: { grid: { color: 'rgba(139,0,0,0.08)' }, ticks: { font: { size: 9 } } },
-        y: {
-          min: 0, max: 110,
-          grid: { color: 'rgba(139,0,0,0.08)' },
-          ticks: { font: { size: 9 }, callback: v => v }
-        }
-      }
-    }
-  });
-
-  // Load chart
-  const lctx = document.getElementById('load-chart');
-  if (lctx) renderLoadChart(lctx);
-}
-
-function buildWeeklyScores() {
-  if (!state.workouts.length) {
-    // Demo empty set
-    return Array.from({length:4}, (_,i) => ({ label: `W${i+1}`, overall:0, durable:0, strong:0, fast:0 }));
-  }
-
-  const start = new Date(state.workouts[0].date);
-  const end = new Date(state.workouts[state.workouts.length - 1].date);
-  const weeks = [];
-  const cur = new Date(start);
-
-  while (cur <= end) {
-    const weekEnd = new Date(cur);
-    weekEnd.setDate(weekEnd.getDate() + 7);
-    const wLabel = `${cur.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
-
-    // Score up to this week
-    const slice = state.workouts.filter(w => new Date(w.date) <= weekEnd);
-    const snapScores = computeScoresAt(slice);
-    weeks.push({ label: wLabel, ...snapScores });
-    cur.setDate(cur.getDate() + 7);
-  }
-  return weeks;
-}
-
-function computeScoresAt(workouts) {
-  if (!workouts.length) return { overall:0, durable:0, strong:0, fast:0 };
-  // Save full state, compute on slice, restore
-  const savedWorkouts = state.workouts;
-  const savedScores   = {...state.scores};
-  const savedPRs      = {...state.prs};
-  state.workouts = workouts;
-  computeScores();
-  const snap = {...state.scores};
-  // Restore everything
-  state.workouts = savedWorkouts;
-  state.scores   = savedScores;
-  state.prs      = savedPRs;
-  return snap;
-}
-
-function projectScores(weeklyScores, key) {
-  if (weeklyScores.length < 2) return { labels: [], values: [] };
-  const recent = weeklyScores.slice(-Math.min(6, weeklyScores.length));
-  const n = recent.length;
-  const xs = recent.map((_,i) => i);
-  const ys = recent.map(w => w[key]);
-
-  // linear regression
-  const meanX = xs.reduce((a,b)=>a+b,0)/n;
-  const meanY = ys.reduce((a,b)=>a+b,0)/n;
-  const slope = xs.reduce((s,x,i) => s + (x-meanX)*(ys[i]-meanY), 0) /
-                xs.reduce((s,x) => s + (x-meanX)**2, 0);
-  const intercept = meanY - slope * meanX;
-
-  const projWeeks = 16;
-  const labels = [], values = [];
-  const lastDate = new Date(state.workouts[state.workouts.length-1].date);
-
-  for (let i = 1; i <= projWeeks; i++) {
-    const d = new Date(lastDate);
-    d.setDate(d.getDate() + i*7);
-    labels.push(d.toLocaleDateString('en-US',{month:'short',day:'numeric'}));
-    const raw = intercept + slope * (n - 1 + i);
-    values.push(Math.max(0, Math.min(105, Math.round(raw * 10) / 10)));
-  }
-  return { labels, values };
-}
-
-function renderLoadChart(ctx) {
-  if (loadChart) loadChart.destroy();
-  if (!state.workouts.length) return;
-
-  // Weekly training load by pillar
-  const weeks = {};
-  state.workouts.forEach(w => {
-    const d = new Date(w.date);
-    const wk = `${d.getFullYear()}-W${getWeekNum(d)}`;
-    if (!weeks[wk]) weeks[wk] = { durable: 0, strong: 0, fast: 0, mobility: 0 };
-    const load = (w.duration || 0);
-    weeks[wk][w.pillar] = (weeks[wk][w.pillar] || 0) + load;
-  });
-
-  const labels = Object.keys(weeks).slice(-12);
-  loadChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels.map(l => l.split('-')[1]),
-      datasets: [
-        { label: 'Strong',   data: labels.map(l => weeks[l]?.strong   || 0), backgroundColor: 'rgba(230,126,34,0.6)', stack: 'load' },
-        { label: 'Durable',  data: labels.map(l => weeks[l]?.durable  || 0), backgroundColor: 'rgba(192,57,43,0.6)',  stack: 'load' },
-        { label: 'Fast',     data: labels.map(l => weeks[l]?.fast     || 0), backgroundColor: 'rgba(241,196,15,0.6)', stack: 'load' },
-        { label: 'Mobility', data: labels.map(l => weeks[l]?.mobility || 0), backgroundColor: 'rgba(39,174,96,0.4)',  stack: 'load' },
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 8 } } },
-        y: { stacked: true, grid: { color: 'rgba(139,0,0,0.08)' }, ticks: { font: { size: 8 }, callback: v => v + 'm' } }
-      }
-    }
-  });
-}
-
-function getWeekNum(d) {
-  const jan1 = new Date(d.getFullYear(), 0, 1);
-  return Math.ceil((((d - jan1) / 86400000) + jan1.getDay() + 1) / 7);
-}
-
-// ============================================================
-// PROGRAM GENERATION
-// ============================================================
-function initPriorityControls() {
-  const cont = document.getElementById('priority-controls');
-  const pillars = [
-    { key: 'strong', label: 'STRONG · 4/3/2 Plates', color: 'var(--strong)' },
-    { key: 'durable', label: 'DURABLE · Murph Challenge', color: 'var(--durable)' },
-    { key: 'fast', label: 'FAST · Sub-6:00 Mile', color: 'var(--fast)' },
-  ];
-  cont.innerHTML = pillars.map(p => `
-    <div class="pillar-priority">
-      <div class="pillar-priority-header">
-        <span class="pillar-name" style="color:${p.color}">${p.label}</span>
-        <select class="priority-select" data-key="${p.key}" onchange="updatePriority('${p.key}', this.value)">
-          <option value="1" ${state.priorities[p.key]===1?'selected':''}>Priority 1 (Highest)</option>
-          <option value="2" ${state.priorities[p.key]===2?'selected':''}>Priority 2</option>
-          <option value="3" ${state.priorities[p.key]===3?'selected':''}>Priority 3 (Lowest)</option>
-        </select>
-      </div>
-    </div>
-  `).join('');
-}
-
-function updatePriority(key, val) {
-  state.priorities[key] = parseInt(val);
-}
-
-function regenerateProgram() {
-  const spinner = document.getElementById('regen-spinner');
-  spinner.style.display = 'inline-block';
-  setTimeout(() => {
-    state.program = generateProgram(state.priorities);
-    renderProgram();
-    spinner.style.display = 'none';
-  }, 600);
-}
-
-function generateProgram(priorities) {
-  const { durable: pd, strong: ps, fast: pf } = priorities;
-  const w = priorityWeights(pd, ps, pf);
-
-  // sessions per week by pillar (total ~5 sessions/week)
-  const total = 5;
-  const strongSess  = Math.round(w.strong  * total * 1.0);
-  const durableSess = Math.round(w.durable * total * 1.0);
-  const fastSess    = Math.round(w.fast    * total * 1.0);
-  const mobSess     = 1;
-
-  const weeks = [];
-  for (let wk = 1; wk <= 12; wk++) {
-    // Phase: 1-4 Base, 5-8 Build, 9-11 Peak, 12 Deload
-    const phase = wk <= 4 ? 'BASE' : wk <= 8 ? 'BUILD' : wk <= 11 ? 'PEAK' : 'DELOAD';
-    const intensityMod = wk <= 4 ? 0.7 : wk <= 8 ? 0.85 : wk <= 11 ? 1.0 : 0.6;
-
-    const days = buildWeekDays(strongSess, durableSess, fastSess, mobSess, phase, intensityMod, wk);
-    weeks.push({ week: wk, phase, days });
-  }
-  return weeks;
-}
-
-function buildWeekDays(ss, ds, fs, ms, phase, intensity, wk) {
-  const pool = [];
-  for (let i = 0; i < ss; i++) pool.push(makeWorkout('strong', phase, intensity, wk));
-  for (let i = 0; i < ds; i++) pool.push(makeWorkout('durable', phase, intensity, wk));
-  for (let i = 0; i < fs; i++) pool.push(makeWorkout('fast', phase, intensity, wk));
-  for (let i = 0; i < ms; i++) pool.push(makeWorkout('mobility', phase, intensity, wk));
-
-  // distribute across 7 days
-  const days = Array.from({length:7}, (_,i) => ({ day: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i], workouts: [] }));
-  const slots = [0,2,4,1,5,3,6]; // distribution order
-  pool.slice(0,7).forEach((w,i) => days[slots[i] % 7].workouts.push(w));
-  return days;
-}
-
-function makeWorkout(pillar, phase, intensity, week) {
-  const templates = {
-    strong: {
-      BASE: [
-        `Deadlift 5×5 @${Math.round(60*intensity)}% + RDL 3×8`,
-        `Squat 5×5 @${Math.round(60*intensity)}% + Pull-ups 4×6`,
-        `Bench 5×5 @${Math.round(60*intensity)}% + Row 4×8`,
-      ],
-      BUILD: [
-        `Deadlift 4×3 @${Math.round(75*intensity)}% + Deficit DL 3×5`,
-        `Squat 4×4 @${Math.round(75*intensity)}% + Front Squat 3×5`,
-        `Bench 4×4 @${Math.round(75*intensity)}% + DB Incline 3×8`,
-      ],
-      PEAK: [
-        `Deadlift Wave: 3/2/1 @85/90/95%`,
-        `Squat 3×3 @${Math.round(85*intensity)}% + Box Squat`,
-        `Bench 3×3 @${Math.round(87*intensity)}% + Board Press`,
-      ],
-      DELOAD: [`Light Deadlift 3×5 @50%`, `Light Squat 3×5 @50%`, `Light Bench 3×5 @50%`],
-    },
-    durable: {
-      BASE: [
-        `Murph Sim 50% (no vest) — 5-10-15 × 10`,
-        `Pull-up ladder + Push-up volume (100 total)`,
-        `1mi run + calisthenics circuit`,
-      ],
-      BUILD: [
-        `Murph Sim 75% — 5-10-15 × 15`,
-        `Pull-ups 6×10 + Push-ups 4×25 + Squats 4×20`,
-        `1mi run + Murph middle + 1mi run (vest optional)`,
-      ],
-      PEAK: [
-        `Full Murph (no vest) — time trial`,
-        `20-lb vest Murph sim (½)`,
-        `Full Murph with vest — performance benchmark`,
-      ],
-      DELOAD: [`30-min easy circuit`, `Bodyweight flow × 20 min`],
-    },
-    fast: {
-      BASE: [
-        `3-mile Zone 2 run (conversational pace)`,
-        `4×400m @ current 5K effort`,
-        `2-mile easy + strides`,
-      ],
-      BUILD: [
-        `Tempo: 1mi easy + 1mi hard + 1mi easy`,
-        `6×400m @ goal pace + 10 sec`,
-        `4-mile aerobic base run`,
-      ],
-      PEAK: [
-        `Mile time trial`,
-        `8×200m @ 5K effort, 90-sec rest`,
-        `3mi easy + 3×1mi @ threshold`,
-      ],
-      DELOAD: [`2mi easy jog`, `Strides only — 6×50m`],
-    },
-    mobility: {
-      BASE: [`ATG work: tibialis, split squat, nordic curl`],
-      BUILD: [`Loaded mobility: ATG + hip 90/90 + shoulder CARs`],
-      PEAK: [`Full ROM circuit — pre-lift`],
-      DELOAD: [`Restorative stretch + breathwork 20 min`],
-    },
-  };
-
-  const t = templates[pillar]?.[phase] || templates[pillar]?.BASE || ['Rest / Active Recovery'];
-  return { pillar, label: t[week % t.length] };
-}
-
-function renderProgram() {
-  initPriorityControls();
-  if (!state.program.length) state.program = generateProgram(state.priorities);
-
-  const cont = document.getElementById('program-weeks');
-  cont.innerHTML = state.program.map(wk => `
-    <div class="week-block">
-      <div class="week-header" onclick="toggleWeek(this)">
-        <span>
-          <span class="red">Week ${wk.week}</span>
-          <span class="dim" style="margin-left:10px;font-family:'Rajdhani',sans-serif;font-size:0.7rem">— ${wk.phase}</span>
-        </span>
-        <span class="dim">▾</span>
-      </div>
-      <div class="week-content">
-        ${wk.days.map(d => `
-          <div class="day-row">
-            <span class="day-label">${d.day}</span>
-            <div class="day-workouts">
-              ${d.workouts.length ? d.workouts.map(w =>
-                `<span class="workout-pill pill-${w.pillar}">${w.label}</span>`
-              ).join('') : '<span class="workout-pill pill-rest">Rest / Recovery</span>'}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleWeek(header) {
-  const content = header.nextElementSibling;
-  content.classList.toggle('open');
-}
-
-// ============================================================
-// LOG VIEW
-// ============================================================
-function filterLog(f) {
+// ══════════════════════════════════════════════════════════════
+// WORKOUT LIST
+// ══════════════════════════════════════════════════════════════
+function filterLog(f, btn) {
   state.logFilter = f;
-  ['all','strong','durable','fast','mobility'].forEach(k => {
-    const b = document.getElementById('log-btn-' + k);
-    if (b) b.classList.toggle('btn-primary', k === f);
-  });
+  document.querySelectorAll('.fpill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
   renderWorkoutList();
 }
 
 function renderWorkoutList() {
-  const cont = document.getElementById('workout-list');
-  let workouts = [...state.workouts].reverse();
-  if (state.logFilter !== 'all') workouts = workouts.filter(w => w.pillar === state.logFilter);
+  const cont = document.getElementById('workout-table');
+  let data = [...state.workouts].reverse();
+  if (state.logFilter !== 'all') data = data.filter(w => w.pillar === state.logFilter);
+  if (!data.length) { cont.innerHTML = '<div class="empty-state">No workouts in this category.</div>'; return; }
 
-  if (!workouts.length) {
-    cont.innerHTML = '<div class="dim" style="font-size:0.75rem">No workouts in this category.</div>';
-    return;
-  }
-
-  cont.innerHTML = workouts.map(w => {
-    const setsSummary = (w.sets || []).reduce((acc, s) => {
-      const key = s.exercise;
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(`${s.sets}×${s.reps}${s.weight ? ' @' + s.weight + 'lb' : ''}`);
-      return acc;
-    }, {});
-
-    const lapHTML = (w.laps || []).length ? `
-      <div class="mt-8" style="font-size:0.68rem;color:var(--bone-dim);margin-top:8px">Laps:</div>
-      <div class="laps-row">
-        ${w.laps.map(l => `<span class="lap-chip">L${l.lap}: ${formatTime(l.time_sec)} · ${l.distance_mi}mi</span>`).join('')}
-      </div>` : '';
-
-    const setsHTML = Object.keys(setsSummary).length ? `
+  cont.innerHTML = data.map(w => {
+    const setsHTML = (w.sets||[]).length ? `
       <table class="sets-table">
-        <thead><tr><th>Exercise</th><th>Volume</th></tr></thead>
-        <tbody>
-          ${Object.entries(setsSummary).map(([ex, vols]) =>
-            `<tr><td>${ex}</td><td>${vols.join(', ')}</td></tr>`
-          ).join('')}
-        </tbody>
+        <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th></tr></thead>
+        <tbody>${(w.sets||[]).map(s => `<tr><td>${s.exercise}</td><td>${s.sets}</td><td>${s.reps}</td><td>${s.weight ? s.weight+' lb' : 'BW'}</td></tr>`).join('')}</tbody>
       </table>` : '';
+    const lapsHTML = (w.laps||[]).length ? `
+      <div class="laps-wrap">${(w.laps||[]).map(l => `<span class="lap-chip">L${l.lap}: ${fmtTime(l.time_sec)} · ${l.distance_mi}mi</span>`).join('')}</div>` : '';
+    const mileHTML = w.mile_time_sec ? `<div style="margin-top:6px"><span class="lap-chip">Mile: ${fmtTime(w.mile_time_sec)}</span></div>` : '';
+    const vestHTML = w.vest_weight_lbs > 0 ? ` · ${w.vest_weight_lbs}lb vest` : '';
 
-    const mileNote = w.mile_time_sec ? `<div class="mt-8"><span class="lap-chip">Mile: ${formatTime(w.mile_time_sec)}</span></div>` : '';
-
-    return `
-      <div class="workout-entry" onclick="toggleEntry(this)">
-        <div class="we-header">
-          <span class="we-title">${w.title || 'Workout'}</span>
-          <span class="workout-pill pill-${w.pillar}" style="font-size:0.6rem">${w.pillar}</span>
-        </div>
-        <div class="we-meta">${w.date} · ${w.duration || 0} min${w.notes ? ' · ' + w.notes : ''}</div>
-        <div class="we-detail">
-          ${setsHTML}${lapHTML}${mileNote}
-        </div>
+    return `<div class="wt-row" onclick="toggleDetail(this)">
+        <div class="wt-date">${w.date}</div>
+        <div><div class="wt-title">${w.title||'Workout'}</div><div class="wt-notes">${w.notes||''}${vestHTML}</div></div>
+        <div class="wt-dur">${w.duration||0} min</div>
+        <span class="pillar-badge pb-${w.pillar}">${w.pillar}</span>
+        <div class="wt-detail">${setsHTML}${lapsHTML}${mileHTML}</div>
       </div>`;
   }).join('');
 }
 
-function toggleEntry(el) {
-  const detail = el.querySelector('.we-detail');
-  detail.classList.toggle('open');
+function toggleDetail(row) {
+  const detail = row.querySelector('.wt-detail');
+  if (detail) { detail.classList.toggle('open'); row.classList.toggle('expanded'); }
 }
 
-// ============================================================
+// ══════════════════════════════════════════════════════════════
+// SETTINGS / SUPABASE
+// ══════════════════════════════════════════════════════════════
+function saveSupabaseConfig() {
+  state.supabase.url = document.getElementById('sb-url').value.trim();
+  state.supabase.key = document.getElementById('sb-key').value.trim();
+  testSupabase();
+}
+
+async function testSupabase() {
+  const url = (document.getElementById('sb-url').value || state.supabase.url).trim();
+  const key = (document.getElementById('sb-key').value || state.supabase.key).trim();
+  const msg = document.getElementById('sb-msg');
+  if (!url || !key) { msg.textContent = 'Enter URL and key first.'; msg.className = 'sb-status-msg err'; return; }
+  msg.textContent = 'Testing connection...'; msg.className = 'sb-status-msg';
+  try {
+    const res = await fetch(`${url}/rest/v1/actual_workouts?select=id&limit=1`, {
+      headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
+    });
+    if (res.ok) {
+      msg.textContent = '✓ Connected to Supabase successfully.'; msg.className = 'sb-status-msg ok';
+      state.supabase = { url, key, connected: true };
+      document.getElementById('sb-dot').classList.add('connected');
+      document.getElementById('sb-status-label').textContent = 'supabase';
+      loadFromSupabase();
+    } else {
+      const err = await res.json();
+      msg.textContent = `✗ ${err.message || res.statusText}`; msg.className = 'sb-status-msg err';
+    }
+  } catch(e) {
+    msg.textContent = `✗ ${e.message}`; msg.className = 'sb-status-msg err';
+  }
+}
+
+async function loadFromSupabase() {
+  if (!state.supabase.connected) return;
+  try {
+    const res = await fetch(`${state.supabase.url}/rest/v1/actual_workouts?select=*&order=date.asc`, {
+      headers: { 'apikey': state.supabase.key, 'Authorization': `Bearer ${state.supabase.key}` }
+    });
+    if (res.ok) {
+      const rows = await res.json();
+      if (rows.length) { mergeWorkouts(rows); showOk(`Loaded ${rows.length} workouts from Supabase`); }
+    }
+  } catch(e) { console.warn('Supabase load error:', e); }
+}
+
+async function pushToSupabase(workout) {
+  if (!state.supabase.connected) return;
+  try {
+    await fetch(`${state.supabase.url}/rest/v1/actual_workouts`, {
+      method: 'POST',
+      headers: {
+        'apikey': state.supabase.key,
+        'Authorization': `Bearer ${state.supabase.key}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(workout)
+    });
+  } catch(e) { console.warn('Supabase push error:', e); }
+}
+
+function exportJSON() {
+  const data = JSON.stringify({ athlete: { name:'Soldier', exportDate: new Date().toISOString().slice(0,10) }, workouts: state.workouts }, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `thragg_log_${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+function clearLocalData() {
+  if (!confirm('Clear all locally loaded workout data? This cannot be undone.')) return;
+  state.workouts = []; state.milestones = []; state.prs = { deadlift:0, squat:0, bench:0, mileSec:0, murphDone:false, murphTime:0, pullUps:0 };
+  state.scores = {overall:0,strong:0,durable:0,fast:0};
+  updateScorePanel(); renderWorkoutList();
+  document.getElementById('chip-score').textContent = '—';
+  showOk('Local data cleared.');
+}
+
+// ══════════════════════════════════════════════════════════════
 // INIT
-// ============================================================
+// ══════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  initPriorityControls();
-  state.program = generateProgram(state.priorities);
-  // Mark the default timeline button as active without rendering into hidden canvas
-  const tlBtn = document.getElementById('tl-btn-overall');
-  if (tlBtn) tlBtn.classList.add('btn-primary');
-  filterLog('all');
+  // Restore saved Supabase config
+  const savedUrl = localStorage.getItem('sb_url');
+  const savedKey = localStorage.getItem('sb_key');
+  if (savedUrl) { document.getElementById('sb-url').value = savedUrl; state.supabase.url = savedUrl; }
+  if (savedKey) { document.getElementById('sb-key').value = savedKey; state.supabase.key = savedKey; }
+
+  // Auto-connect if credentials injected via supabase.js
+  if (state.supabase.url && state.supabase.key) {
+    testSupabase();
+  }
+
+  // Program init
+  state.program = buildProgram();
+});
+
+// Save Supabase config on page unload
+window.addEventListener('beforeunload', () => {
+  if (state.supabase.url) localStorage.setItem('sb_url', state.supabase.url);
+  if (state.supabase.key) localStorage.setItem('sb_key', state.supabase.key);
 });
 </script>
 </body>
