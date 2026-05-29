@@ -360,7 +360,7 @@ nav {
 
 /* === PROGRAM EXPLORER === */
 .prog-banner {
-  display: grid; grid-template-columns: 1fr auto 1fr;
+  display: grid; grid-template-columns: 1fr auto 1fr auto;
   gap: 16px; align-items: center;
   background: var(--surface); border: 1px solid var(--border3); border-radius: 10px;
   padding: 18px 22px; margin-bottom: 0; position: relative; overflow: hidden;
@@ -374,6 +374,10 @@ nav {
   background: radial-gradient(ellipse at 50% 0%, rgba(200,49,10,0.05) 0%, transparent 65%);
   pointer-events: none;
 }
+.prog-banner-clickable { cursor: pointer; transition: border-color 0.2s; }
+.prog-banner-clickable:hover { border-color: rgba(200,49,10,0.5); }
+.pb-chevron { font-size: 1.2rem; color: var(--iron); position: relative; z-index:1; transition: color 0.2s, transform 0.2s; }
+.prog-banner-clickable:hover .pb-chevron { color: var(--accent); transform: translateX(2px); }
 .pb-left { position: relative; z-index: 1; }
 .pb-cycle-label { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--iron); margin-bottom: 5px; }
 .pb-phase-badge {
@@ -389,8 +393,8 @@ nav {
 .pb-stat-label { font-size: 0.56rem; color: var(--iron); letter-spacing: 0.16em; text-transform: uppercase; margin-top: 3px; }
 
 .phase-progress-wrap {
-  margin-top: 10px; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 6px; padding: 12px 16px;
+  margin-top: 8px; margin-bottom: 10px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 10px 14px;
 }
 .phase-progress-track { display: flex; gap: 3px; align-items: center; }
 .pp-segment {
@@ -404,97 +408,116 @@ nav {
 .pp-label { font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; flex: 1; color: var(--iron); overflow: hidden; white-space: nowrap; }
 .pp-label.current { color: var(--accent2); }
 
-/* Cycle roadmap */
-.cycle-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-  margin-bottom: 10px; overflow: hidden;
+/* Help button */
+.prog-help-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+  background: var(--surface); border: 1px solid var(--border2); color: var(--steel);
+  font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 500;
+  border-radius: 8px; cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
 }
+.prog-help-btn:hover { color: var(--armor); border-color: rgba(138,130,120,0.4); }
+
+/* Help menu */
+.prog-help-menu {
+  background: var(--surface); border: 1px solid var(--border2); border-radius: 10px;
+  margin-bottom: 14px; overflow: hidden;
+  animation: drawerIn 0.25s cubic-bezier(0.2,0,0,1);
+}
+.phm-header { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; border-bottom: 1px solid var(--border); }
+.phm-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--ivory); }
+.phm-close { background: none; border: none; color: var(--iron); font-size: 1rem; cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: color 0.15s; line-height: 1; }
+.phm-close:hover { color: var(--armor); }
+.phm-body { padding: 16px 18px; }
+.phm-cycle { margin-bottom: 14px; }
+.phm-cycle-head { font-family: 'Playfair Display', serif; font-size: 0.85rem; font-weight: 700; color: var(--ivory); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.phm-cycle-tag { font-family: 'DM Sans', sans-serif; font-size: 0.52rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 100px; }
+.phm-phases { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+.phm-phase-row { display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: var(--surface2); border-radius: 6px; font-size: 0.68rem; }
+.phm-phase-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.phm-phase-name { font-weight: 600; flex: 1; }
+.phm-phase-weeks { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--iron); }
+.phm-note { font-size: 0.64rem; color: var(--iron); line-height: 1.5; padding-top: 6px; border-top: 1px solid var(--border); font-style: italic; }
+.phm-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+/* Week banner */
+.prog-week-banner { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+.pwb-label { font-size: 0.56rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--steel); margin-bottom: 10px; }
+.pwb-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.pwb-chip { padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border2); background: var(--surface2); color: var(--iron); font-family: 'DM Mono', monospace; font-size: 0.62rem; cursor: pointer; transition: all 0.15s; }
+.pwb-chip:hover { color: var(--armor); border-color: rgba(138,130,120,0.4); }
+.pwb-chip.current-wk { border-color: var(--accent); color: var(--accent2); background: rgba(200,49,10,0.1); }
+.pwb-chip.active-wk { border-color: var(--armor); color: var(--ivory); background: rgba(192,184,176,0.1); }
+.pwb-chip.deload-wk { color: var(--dim); border-color: rgba(46,42,39,0.5); }
+
+/* Detail pane */
+.prog-detail-pane { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; margin-bottom: 14px; overflow: hidden; animation: drawerIn 0.25s cubic-bezier(0.2,0,0,1); }
+.pdp-header { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; border-bottom: 1px solid var(--border); }
+.pdp-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--ivory); }
+.pdp-close { background: none; border: none; color: var(--iron); font-size: 1rem; cursor: pointer; padding: 2px 6px; border-radius: 4px; transition: color 0.15s; line-height: 1; }
+.pdp-close:hover { color: var(--armor); }
+.pdp-body { padding: 16px 18px; }
+
+/* Week session cards */
+.session-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+.session-head { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
+.session-head:hover { background: rgba(138,130,120,0.04); }
+.session-day { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--ivory); min-width: 36px; }
+.session-type-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.session-title { font-size: 0.78rem; font-weight: 500; color: var(--armor); flex: 1; }
+.session-duration { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--iron); }
+.session-body { display: none; padding: 12px 14px; }
+.session-body.open { display: block; }
+.session-focus { font-size: 0.72rem; color: var(--armor); line-height: 1.5; margin-bottom: 10px; }
+.session-sets { width: 100%; border-collapse: collapse; font-size: 0.68rem; }
+.session-sets th { font-family: 'DM Mono', monospace; font-size: 0.54rem; color: var(--iron); letter-spacing: 0.1em; text-align: left; padding: 0 8px 6px; border-bottom: 1px solid var(--border); }
+.session-sets td { padding: 5px 8px; color: var(--armor); border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+.session-sets tr:last-child td { border-bottom: none; }
+.session-note { font-size: 0.64rem; color: var(--iron); font-style: italic; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+/* Phase overview */
+.phase-overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.pov-stat { background: var(--surface2); border-radius: 6px; padding: 10px 12px; }
+.pov-label { font-size: 0.54rem; color: var(--iron); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+.pov-val { font-size: 0.8rem; color: var(--armor); font-weight: 500; line-height: 1.4; }
+.pov-goals { margin-bottom: 10px; }
+.pov-goal { display: flex; align-items: center; gap: 7px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 0.7rem; color: var(--armor); }
+.pov-goal:last-child { border-bottom: none; }
+.pov-goal-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.pov-exit { background: rgba(200,49,10,0.05); border: 1px solid rgba(200,49,10,0.2); border-radius: 6px; padding: 10px 12px; font-size: 0.66rem; color: var(--armor); line-height: 1.5; }
+.pov-exit-label { font-size: 0.52rem; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 5px; }
+.unprescribed-note { padding: 20px 16px; text-align: center; background: rgba(46,42,39,0.3); border: 1px dashed var(--border2); border-radius: 8px; font-size: 0.7rem; color: var(--iron); line-height: 1.6; margin-top: 12px; }
+.unprescribed-note strong { color: var(--armor); display: block; margin-bottom: 6px; font-family: 'Playfair Display', serif; font-size: 0.9rem; }
+
+/* Cycle / phase detail cards (used in help menu) */
+.cycle-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
 .cycle-card.active-cycle { border-color: var(--border3); }
 .cycle-card.active-cycle .cc-head { background: rgba(200,49,10,0.05); }
-.cc-head {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 18px; cursor: pointer; transition: background 0.15s;
-  border-bottom: 1px solid var(--border);
-}
+.cc-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid var(--border); }
 .cc-head:hover { background: rgba(138,130,120,0.04); }
 .cc-head-left { display: flex; align-items: center; gap: 12px; }
 .cc-num { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--iron); }
 .cc-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--ivory); }
-.cc-active-pip {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
-  box-shadow: 0 0 8px rgba(200,49,10,0.6); animation: pip-pulse 2.5s ease-in-out infinite;
-}
+.cc-active-pip { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px rgba(200,49,10,0.6); animation: pip-pulse 2.5s ease-in-out infinite; }
 .cc-head-right { display: flex; align-items: center; gap: 10px; }
 .cc-months { font-size: 0.6rem; color: var(--iron); font-family: 'DM Mono', monospace; }
-.cc-status {
-  padding: 2px 9px; border-radius: 100px; font-size: 0.52rem;
-  font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid;
-}
+.cc-status { padding: 2px 9px; border-radius: 100px; font-size: 0.52rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid; }
 .cc-status.active   { background: rgba(200,49,10,0.12); color: var(--accent2); border-color: rgba(200,49,10,0.3); }
 .cc-status.upcoming { background: rgba(88,80,74,0.1); color: var(--iron); border-color: var(--border2); }
 .cc-status.complete { background: rgba(106,122,106,0.12); color: #8A9A8A; border-color: rgba(106,122,106,0.25); }
 .cc-body { display: none; padding: 14px 18px; }
 .cc-body.open { display: block; }
 .cc-phases { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-.cc-phase-row {
-  display: flex; align-items: center; gap: 12px; padding: 8px 12px;
-  background: var(--surface2); border-radius: 6px; border: 1px solid var(--border);
-}
+.cc-phase-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--surface2); border-radius: 6px; border: 1px solid var(--border); }
 .cc-phase-row.current-phase { border-color: var(--border3); background: rgba(200,49,10,0.04); }
 .cph-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 .cph-name { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; flex: 1; }
 .cph-weeks { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--iron); }
-.cph-gate {
-  font-size: 0.6rem; color: var(--iron); font-style: italic;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;
-}
+.cph-gate { font-size: 0.6rem; color: var(--iron); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
 .cph-status { font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .cph-status.active   { color: var(--accent2); }
 .cph-status.upcoming { color: var(--iron); }
 .cph-status.complete { color: #8A9A8A; }
 .cc-note { font-size: 0.65rem; color: var(--iron); line-height: 1.5; padding: 6px 0 0; border-top: 1px solid var(--border); margin-top: 6px; }
-
-/* Weekly skeleton card */
-.week-skeleton-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-  padding: 18px; overflow: hidden;
-}
-.wsk-title { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--steel); margin-bottom: 14px; }
-.wsk-grid { display: flex; flex-direction: column; gap: 0; }
-.wsk-row {
-  display: grid; grid-template-columns: 80px 100px 1fr;
-  gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border);
-  align-items: start;
-}
-.wsk-row:last-child { border-bottom: none; }
-.wsk-day { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--ivory); padding-top: 2px; }
-.wsk-type { font-size: 0.62rem; color: var(--steel); letter-spacing: 0.05em; padding-top: 2px; }
-.wsk-desc { font-size: 0.7rem; color: var(--armor); line-height: 1.4; }
-.wsk-note { font-size: 0.62rem; color: var(--iron); line-height: 1.6; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-style: italic; }
-
-/* Phase detail */
-.phase-detail-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-  margin-bottom: 8px; overflow: hidden;
-}
-.phase-detail-card.active-phase { border-color: var(--border3); }
-.pdc-head {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 13px 18px; cursor: pointer; transition: background 0.15s;
-}
-.pdc-head:hover { background: rgba(138,130,120,0.04); }
-.pdc-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--ivory); }
-.pdc-body { display: none; padding: 0 18px 14px; }
-.pdc-body.open { display: block; }
-.pdc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-.pdc-stat { background: var(--surface2); border-radius: 6px; padding: 10px 12px; }
-.pdc-stat-label { font-size: 0.54rem; color: var(--iron); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
-.pdc-stat-val { font-size: 0.8rem; color: var(--armor); font-weight: 500; }
-.pdc-goals { margin-bottom: 10px; }
-.pdc-goal-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 0.68rem; color: var(--armor); }
-.pdc-goal-item:last-child { border-bottom: none; }
-.pdc-goal-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-.pdc-exit { background: rgba(200,49,10,0.05); border: 1px solid rgba(200,49,10,0.2); border-radius: 6px; padding: 10px 12px; font-size: 0.66rem; color: var(--armor); line-height: 1.5; }
 .pdc-exit-label { font-size: 0.52rem; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 5px; }
 
 /* === LOG === */
@@ -801,43 +824,66 @@ nav {
 
 <!-- ══════════════ PROGRAM ══════════════ -->
 <div class="panel" id="panel-program">
-  <div class="page-head">
-    <h2>Training <em>Program</em></h2>
-    <p>Your active cycle, upcoming phases, and where you stand in the 18–24 month arc.</p>
-  </div>
 
-  <!-- Current position banner -->
-  <div id="prog-position-banner">
-    <div class="prog-banner">
-      <div class="pb-left">
-        <div class="pb-cycle-label" id="pb-cycle-label">—</div>
-        <div class="pb-phase-badge" id="pb-phase-badge">—</div>
-      </div>
-      <div class="pb-center">
-        <div class="pb-week-num" id="pb-week-num">—</div>
-        <div class="pb-week-sub" id="pb-week-sub">of program</div>
-      </div>
-      <div class="pb-right">
-        <div class="pb-stat-val" id="pb-months-remain">—</div>
-        <div class="pb-stat-label">months remaining</div>
-      </div>
+  <!-- Page head with help button -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;">
+    <div class="page-head" style="margin-bottom:0">
+      <h2>Training <em>Program</em></h2>
+      <p>Foundation to Peak · 18–24 month arc · 3 cycles</p>
     </div>
-    <!-- Phase progress bar -->
-    <div class="phase-progress-wrap">
-      <div class="phase-progress-track" id="phase-progress-track"></div>
+    <button class="prog-help-btn" onclick="toggleHelpMenu()" id="prog-help-btn" title="Program overview">
+      <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+        <circle cx="10" cy="10" r="8" stroke="#8A8278" stroke-width="1.4"/>
+        <path d="M7.5 7.5 C7.5 6.1 8.6 5 10 5 C11.4 5 12.5 6.1 12.5 7.5 C12.5 8.9 10 10 10 10" stroke="#8A8278" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="10" cy="13.5" r="0.8" fill="#8A8278"/>
+      </svg>
+      Overview
+    </button>
+  </div>
+
+  <!-- Help / overview fly-down -->
+  <div class="prog-help-menu" id="prog-help-menu" style="display:none">
+    <div class="phm-header">
+      <span class="phm-title">Program Overview</span>
+      <button class="phm-close" onclick="toggleHelpMenu()">✕</button>
     </div>
+    <div class="phm-body" id="prog-help-body"></div>
   </div>
 
-  <!-- Cycle roadmap -->
-  <div id="prog-roadmap">
-    <div class="sec-label" style="margin-top:16px">Training Roadmap</div>
-    <div id="cycle-roadmap"></div>
+  <!-- Banner 1: Phase / position -->
+  <div class="prog-banner prog-banner-clickable" id="prog-phase-banner" onclick="showProgramDetail('phase')" title="Tap to see phase detail">
+    <div class="pb-left">
+      <div class="pb-cycle-label" id="pb-cycle-label">—</div>
+      <div class="pb-phase-badge" id="pb-phase-badge">—</div>
+    </div>
+    <div class="pb-center">
+      <div class="pb-week-num" id="pb-week-num">—</div>
+      <div class="pb-week-sub">of program</div>
+    </div>
+    <div class="pb-right">
+      <div class="pb-stat-val" id="pb-months-remain">—</div>
+      <div class="pb-stat-label">months left</div>
+    </div>
+    <div class="pb-chevron">›</div>
+  </div>
+  <!-- Phase progress bar -->
+  <div class="phase-progress-wrap">
+    <div class="phase-progress-track" id="phase-progress-track"></div>
   </div>
 
-  <!-- Phase detail drill-down -->
-  <div id="prog-phases">
-    <div class="sec-label" style="margin-top:16px">Phase Detail</div>
-    <div id="phase-detail-list"></div>
+  <!-- Banner 2: Week selector -->
+  <div class="prog-week-banner" id="prog-week-banner">
+    <div class="pwb-label">Phase Weeks</div>
+    <div class="pwb-chips" id="pwb-chips"></div>
+  </div>
+
+  <!-- Detail pane — phase overview or week detail -->
+  <div class="prog-detail-pane" id="prog-detail-pane" style="display:none">
+    <div class="pdp-header">
+      <span class="pdp-title" id="pdp-title">—</span>
+      <button class="pdp-close" onclick="closeDetailPane()">✕</button>
+    </div>
+    <div class="pdp-body" id="pdp-body"></div>
   </div>
 
 </div>
@@ -1732,6 +1778,646 @@ const PHASE_DEFINITIONS = {
   },
 };
 
+
+// ══════════════════════════════════════════════════════════════
+// PROGRAM EXPLORER — hard-coded Foundation → Peak program
+// ══════════════════════════════════════════════════════════════
+
+const PHASE_COLORS = {
+  BASE:           { bg: 'rgba(88,80,74,0.5)',     border: '#58504A', text: '#8A8278' },
+  DURABILITY:     { bg: 'rgba(200,49,10,0.45)',   border: '#C8310A', text: '#E04418' },
+  SPEED:          { bg: 'rgba(192,184,176,0.4)',  border: '#C0B8B0', text: '#C0B8B0' },
+  STRENGTH_PEAK:  { bg: 'rgba(138,130,120,0.5)',  border: '#8A8278', text: '#F0EAE0' },
+  DELOAD:         { bg: 'rgba(46,42,39,0.5)',     border: '#2E2A27', text: '#58504A' },
+};
+
+const PHASE_DEFINITIONS = {
+  BASE: {
+    goals: ['Establish aerobic base', 'Build pull-up volume to 50 reps/session', 'Maintain strength at 70% 1RM'],
+    running: 'Zone 2 only · 3–4×/week · build to 15–20 miles/week',
+    murph: '25–50% simulation volume — scaled pull-ups, push-ups, squats',
+    strength: 'Maintenance at 70% 1RM · technique focus · no max attempts',
+    intervals: false,
+    exit_gate: '3 miles easy with no injury flags + 50 pull-ups per session achievable across sets',
+  },
+  DURABILITY: {
+    goals: ['Full Murph completion (no vest)', 'Increase pull-up capacity', 'Begin tempo running'],
+    running: 'Zone 2 base + weekly tempo run',
+    murph: '75–100% volume · no vest',
+    strength: 'Progressive overload resumes',
+    intervals: false,
+    exit_gate: 'Full Murph completed (no vest) + 5K comfortable',
+  },
+  SPEED: {
+    goals: ['Sub 6:30 mile time trial', 'Vest Murph introduction', 'Strength maintained'],
+    running: '400m intervals: start 6–8 reps · build to 12 · taper before test',
+    murph: 'Introduce vest at reduced volume',
+    strength: 'Maintained, not peaked',
+    intervals: true,
+    exit_gate: 'Sub 6:30 mile time trial',
+  },
+  STRENGTH_PEAK: {
+    goals: ['Deadlift 405 lb', 'Squat 315 lb', 'Bench 225 lb', 'PR test week at end'],
+    running: 'Reduced — 2× Zone 2 only',
+    murph: '1×/week maintenance only',
+    strength: 'Max intensity · wave loading · test week at end',
+    intervals: false,
+    exit_gate: 'DL / Squat / Bench PRs tested',
+  },
+  DELOAD: {
+    goals: ['Active recovery', 'Volume reduction 40–50%', 'Keep weights, drop sets and reps'],
+    running: 'Easy movement only — 2× 20 min jog',
+    murph: 'Skip or light calisthenics only',
+    strength: 'Same weights · 40–50% of normal volume',
+    intervals: false,
+    exit_gate: 'Feel recovered and ready for next phase',
+  },
+};
+
+// ── BASE PHASE — 10 work weeks + 2 deload weeks ───────────────
+// Baselines: DL 240lb, SQ 240lb, BP 200lb. @70% = DL168, SQ168, BP140
+// Rounded to nearest 5lb plate increment.
+// Murph scaling: weeks 1-2=25%, 3-4=33%, 5-6=40%, 7-8=50%, 9-10=50%+pull focus
+// Running: Zone 2, 30-40 min, 3-4x/week (Thu = dedicated run day)
+// Week structure: Mon=Bench, Tue=Murph sim, Wed=Deadlift, Thu=Z2 run, Fri=Squat, Sat=KOT, Sun=Rest
+const BASE_PHASE_WEEKS = [
+  { // Week 1
+    week: 1, label: 'Orientation', isDeload: false,
+    focus: 'Establish baseline movement quality. Light loads, full ROM emphasis. No grinding.',
+    days: [
+      { day: 'Mon', title: 'Bench + Upper Accessory', type: 'strength', pillar: 'strong', duration: 55,
+        focus: 'Bench heavy 5×5 @140lb. Incline DB volume 5×10 @40lb/hand. Scapular stability work.',
+        sets: [
+          { exercise: 'Bench Press',       sets: 1, reps: 8,  weight: 95,  note: 'Warmup' },
+          { exercise: 'Bench Press',       sets: 5, reps: 5,  weight: 140, note: 'Heavy work' },
+          { exercise: 'Incline DB Press',  sets: 5, reps: 10, weight: 40,  note: 'Volume' },
+          { exercise: 'Face Pull',         sets: 3, reps: 15, weight: 30,  note: 'Rotator cuff' },
+          { exercise: 'Pull-ups',          sets: 3, reps: 5,  weight: 0,   note: 'Technique focus' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 25% (No Vest)', type: 'conditioning', pillar: 'durable', duration: 35,
+        focus: '1/4 Murph volume. 5 rounds of 5 pull-ups / 10 push-ups / 15 squats. 0.5mi run each end.',
+        sets: [
+          { exercise: 'Run (0.5mi)',  sets: 1, reps: 1, weight: 0, note: 'Opening run — easy pace' },
+          { exercise: 'Pull-ups',    sets: 5, reps: 5, weight: 0, note: '25 total' },
+          { exercise: 'Push-ups',    sets: 5, reps: 10, weight: 0, note: '50 total' },
+          { exercise: 'Air Squats',  sets: 5, reps: 15, weight: 0, note: '75 total' },
+          { exercise: 'Run (0.5mi)', sets: 1, reps: 1, weight: 0, note: 'Closing run — match opening pace' },
+        ] },
+      { day: 'Wed', title: 'Deadlift + Pull Accessory', type: 'strength', pillar: 'strong', duration: 55,
+        focus: 'Deadlift heavy 5×5 @170lb. Romanian DL volume 5×10 @125lb. Pull-up ladders.',
+        sets: [
+          { exercise: 'Deadlift',          sets: 1, reps: 5,  weight: 135, note: 'Warmup' },
+          { exercise: 'Deadlift',          sets: 5, reps: 5,  weight: 170, note: 'Heavy work @70%' },
+          { exercise: 'Romanian Deadlift', sets: 5, reps: 10, weight: 125, note: 'Volume' },
+          { exercise: 'Pull-ups',          sets: 4, reps: 5,  weight: 0,   note: 'Accumulated volume' },
+          { exercise: 'Barbell Row',       sets: 3, reps: 10, weight: 95,  note: 'Upper back' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 30 min', type: 'run', pillar: 'fast', duration: 35,
+        focus: 'Conversational pace only. HR <145. 2.5–3 miles. No watch pressure — run by feel.',
+        sets: [] },
+      { day: 'Fri', title: 'Squat + Lower Accessory', type: 'strength', pillar: 'strong', duration: 55,
+        focus: 'Squat heavy 5×5 @170lb. Leg press volume 5×12 @200lb. Posterior chain.',
+        sets: [
+          { exercise: 'Back Squat',      sets: 1, reps: 5,  weight: 135, note: 'Warmup' },
+          { exercise: 'Back Squat',      sets: 5, reps: 5,  weight: 170, note: 'Heavy work @70%' },
+          { exercise: 'Leg Press',       sets: 5, reps: 12, weight: 200, note: 'Volume' },
+          { exercise: 'Nordic Curl',     sets: 3, reps: 5,  weight: 0,   note: 'Eccentric hamstring' },
+          { exercise: 'Tibialis Raise',  sets: 3, reps: 25, weight: 0,   note: 'Ankle prep' },
+        ] },
+      { day: 'Sat', title: 'KOT Active Recovery', type: 'mobility', pillar: 'mobility', duration: 30,
+        focus: 'ATG split squat, tibialis work, 90/90 hip stretch, thoracic rotation. No loading today.',
+        sets: [
+          { exercise: 'ATG Split Squat',       sets: 3, reps: 8,  weight: 0,  note: 'Bodyweight only — week 1' },
+          { exercise: 'Tibialis Raise',         sets: 3, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',      sets: 3, reps: 60, weight: 0,  note: 'Seconds per side' },
+          { exercise: 'Thoracic Rotation',      sets: 2, reps: 10, weight: 0,  note: 'Per side' },
+          { exercise: 'Couch Stretch',          sets: 2, reps: 90, weight: 0,  note: 'Seconds per side' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest. Sleep, eat, recover.', sets: [] },
+    ]
+  },
+  { // Week 2
+    week: 2, label: 'Foundation Build', isDeload: false,
+    focus: 'Same loads as Week 1. Rep quality over weight. Add 5lb only if Week 1 felt effortless.',
+    days: [
+      { day: 'Mon', title: 'Bench + Upper Accessory', type: 'strength', pillar: 'strong', duration: 55,
+        focus: 'Bench heavy 5×5 @145lb. Volume push widens to DB flyes. Pull-up volume bump.',
+        sets: [
+          { exercise: 'Bench Press',      sets: 1, reps: 8,  weight: 95,  note: 'Warmup' },
+          { exercise: 'Bench Press',      sets: 5, reps: 5,  weight: 145, note: '+5lb from W1' },
+          { exercise: 'DB Flye',          sets: 4, reps: 12, weight: 30,  note: 'Chest stretch focus' },
+          { exercise: 'Face Pull',        sets: 3, reps: 15, weight: 30,  note: '' },
+          { exercise: 'Pull-ups',         sets: 4, reps: 5,  weight: 0,   note: 'Up from 3 sets' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 25% (No Vest)', type: 'conditioning', pillar: 'durable', duration: 35,
+        focus: 'Same as W1. Focus on unbroken sets where possible. Time it.',
+        sets: [
+          { exercise: 'Run (0.5mi)',  sets: 1, reps: 1, weight: 0, note: '' },
+          { exercise: 'Pull-ups',    sets: 5, reps: 5, weight: 0, note: 'Try 1–2 unbroken sets' },
+          { exercise: 'Push-ups',    sets: 5, reps: 10, weight: 0, note: '' },
+          { exercise: 'Air Squats',  sets: 5, reps: 15, weight: 0, note: '' },
+          { exercise: 'Run (0.5mi)', sets: 1, reps: 1, weight: 0, note: '' },
+        ] },
+      { day: 'Wed', title: 'Deadlift + Pull Accessory', type: 'strength', pillar: 'strong', duration: 55,
+        focus: 'Deadlift 5×5 @175lb. Add deficit pulls for range. Pull-up volume creep.',
+        sets: [
+          { exercise: 'Deadlift',          sets: 1, reps: 5,  weight: 135, note: 'Warmup' },
+          { exercise: 'Deadlift',          sets: 5, reps: 5,  weight: 175, note: '+5lb' },
+          { exercise: 'Romanian Deadlift', sets: 5, reps: 10, weight: 130, note: '' },
+          { exercise: 'Pull-ups',          sets: 5, reps: 5,  weight: 0,   note: 'Up from 4 sets' },
+          { exercise: 'Barbell Row',       sets: 3, reps: 10, weight: 100, note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 32 min', type: 'run', pillar: 'fast', duration: 37,
+        focus: 'Same effort, 2 more minutes. Build slow. ~3 miles.', sets: [] },
+      { day: 'Fri', title: 'Squat + Lower Accessory', type: 'strength', pillar: 'strong', duration: 55,
+        focus: 'Squat 5×5 @175lb. Add box squats for depth confidence.',
+        sets: [
+          { exercise: 'Back Squat',     sets: 1, reps: 5,  weight: 135, note: 'Warmup' },
+          { exercise: 'Back Squat',     sets: 5, reps: 5,  weight: 175, note: '+5lb' },
+          { exercise: 'Box Squat',      sets: 3, reps: 8,  weight: 135, note: 'Depth focus' },
+          { exercise: 'Nordic Curl',    sets: 3, reps: 5,  weight: 0,   note: '' },
+          { exercise: 'Tibialis Raise', sets: 3, reps: 25, weight: 0,   note: '' },
+        ] },
+      { day: 'Sat', title: 'KOT Active Recovery', type: 'mobility', pillar: 'mobility', duration: 30,
+        focus: 'Add light load to ATG split squat. Same mobility work.',
+        sets: [
+          { exercise: 'ATG Split Squat',  sets: 3, reps: 8,  weight: 15, note: 'Light DB' },
+          { exercise: 'Tibialis Raise',    sets: 3, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch', sets: 3, reps: 60, weight: 0,  note: 'sec' },
+          { exercise: 'Thoracic Rotation', sets: 2, reps: 10, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+    ]
+  },
+  { // Week 3
+    week: 3, label: 'Load Progression', isDeload: false,
+    focus: 'First meaningful load increase. Murph sim steps up to 33%. Run to 35 min.',
+    days: [
+      { day: 'Mon', title: 'Bench + Pull-up Focus', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'Bench 5×5 @150lb. Pull-ups become primary upper pull. 5 sets minimum.',
+        sets: [
+          { exercise: 'Bench Press',      sets: 1, reps: 5,  weight: 115, note: 'Warmup' },
+          { exercise: 'Bench Press',      sets: 5, reps: 5,  weight: 150, note: 'Heavy' },
+          { exercise: 'Incline DB Press', sets: 4, reps: 10, weight: 45,  note: 'Volume' },
+          { exercise: 'Pull-ups',         sets: 5, reps: 6,  weight: 0,   note: 'Primary upper pull — Murph limiter' },
+          { exercise: 'Face Pull',        sets: 3, reps: 15, weight: 35,  note: '' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 33% (No Vest)', type: 'conditioning', pillar: 'durable', duration: 40,
+        focus: '7 rounds of 5/10/15. 0.5mi runs. Total: 35 pull / 70 push / 105 squat.',
+        sets: [
+          { exercise: 'Run (0.5mi)',  sets: 1, reps: 1, weight: 0, note: '' },
+          { exercise: 'Pull-ups',    sets: 7, reps: 5, weight: 0, note: '35 total' },
+          { exercise: 'Push-ups',    sets: 7, reps: 10, weight: 0, note: '70 total' },
+          { exercise: 'Air Squats',  sets: 7, reps: 15, weight: 0, note: '105 total' },
+          { exercise: 'Run (0.5mi)', sets: 1, reps: 1, weight: 0, note: '' },
+        ] },
+      { day: 'Wed', title: 'Deadlift + Pull Accessory', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'Deadlift 5×5 @180lb. Volume stays at RDL. Pull-ups volume continues.',
+        sets: [
+          { exercise: 'Deadlift',          sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Deadlift',          sets: 5, reps: 5,  weight: 180, note: '' },
+          { exercise: 'Romanian Deadlift', sets: 5, reps: 10, weight: 135, note: '' },
+          { exercise: 'Pull-ups',          sets: 5, reps: 6,  weight: 0,   note: '' },
+          { exercise: 'Barbell Row',       sets: 3, reps: 10, weight: 105, note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 35 min', type: 'run', pillar: 'fast', duration: 40,
+        focus: 'Conversational. Building to ~3.5 miles. Add walk-breaks if HR climbs.', sets: [] },
+      { day: 'Fri', title: 'Squat + Lower Accessory', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'Squat 5×5 @180lb. Pause squats added for strength in hole.',
+        sets: [
+          { exercise: 'Back Squat',     sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Back Squat',     sets: 5, reps: 5,  weight: 180, note: '' },
+          { exercise: 'Pause Squat',    sets: 3, reps: 5,  weight: 145, note: '2-sec pause' },
+          { exercise: 'Nordic Curl',    sets: 3, reps: 6,  weight: 0,   note: '' },
+          { exercise: 'Tibialis Raise', sets: 3, reps: 25, weight: 0,   note: '' },
+        ] },
+      { day: 'Sat', title: 'KOT Active Recovery', type: 'mobility', pillar: 'mobility', duration: 30,
+        focus: 'ATG work progresses. Add slant board if available.',
+        sets: [
+          { exercise: 'ATG Split Squat',   sets: 3, reps: 8,  weight: 20, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 4, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 3, reps: 60, weight: 0,  note: '' },
+          { exercise: 'Couch Stretch',      sets: 2, reps: 90, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+    ]
+  },
+  { // Week 4 — first deload week of the 10-week block
+    week: 4, label: 'Mini Deload', isDeload: true,
+    focus: 'Back off week. Keep weights, cut volume 40%. No new PRs attempted. Let the body adapt.',
+    days: [
+      { day: 'Mon', title: 'Bench — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'Bench 3×5 @140lb. No accessory work beyond face pulls.',
+        sets: [
+          { exercise: 'Bench Press', sets: 3, reps: 5,  weight: 140, note: 'Deload — 60% volume' },
+          { exercise: 'Face Pull',   sets: 2, reps: 15, weight: 30,  note: '' },
+          { exercise: 'Pull-ups',    sets: 3, reps: 5,  weight: 0,   note: '' },
+        ] },
+      { day: 'Tue', title: 'Easy Movement — 20 min', type: 'conditioning', pillar: 'durable', duration: 25,
+        focus: 'Light walk/jog. No Murph sim. Let arms recover.', sets: [] },
+      { day: 'Wed', title: 'Deadlift — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'Deadlift 3×5 @170lb. Single accessory set only.',
+        sets: [
+          { exercise: 'Deadlift',    sets: 3, reps: 5,  weight: 170, note: 'Deload' },
+          { exercise: 'Pull-ups',    sets: 3, reps: 5,  weight: 0,   note: '' },
+          { exercise: 'Barbell Row', sets: 2, reps: 8,  weight: 95,  note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 25 min', type: 'run', pillar: 'fast', duration: 30,
+        focus: 'Short easy run. Active recovery.', sets: [] },
+      { day: 'Fri', title: 'Squat — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'Squat 3×5 @170lb. Mobility at the end.',
+        sets: [
+          { exercise: 'Back Squat',  sets: 3, reps: 5,  weight: 170, note: 'Deload' },
+          { exercise: 'ATG Split Squat', sets: 2, reps: 8, weight: 20, note: '' },
+        ] },
+      { day: 'Sat', title: 'Full KOT Session', type: 'mobility', pillar: 'mobility', duration: 40,
+        focus: 'Extended mobility — use extra energy from reduced training load.',
+        sets: [
+          { exercise: 'ATG Split Squat',   sets: 4, reps: 10, weight: 20, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 4, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 4, reps: 60, weight: 0,  note: '' },
+          { exercise: 'Nordic Curl',        sets: 3, reps: 5,  weight: 0,  note: '' },
+          { exercise: 'Thoracic Rotation',  sets: 3, reps: 10, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+    ]
+  },
+  { // Week 5
+    week: 5, label: 'Reload', isDeload: false,
+    focus: 'Return from deload. Loads resume at Week 3 levels. Murph at 40%.',
+    days: [
+      { day: 'Mon', title: 'Bench + Pull-up Priority', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'Bench 5×5 @150lb. Pull-ups now 6 sets — non-negotiable Murph prep.',
+        sets: [
+          { exercise: 'Bench Press',      sets: 1, reps: 5,  weight: 115, note: '' },
+          { exercise: 'Bench Press',      sets: 5, reps: 5,  weight: 150, note: '' },
+          { exercise: 'Incline DB Press', sets: 4, reps: 10, weight: 45,  note: '' },
+          { exercise: 'Pull-ups',         sets: 6, reps: 6,  weight: 0,   note: 'Murph prep — highest priority' },
+          { exercise: 'Face Pull',        sets: 3, reps: 15, weight: 35,  note: '' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 40% (No Vest)', type: 'conditioning', pillar: 'durable', duration: 45,
+        focus: '8 rounds of 5/10/15. Full mile runs both ends. 40 pull / 80 push / 120 squat.',
+        sets: [
+          { exercise: 'Run (1.0mi)',  sets: 1, reps: 1, weight: 0, note: 'Full mile — easy pace' },
+          { exercise: 'Pull-ups',    sets: 8, reps: 5, weight: 0, note: '40 total' },
+          { exercise: 'Push-ups',    sets: 8, reps: 10, weight: 0, note: '80 total' },
+          { exercise: 'Air Squats',  sets: 8, reps: 15, weight: 0, note: '120 total' },
+          { exercise: 'Run (1.0mi)', sets: 1, reps: 1, weight: 0, note: '' },
+        ] },
+      { day: 'Wed', title: 'Deadlift + Pull Accessory', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'DL 5×5 @185lb. RDL volume holds. Weighted pull-ups introduced lightly.',
+        sets: [
+          { exercise: 'Deadlift',          sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Deadlift',          sets: 5, reps: 5,  weight: 185, note: '' },
+          { exercise: 'Romanian Deadlift', sets: 5, reps: 10, weight: 140, note: '' },
+          { exercise: 'Pull-ups',          sets: 4, reps: 6,  weight: 0,   note: '' },
+          { exercise: 'Barbell Row',       sets: 3, reps: 10, weight: 110, note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 35 min', type: 'run', pillar: 'fast', duration: 40,
+        focus: 'Consistent pace. Track mileage — first week with full mile runs on Tue.', sets: [] },
+      { day: 'Fri', title: 'Squat + Lower Accessory', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'Squat 5×5 @185lb. Leg press volume sustained.',
+        sets: [
+          { exercise: 'Back Squat',     sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Back Squat',     sets: 5, reps: 5,  weight: 185, note: '' },
+          { exercise: 'Leg Press',      sets: 5, reps: 12, weight: 220, note: '' },
+          { exercise: 'Nordic Curl',    sets: 3, reps: 6,  weight: 0,   note: '' },
+          { exercise: 'Tibialis Raise', sets: 3, reps: 25, weight: 0,   note: '' },
+        ] },
+      { day: 'Sat', title: 'KOT Active Recovery', type: 'mobility', pillar: 'mobility', duration: 30,
+        focus: 'Standard KOT session. Note tightness in hip flexors after full mile runs.',
+        sets: [
+          { exercise: 'ATG Split Squat',   sets: 3, reps: 10, weight: 25, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 3, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 3, reps: 60, weight: 0,  note: '' },
+          { exercise: 'Couch Stretch',      sets: 2, reps: 90, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+    ]
+  },
+  { // Week 6
+    week: 6, label: 'Aerobic Build', isDeload: false,
+    focus: 'Run volume steps up to 40 min. Murph holds at 40% but with better pull efficiency goal.',
+    days: [
+      { day: 'Mon', title: 'Bench + Pull-ups', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'Bench 5×5 @155lb. Pull-ups: try 3 sets of 8 — step up from 6s.',
+        sets: [
+          { exercise: 'Bench Press',      sets: 1, reps: 5,  weight: 115, note: '' },
+          { exercise: 'Bench Press',      sets: 5, reps: 5,  weight: 155, note: '' },
+          { exercise: 'Incline DB Press', sets: 4, reps: 10, weight: 47,  note: '' },
+          { exercise: 'Pull-ups',         sets: 6, reps: 7,  weight: 0,   note: 'Increase reps/set' },
+          { exercise: 'Face Pull',        sets: 3, reps: 15, weight: 35,  note: '' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 40% Quality (No Vest)', type: 'conditioning', pillar: 'durable', duration: 45,
+        focus: 'Same volume as W5 — focus on reducing rest between rounds. Tighten the clock.',
+        sets: [
+          { exercise: 'Run (1.0mi)',  sets: 1, reps: 1, weight: 0, note: '' },
+          { exercise: 'Pull-ups',    sets: 8, reps: 5, weight: 0, note: 'Minimize rest between rounds' },
+          { exercise: 'Push-ups',    sets: 8, reps: 10, weight: 0, note: '' },
+          { exercise: 'Air Squats',  sets: 8, reps: 15, weight: 0, note: '' },
+          { exercise: 'Run (1.0mi)', sets: 1, reps: 1, weight: 0, note: '' },
+        ] },
+      { day: 'Wed', title: 'Deadlift + Pull Accessory', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'DL 5×5 @190lb. Barbell row weight climbs.',
+        sets: [
+          { exercise: 'Deadlift',          sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Deadlift',          sets: 5, reps: 5,  weight: 190, note: '' },
+          { exercise: 'Romanian Deadlift', sets: 5, reps: 10, weight: 145, note: '' },
+          { exercise: 'Pull-ups',          sets: 4, reps: 7,  weight: 0,   note: '' },
+          { exercise: 'Barbell Row',       sets: 3, reps: 10, weight: 115, note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 40 min', type: 'run', pillar: 'fast', duration: 45,
+        focus: '~4 miles. Consistent. No pace pressure.', sets: [] },
+      { day: 'Fri', title: 'Squat + Lower Accessory', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'Squat 5×5 @190lb.',
+        sets: [
+          { exercise: 'Back Squat',     sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Back Squat',     sets: 5, reps: 5,  weight: 190, note: '' },
+          { exercise: 'Leg Press',      sets: 5, reps: 12, weight: 230, note: '' },
+          { exercise: 'Nordic Curl',    sets: 3, reps: 7,  weight: 0,   note: '' },
+          { exercise: 'Tibialis Raise', sets: 3, reps: 25, weight: 0,   note: '' },
+        ] },
+      { day: 'Sat', title: 'KOT Active Recovery', type: 'mobility', pillar: 'mobility', duration: 30, focus: 'Standard KOT.', sets: [
+          { exercise: 'ATG Split Squat',   sets: 3, reps: 10, weight: 25, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 3, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 3, reps: 60, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+    ]
+  },
+  { // Week 7
+    week: 7, label: 'Mid-Phase Check', isDeload: false,
+    focus: 'Week 7 is the first pull-up volume milestone check: can you hit 50 pull-ups across a session? Murph sim steps to 50%.',
+    days: [
+      { day: 'Mon', title: 'Bench + Pull-up Milestone', type: 'strength', pillar: 'strong', duration: 65,
+        focus: 'Bench 5×5 @155lb. Pull-up test: 10 sets of 5 = 50 total. Rest as needed. This is the BASE exit gate marker.',
+        sets: [
+          { exercise: 'Bench Press',  sets: 1, reps: 5,  weight: 115, note: '' },
+          { exercise: 'Bench Press',  sets: 5, reps: 5,  weight: 155, note: '' },
+          { exercise: 'Pull-ups',     sets: 10, reps: 5, weight: 0,   note: '50 total — exit gate test' },
+          { exercise: 'Face Pull',    sets: 3,  reps: 15, weight: 35, note: '' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 50% (No Vest)', type: 'conditioning', pillar: 'durable', duration: 50,
+        focus: '10 rounds of 5/10/15. Full mile runs. 50 pull / 100 push / 150 squat. Half Murph.',
+        sets: [
+          { exercise: 'Run (1.0mi)',  sets: 1, reps: 1, weight: 0, note: '' },
+          { exercise: 'Pull-ups',    sets: 10, reps: 5, weight: 0, note: '50 total' },
+          { exercise: 'Push-ups',    sets: 10, reps: 10, weight: 0, note: '100 total' },
+          { exercise: 'Air Squats',  sets: 10, reps: 15, weight: 0, note: '150 total' },
+          { exercise: 'Run (1.0mi)', sets: 1, reps: 1, weight: 0, note: '' },
+        ] },
+      { day: 'Wed', title: 'Deadlift + Pull Accessory', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'DL 5×5 @195lb. Focus on hip drive and lockout.',
+        sets: [
+          { exercise: 'Deadlift',          sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Deadlift',          sets: 5, reps: 5,  weight: 195, note: '' },
+          { exercise: 'Romanian Deadlift', sets: 5, reps: 10, weight: 150, note: '' },
+          { exercise: 'Pull-ups',          sets: 4, reps: 7,  weight: 0,   note: '' },
+          { exercise: 'Barbell Row',       sets: 3, reps: 10, weight: 120, note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 40 min', type: 'run', pillar: 'fast', duration: 45,
+        focus: 'Maintain 40 min. Note how body feels after 50% Murph on Tue.', sets: [] },
+      { day: 'Fri', title: 'Squat + Lower Accessory', type: 'strength', pillar: 'strong', duration: 60,
+        focus: 'Squat 5×5 @195lb.',
+        sets: [
+          { exercise: 'Back Squat',     sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Back Squat',     sets: 5, reps: 5,  weight: 195, note: '' },
+          { exercise: 'Pause Squat',    sets: 3, reps: 5,  weight: 155, note: '' },
+          { exercise: 'Nordic Curl',    sets: 3, reps: 7,  weight: 0,   note: '' },
+          { exercise: 'Tibialis Raise', sets: 3, reps: 25, weight: 0,   note: '' },
+        ] },
+      { day: 'Sat', title: 'KOT Active Recovery', type: 'mobility', pillar: 'mobility', duration: 30, focus: 'Standard KOT. Watch hip flexor tightness after big Tue volume.', sets: [
+          { exercise: 'ATG Split Squat',   sets: 3, reps: 10, weight: 30, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 4, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 4, reps: 60, weight: 0,  note: '' },
+          { exercise: 'Couch Stretch',      sets: 3, reps: 90, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+    ]
+  },
+  { // Week 8 — second mini deload
+    week: 8, label: 'Mini Deload #2', isDeload: true,
+    focus: 'Second planned deload. Half the Murph volume. Strength keeps weights, drops to 3 sets.',
+    days: [
+      { day: 'Mon', title: 'Bench — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'Bench 3×5 @150lb. Pull-ups 3×5.',
+        sets: [
+          { exercise: 'Bench Press', sets: 3, reps: 5, weight: 150, note: 'Deload' },
+          { exercise: 'Pull-ups',    sets: 3, reps: 5, weight: 0,   note: '' },
+          { exercise: 'Face Pull',   sets: 2, reps: 15, weight: 30, note: '' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 25% Easy (No Vest)', type: 'conditioning', pillar: 'durable', duration: 30,
+        focus: '5 rounds 5/10/15. Short runs. No pressure on pace.',
+        sets: [
+          { exercise: 'Run (0.5mi)',  sets: 1, reps: 1, weight: 0, note: '' },
+          { exercise: 'Pull-ups',    sets: 5, reps: 5, weight: 0, note: '' },
+          { exercise: 'Push-ups',    sets: 5, reps: 10, weight: 0, note: '' },
+          { exercise: 'Air Squats',  sets: 5, reps: 15, weight: 0, note: '' },
+          { exercise: 'Run (0.5mi)', sets: 1, reps: 1, weight: 0, note: '' },
+        ] },
+      { day: 'Wed', title: 'Deadlift — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'DL 3×5 @185lb.',
+        sets: [
+          { exercise: 'Deadlift',    sets: 3, reps: 5, weight: 185, note: 'Deload' },
+          { exercise: 'Pull-ups',    sets: 3, reps: 5, weight: 0,   note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 25 min', type: 'run', pillar: 'fast', duration: 30,
+        focus: 'Short easy run.', sets: [] },
+      { day: 'Fri', title: 'Squat — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'Squat 3×5 @185lb.',
+        sets: [
+          { exercise: 'Back Squat',      sets: 3, reps: 5, weight: 185, note: 'Deload' },
+          { exercise: 'ATG Split Squat', sets: 2, reps: 8, weight: 25,  note: '' },
+        ] },
+      { day: 'Sat', title: 'Full KOT', type: 'mobility', pillar: 'mobility', duration: 40,
+        focus: 'Extended KOT. Use the recovery week to hit mobility hard.',
+        sets: [
+          { exercise: 'ATG Split Squat',   sets: 4, reps: 12, weight: 30, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 4, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 4, reps: 60, weight: 0,  note: '' },
+          { exercise: 'Nordic Curl',        sets: 3, reps: 7,  weight: 0,  note: '' },
+          { exercise: 'Couch Stretch',      sets: 3, reps: 90, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+    ]
+  },
+  { // Week 9
+    week: 9, label: 'Final Push', isDeload: false,
+    focus: 'Last 2 hard weeks. Loads near top of BASE range. Murph holds at 50% — quality reps.',
+    days: [
+      { day: 'Mon', title: 'Bench + Pull-up Volume', type: 'strength', pillar: 'strong', duration: 65,
+        focus: 'Bench 5×5 @160lb. Pull-ups 6×8 = 48 reps. Approaching exit gate.',
+        sets: [
+          { exercise: 'Bench Press',      sets: 1, reps: 5,  weight: 115, note: '' },
+          { exercise: 'Bench Press',      sets: 5, reps: 5,  weight: 160, note: '' },
+          { exercise: 'Incline DB Press', sets: 4, reps: 10, weight: 50,  note: '' },
+          { exercise: 'Pull-ups',         sets: 6, reps: 8,  weight: 0,   note: '48 total — approaching 50' },
+          { exercise: 'Face Pull',        sets: 3, reps: 15, weight: 40,  note: '' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 50% Quality (No Vest)', type: 'conditioning', pillar: 'durable', duration: 55,
+        focus: '10 rounds 5/10/15. Time the session. Note pace per round.',
+        sets: [
+          { exercise: 'Run (1.0mi)',  sets: 1, reps: 1, weight: 0, note: 'Note split' },
+          { exercise: 'Pull-ups',    sets: 10, reps: 5, weight: 0, note: '' },
+          { exercise: 'Push-ups',    sets: 10, reps: 10, weight: 0, note: '' },
+          { exercise: 'Air Squats',  sets: 10, reps: 15, weight: 0, note: '' },
+          { exercise: 'Run (1.0mi)', sets: 1, reps: 1, weight: 0, note: 'Note split vs opener' },
+        ] },
+      { day: 'Wed', title: 'Deadlift + Pull Accessory', type: 'strength', pillar: 'strong', duration: 65,
+        focus: 'DL 5×5 @200lb. Two plates. A milestone in BASE context.',
+        sets: [
+          { exercise: 'Deadlift',          sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Deadlift',          sets: 1, reps: 3,  weight: 185, note: '' },
+          { exercise: 'Deadlift',          sets: 5, reps: 5,  weight: 200, note: 'Two plates' },
+          { exercise: 'Romanian Deadlift', sets: 5, reps: 10, weight: 155, note: '' },
+          { exercise: 'Pull-ups',          sets: 5, reps: 8,  weight: 0,   note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 Run — 40 min', type: 'run', pillar: 'fast', duration: 45,
+        focus: 'Maintain 40 min. 3.5–4 miles. Effort stays conversational.', sets: [] },
+      { day: 'Fri', title: 'Squat + Lower Accessory', type: 'strength', pillar: 'strong', duration: 65,
+        focus: 'Squat 5×5 @200lb.',
+        sets: [
+          { exercise: 'Back Squat',     sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Back Squat',     sets: 1, reps: 3,  weight: 185, note: '' },
+          { exercise: 'Back Squat',     sets: 5, reps: 5,  weight: 200, note: '' },
+          { exercise: 'Leg Press',      sets: 5, reps: 12, weight: 250, note: '' },
+          { exercise: 'Nordic Curl',    sets: 3, reps: 8,  weight: 0,   note: '' },
+          { exercise: 'Tibialis Raise', sets: 3, reps: 25, weight: 0,   note: '' },
+        ] },
+      { day: 'Sat', title: 'KOT Active Recovery', type: 'mobility', pillar: 'mobility', duration: 30, focus: 'Standard KOT.', sets: [
+          { exercise: 'ATG Split Squat',   sets: 3, reps: 12, weight: 35, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 4, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 3, reps: 60, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+    ]
+  },
+  { // Week 10
+    week: 10, label: 'BASE Phase Finale', isDeload: false,
+    focus: 'Final work week of BASE. Exit gate test: 50 pull-ups, 3-mile easy run, no injury flags.',
+    days: [
+      { day: 'Mon', title: 'Bench + EXIT GATE Pull-up Test', type: 'strength', pillar: 'strong', duration: 65,
+        focus: 'Bench 5×5 @160lb. Then: 10 sets × 5 pull-ups = 50 total. Record time and quality.',
+        sets: [
+          { exercise: 'Bench Press',  sets: 1,  reps: 5,  weight: 115, note: '' },
+          { exercise: 'Bench Press',  sets: 5,  reps: 5,  weight: 160, note: '' },
+          { exercise: 'Pull-ups',     sets: 10, reps: 5,  weight: 0,   note: 'EXIT GATE — 50 total, rest as needed' },
+          { exercise: 'Face Pull',    sets: 3,  reps: 15, weight: 40,  note: '' },
+        ] },
+      { day: 'Tue', title: 'Murph Sim — 50% (No Vest)', type: 'conditioning', pillar: 'durable', duration: 55,
+        focus: 'Last Murph sim of BASE. Time it. Note comparison to Week 7.',
+        sets: [
+          { exercise: 'Run (1.0mi)',  sets: 1, reps: 1, weight: 0, note: '' },
+          { exercise: 'Pull-ups',    sets: 10, reps: 5, weight: 0, note: '' },
+          { exercise: 'Push-ups',    sets: 10, reps: 10, weight: 0, note: '' },
+          { exercise: 'Air Squats',  sets: 10, reps: 15, weight: 0, note: '' },
+          { exercise: 'Run (1.0mi)', sets: 1, reps: 1, weight: 0, note: 'Note: can you run at the same pace as opener?' },
+        ] },
+      { day: 'Wed', title: 'Deadlift + Pull Accessory', type: 'strength', pillar: 'strong', duration: 65,
+        focus: 'DL 5×5 @200lb. Last heavy pull of BASE.',
+        sets: [
+          { exercise: 'Deadlift',          sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Deadlift',          sets: 1, reps: 3,  weight: 185, note: '' },
+          { exercise: 'Deadlift',          sets: 5, reps: 5,  weight: 200, note: 'Last BASE heavy pull' },
+          { exercise: 'Romanian Deadlift', sets: 4, reps: 10, weight: 155, note: '' },
+          { exercise: 'Pull-ups',          sets: 5, reps: 8,  weight: 0,   note: '' },
+        ] },
+      { day: 'Thu', title: 'EXIT GATE Run — 3 miles easy', type: 'run', pillar: 'fast', duration: 40,
+        focus: '3 miles at easy pace. No injury flags = BASE exit gate met on running side.',
+        sets: [] },
+      { day: 'Fri', title: 'Squat + Lower Accessory', type: 'strength', pillar: 'strong', duration: 65,
+        focus: 'Squat 5×5 @200lb. Last BASE squat session.',
+        sets: [
+          { exercise: 'Back Squat',     sets: 1, reps: 5,  weight: 135, note: '' },
+          { exercise: 'Back Squat',     sets: 1, reps: 3,  weight: 185, note: '' },
+          { exercise: 'Back Squat',     sets: 5, reps: 5,  weight: 200, note: 'Last BASE squat session' },
+          { exercise: 'Leg Press',      sets: 5, reps: 12, weight: 250, note: '' },
+          { exercise: 'Nordic Curl',    sets: 3, reps: 8,  weight: 0,   note: '' },
+        ] },
+      { day: 'Sat', title: 'KOT — Final BASE Session', type: 'mobility', pillar: 'mobility', duration: 35,
+        focus: 'Full KOT. Record current ROM benchmarks before entering DURABILITY phase.',
+        sets: [
+          { exercise: 'ATG Split Squat',   sets: 4, reps: 12, weight: 35, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 4, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 4, reps: 60, weight: 0,  note: '' },
+          { exercise: 'Nordic Curl',        sets: 3, reps: 8,  weight: 0,  note: '' },
+          { exercise: 'Thoracic Rotation',  sets: 3, reps: 10, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest. Prepare for DURABILITY phase.', sets: [] },
+    ]
+  },
+  { // Week 11 — final deload
+    week: 11, label: 'Transition Deload', isDeload: true,
+    focus: 'Bridge deload between BASE and DURABILITY. Restore, reflect on exit gates.',
+    days: [
+      { day: 'Mon', title: 'Bench — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'Bench 3×5 @150lb.',
+        sets: [
+          { exercise: 'Bench Press', sets: 3, reps: 5, weight: 150, note: '' },
+          { exercise: 'Pull-ups',    sets: 3, reps: 5, weight: 0,   note: '' },
+        ] },
+      { day: 'Tue', title: 'Easy Movement', type: 'conditioning', pillar: 'durable', duration: 20,
+        focus: 'Light walk or 15 min jog. Arms rest.', sets: [] },
+      { day: 'Wed', title: 'Deadlift — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'DL 3×5 @185lb.',
+        sets: [
+          { exercise: 'Deadlift',    sets: 3, reps: 5, weight: 185, note: '' },
+          { exercise: 'Pull-ups',    sets: 2, reps: 5, weight: 0,   note: '' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 — 20 min', type: 'run', pillar: 'fast', duration: 25,
+        focus: 'Short easy run.', sets: [] },
+      { day: 'Fri', title: 'Squat — Deload', type: 'strength', pillar: 'strong', duration: 40,
+        focus: 'Squat 3×5 @185lb.',
+        sets: [
+          { exercise: 'Back Squat', sets: 3, reps: 5, weight: 185, note: '' },
+        ] },
+      { day: 'Sat', title: 'Extended KOT', type: 'mobility', pillar: 'mobility', duration: 45,
+        focus: 'Full KOT. Record any persistent tightness. This is your mobility checkpoint before DURABILITY.',
+        sets: [
+          { exercise: 'ATG Split Squat',   sets: 4, reps: 12, weight: 35, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 4, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 4, reps: 60, weight: 0,  note: '' },
+          { exercise: 'Couch Stretch',      sets: 3, reps: 90, weight: 0,  note: '' },
+          { exercise: 'Nordic Curl',        sets: 3, reps: 8,  weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Final rest before DURABILITY. Full rest.', sets: [] },
+    ]
+  },
+  { // Week 12 — transition deload cont.
+    week: 12, label: 'Transition Deload (cont.)', isDeload: true,
+    focus: 'Second deload week. Complete rest from pull-ups. Set DURABILITY phase intention.',
+    days: [
+      { day: 'Mon', title: 'Bench — Very Light', type: 'strength', pillar: 'strong', duration: 35,
+        focus: 'Bench 2×5 @135lb. Zero pull-up volume — arms fully recovered.',
+        sets: [
+          { exercise: 'Bench Press', sets: 2, reps: 5, weight: 135, note: 'Recovery load only' },
+          { exercise: 'Face Pull',   sets: 2, reps: 15, weight: 30, note: '' },
+        ] },
+      { day: 'Tue', title: 'Rest', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Full rest.', sets: [] },
+      { day: 'Wed', title: 'Deadlift — Very Light', type: 'strength', pillar: 'strong', duration: 35,
+        focus: 'DL 2×5 @155lb. Movement rehearsal only.',
+        sets: [
+          { exercise: 'Deadlift', sets: 2, reps: 5, weight: 155, note: 'Recovery load' },
+        ] },
+      { day: 'Thu', title: 'Zone 2 — 20 min', type: 'run', pillar: 'fast', duration: 25,
+        focus: 'Easy run. No pressure.', sets: [] },
+      { day: 'Fri', title: 'Squat — Very Light', type: 'strength', pillar: 'strong', duration: 35,
+        focus: 'Squat 2×5 @155lb.',
+        sets: [
+          { exercise: 'Back Squat', sets: 2, reps: 5, weight: 155, note: 'Recovery load' },
+        ] },
+      { day: 'Sat', title: 'KOT + DURABILITY Phase Preview', type: 'mobility', pillar: 'mobility', duration: 40,
+        focus: 'KOT session. Review DURABILITY phase parameters. Set intentions for Murph progression.',
+        sets: [
+          { exercise: 'ATG Split Squat',   sets: 3, reps: 12, weight: 35, note: '' },
+          { exercise: 'Tibialis Raise',     sets: 3, reps: 25, weight: 0,  note: '' },
+          { exercise: 'Hip 90/90 Stretch',  sets: 3, reps: 60, weight: 0,  note: '' },
+        ] },
+      { day: 'Sun', title: 'Rest — DURABILITY Begins Next Week', type: 'rest', pillar: 'mobility', duration: 0, focus: 'Rest. DURABILITY phase starts next week.', sets: [] },
+    ]
+  },
+];
+
 // Hard-coded program — edit start_date to your actual program start
 const HARD_CODED_PROGRAM = {
   id: 'prog_001',
@@ -1742,57 +2428,56 @@ const HARD_CODED_PROGRAM = {
       cycle: 1, label: 'Foundation Cycle', approx_months: '1–10',
       note: 'Only cycle that includes BASE. Aerobic base does not need rebuilding after this.',
       phases: [
-        { phase: 'BASE',          weeks: 10, deload: 2 },
-        { phase: 'DURABILITY',    weeks: 10, deload: 2 },
-        { phase: 'SPEED',         weeks: 10, deload: 2 },
-        { phase: 'STRENGTH_PEAK', weeks: 8,  deload: 2 },
+        { phase: 'BASE',          weeks: 10, deload: 2, prescribed_weeks: BASE_PHASE_WEEKS },
+        { phase: 'DURABILITY',    weeks: 10, deload: 2, prescribed_weeks: null },
+        { phase: 'SPEED',         weeks: 10, deload: 2, prescribed_weeks: null },
+        { phase: 'STRENGTH_PEAK', weeks: 8,  deload: 2, prescribed_weeks: null },
       ]
     },
     {
       cycle: 2, label: 'Build Cycle', approx_months: '11–18',
       note: 'BASE dropped. Phases compressed. Vest Murph introduced seriously. Threshold window opens at end of this cycle.',
       phases: [
-        { phase: 'DURABILITY',    weeks: 9, deload: 2 },
-        { phase: 'SPEED',         weeks: 9, deload: 2 },
-        { phase: 'STRENGTH_PEAK', weeks: 8, deload: 2 },
+        { phase: 'DURABILITY',    weeks: 9, deload: 2, prescribed_weeks: null },
+        { phase: 'SPEED',         weeks: 9, deload: 2, prescribed_weeks: null },
+        { phase: 'STRENGTH_PEAK', weeks: 8, deload: 2, prescribed_weeks: null },
       ]
     },
     {
       cycle: 3, label: 'Peak Expression Cycle', approx_months: '19–24',
       note: 'Threshold attempt window. Compress phases where benchmarks are close; extend where gaps remain.',
       phases: [
-        { phase: 'DURABILITY',    weeks: 6, deload: 1 },
-        { phase: 'SPEED',         weeks: 6, deload: 1 },
-        { phase: 'STRENGTH_PEAK', weeks: 6, deload: 2 },
+        { phase: 'DURABILITY',    weeks: 6, deload: 1, prescribed_weeks: null },
+        { phase: 'SPEED',         weeks: 6, deload: 1, prescribed_weeks: null },
+        { phase: 'STRENGTH_PEAK', weeks: 6, deload: 2, prescribed_weeks: null },
       ]
     },
   ]
 };
 
-function renderProgramExplorer() {
-  // Always use the hard-coded program; state.program is kept for Supabase sync if added later
-  const prog = state.program.cycles && state.program.cycles.length > 0
-    ? state.program
-    : HARD_CODED_PROGRAM;
+// ── UI STATE ─────────────────────────────────────────────────
+let progDetailMode = null;  // 'phase' | 'week'
+let progSelectedWeek = null;
 
+function renderProgramExplorer() {
+  const prog = HARD_CODED_PROGRAM;
   const today     = new Date();
-  const startDate = new Date(prog.start_date || HARD_CODED_PROGRAM.start_date);
+  const startDate = new Date(prog.start_date);
 
   const totalDaysElapsed  = Math.floor((today - startDate) / 86400000);
   const totalWeeksElapsed = Math.max(1, Math.floor(totalDaysElapsed / 7) + 1);
 
-  const { currentCycle, currentPhaseObj, weeksRemaining } =
+  const { currentCycle, currentPhaseObj, currentPhaseStartWeek, weeksRemaining } =
     computePosition(prog.cycles, totalWeeksElapsed);
 
   // ── Banner ──────────────────────────────────────────────────
-  const cycleLabel  = currentCycle  ? (currentCycle.label  || `Cycle ${currentCycle.cycle}`) : 'Program Complete';
+  const cycleLabel  = currentCycle  ? (currentCycle.label || `Cycle ${currentCycle.cycle}`) : 'Program Complete';
   const phaseColor  = currentPhaseObj ? (PHASE_COLORS[currentPhaseObj.phase] || PHASE_COLORS.BASE) : PHASE_COLORS.DELOAD;
   const phaseText   = currentPhaseObj ? currentPhaseObj.phase.replace(/_/g,' ') : '—';
   const monthsLeft  = Math.ceil(weeksRemaining / 4.33);
 
   document.getElementById('pb-cycle-label').textContent  = cycleLabel;
   document.getElementById('pb-week-num').textContent      = `Wk ${totalWeeksElapsed}`;
-  document.getElementById('pb-week-sub').textContent      = 'of program';
   document.getElementById('pb-months-remain').textContent = monthsLeft > 0 ? monthsLeft : '0';
 
   const badge = document.getElementById('pb-phase-badge');
@@ -1804,16 +2489,16 @@ function renderProgramExplorer() {
   // ── Phase progress bar ──────────────────────────────────────
   renderPhaseProgressBar(prog.cycles, totalWeeksElapsed);
 
-  // ── Cycle roadmap ───────────────────────────────────────────
-  renderCycleRoadmap(prog.cycles, startDate, totalWeeksElapsed);
+  // ── Week chips ──────────────────────────────────────────────
+  renderWeekChips(currentPhaseObj, currentPhaseStartWeek, totalWeeksElapsed);
 
-  // ── Phase detail ────────────────────────────────────────────
-  renderPhaseDetail(prog.cycles, totalWeeksElapsed);
+  // ── Help menu (built but hidden) ───────────────────────────
+  buildHelpMenu(prog.cycles, startDate, totalWeeksElapsed);
 }
 
 function computePosition(cycles, weekNum) {
   let cumWeeks = 0, totalProgramWeeks = 0;
-  let currentCycle = null, currentPhaseObj = null, weeksRemaining = 0;
+  let currentCycle = null, currentPhaseObj = null, currentPhaseStartWeek = 1, weeksRemaining = 0;
 
   cycles.forEach(c => {
     c.phases.forEach(p => { totalProgramWeeks += (p.weeks||0) + (p.deload||0); });
@@ -1825,19 +2510,19 @@ function computePosition(cycles, weekNum) {
       if (weekNum > cumWeeks && weekNum <= cumWeeks + pw) {
         currentCycle    = c;
         currentPhaseObj = p;
+        currentPhaseStartWeek = cumWeeks + 1;
       }
       cumWeeks += pw;
     });
   });
 
   weeksRemaining = Math.max(0, totalProgramWeeks - weekNum);
-  return { currentCycle, currentPhaseObj, weeksRemaining, totalProgramWeeks };
+  return { currentCycle, currentPhaseObj, currentPhaseStartWeek, weeksRemaining, totalProgramWeeks };
 }
 
 function renderPhaseProgressBar(cycles, currentWeek) {
   const wrap  = document.getElementById('phase-progress-track');
   if (!wrap) return;
-  // Clear any previously appended label rows
   wrap.innerHTML = '';
   const parent = wrap.parentNode;
   const oldLabelRow = parent.querySelector('.pp-label-row');
@@ -1875,114 +2560,182 @@ function renderPhaseProgressBar(cycles, currentWeek) {
   parent.appendChild(labelRow);
 }
 
-function renderCycleRoadmap(cycles, startDate, currentWeek) {
-  const cont = document.getElementById('cycle-roadmap');
-  if (!cont) return;
-  let cumWeeks = 0;
+function renderWeekChips(currentPhaseObj, phaseStartWeek, currentProgramWeek) {
+  const chips = document.getElementById('pwb-chips');
+  if (!chips || !currentPhaseObj) { if(chips) chips.innerHTML = '<span style="font-size:0.68rem;color:var(--iron)">No active phase.</span>'; return; }
 
-  cont.innerHTML = cycles.map(c => {
-    const cycleStartWeek = cumWeeks + 1;
-    let cycleTotalWeeks  = 0;
+  const totalPhaseWeeks = (currentPhaseObj.weeks||0) + (currentPhaseObj.deload||0);
+  const prescribed = currentPhaseObj.prescribed_weeks || [];
+  const currentPhaseWeek = currentProgramWeek - phaseStartWeek + 1;
+
+  chips.innerHTML = Array.from({length: totalPhaseWeeks}, (_, i) => {
+    const wNum = i + 1;
+    const progWeek = prescribed[i];
+    const isDeload = progWeek ? progWeek.isDeload : (i >= (currentPhaseObj.weeks||0));
+    const isCurrent = wNum === currentPhaseWeek;
+    const cls = isCurrent ? 'pwb-chip current-wk' : isDeload ? 'pwb-chip deload-wk' : 'pwb-chip';
+    return `<button class="${cls}" onclick="showProgramDetail('week', ${i})">${isDeload ? 'D' : ''}W${wNum}</button>`;
+  }).join('');
+}
+
+function showProgramDetail(mode, weekIndex) {
+  progDetailMode   = mode;
+  progSelectedWeek = weekIndex;
+  const pane  = document.getElementById('prog-detail-pane');
+  const title = document.getElementById('pdp-title');
+  const body  = document.getElementById('pdp-body');
+
+  pane.style.display = 'block';
+  pane.style.animation = 'none';
+  pane.offsetHeight;
+  pane.style.animation = '';
+
+  const prog = HARD_CODED_PROGRAM;
+  const today = new Date();
+  const startDate = new Date(prog.start_date);
+  const totalWeeksElapsed = Math.max(1, Math.floor((today - startDate) / 86400000 / 7) + 1);
+  const { currentPhaseObj } = computePosition(prog.cycles, totalWeeksElapsed);
+
+  if (mode === 'phase' && currentPhaseObj) {
+    title.textContent = currentPhaseObj.phase.replace(/_/g,' ') + ' — Phase Overview';
+    body.innerHTML = buildPhaseOverview(currentPhaseObj);
+  } else if (mode === 'week' && currentPhaseObj) {
+    const prescribed = currentPhaseObj.prescribed_weeks || [];
+    const wk = prescribed[weekIndex];
+    const wLabel = wk ? `Week ${wk.week} — ${wk.label}` : `Week ${weekIndex+1}`;
+    title.textContent = wLabel;
+    body.innerHTML = wk ? buildWeekDetail(wk) : buildUnprescribed(currentPhaseObj, weekIndex + 1);
+  }
+
+  pane.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeDetailPane() {
+  document.getElementById('prog-detail-pane').style.display = 'none';
+  progDetailMode = null;
+  progSelectedWeek = null;
+}
+
+function buildPhaseOverview(phase) {
+  const def = PHASE_DEFINITIONS[phase.phase] || {};
+  const col = PHASE_COLORS[phase.phase] || PHASE_COLORS.BASE;
+  const hasPrescribed = phase.prescribed_weeks && phase.prescribed_weeks.length > 0;
+  return `
+    <div class="phase-overview-grid">
+      <div class="pov-stat"><div class="pov-label">Running</div><div class="pov-val">${def.running||'—'}</div></div>
+      <div class="pov-stat"><div class="pov-label">Murph Scaling</div><div class="pov-val">${def.murph||'—'}</div></div>
+      <div class="pov-stat"><div class="pov-label">Strength</div><div class="pov-val">${def.strength||'—'}</div></div>
+      <div class="pov-stat"><div class="pov-label">Intervals</div><div class="pov-val">${def.intervals ? 'Yes' : 'No'}</div></div>
+    </div>
+    <div class="pov-goals">${(def.goals||[]).map(g=>`<div class="pov-goal"><div class="pov-goal-dot"></div>${g}</div>`).join('')}</div>
+    <div class="pov-exit"><div class="pov-exit-label">Exit Gate</div>${def.exit_gate||'—'}</div>
+    ${!hasPrescribed ? `<div class="unprescribed-note"><strong>No weekly prescriptions yet</strong>Workouts for this phase haven't been built into the app yet. Tap individual week chips to see this message per week. Prescribed weeks for future phases will be added as you approach them.</div>` : ''}
+  `;
+}
+
+function buildUnprescribed(phase, weekNum) {
+  return `<div class="unprescribed-note">
+    <strong>Week ${weekNum} — Not Yet Prescribed</strong>
+    This week's specific workouts haven't been built into the app yet. The ${phase.phase.replace(/_/g,' ')} phase prescription will be added before you reach it. Phase parameters are available by tapping the phase banner above.
+  </div>`;
+}
+
+const SESSION_COLORS = { strength:'#8A8278', conditioning:'#C8310A', run:'#C0B8B0', mobility:'#6A7A6A', rest:'#2E2A27' };
+
+function buildWeekDetail(wk) {
+  const activeDays = wk.days.filter(d => d.type !== 'rest');
+  return `
+    <div style="font-size:0.68rem;color:var(--iron);margin-bottom:14px;line-height:1.5">${wk.focus}</div>
+    ${wk.days.map(d => {
+      if (d.type === 'rest') return `
+        <div class="session-card">
+          <div class="session-head">
+            <span class="session-day">${d.day}</span>
+            <div class="session-type-dot" style="background:${SESSION_COLORS.rest}"></div>
+            <span class="session-title" style="color:var(--iron)">${d.title}</span>
+          </div>
+        </div>`;
+
+      const hasSets = d.sets && d.sets.length > 0;
+      const setsHTML = hasSets ? `
+        <table class="session-sets">
+          <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Note</th></tr></thead>
+          <tbody>${d.sets.map(s => `<tr>
+            <td>${s.exercise}</td>
+            <td>${s.sets}</td>
+            <td>${s.reps}${s.reps > 30 ? 's' : ''}</td>
+            <td>${s.weight ? s.weight + ' lb' : 'BW'}</td>
+            <td style="color:var(--iron)">${s.note||''}</td>
+          </tr>`).join('')}</tbody>
+        </table>` : `<div style="font-size:0.68rem;color:var(--iron)">No prescribed sets — see focus note.</div>`;
+
+      return `<div class="session-card">
+        <div class="session-head" onclick="this.nextElementSibling.classList.toggle('open')">
+          <span class="session-day">${d.day}</span>
+          <div class="session-type-dot" style="background:${SESSION_COLORS[d.type]||'#8A8278'}"></div>
+          <span class="session-title">${d.title}</span>
+          <span class="session-duration">${d.duration ? d.duration + 'm' : ''}</span>
+        </div>
+        <div class="session-body">
+          <div class="session-focus">${d.focus}</div>
+          ${setsHTML}
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+}
+
+// ── Help / Overview menu ──────────────────────────────────────
+function toggleHelpMenu() {
+  const menu = document.getElementById('prog-help-menu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+  if (menu.style.display === 'block') menu.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function buildHelpMenu(cycles, startDate, currentWeek) {
+  const body = document.getElementById('prog-help-body');
+  if (!body) return;
+
+  let cumWeeks = 0;
+  const html = cycles.map((c, ci) => {
+    let cycleTotalWeeks = 0;
     c.phases.forEach(p => { cycleTotalWeeks += (p.weeks||0) + (p.deload||0); });
+    const cycleStartWeek = cumWeeks + 1;
     const cycleEndWeek = cumWeeks + cycleTotalWeeks;
-    const isActive     = currentWeek >= cycleStartWeek && currentWeek <= cycleEndWeek;
-    const isComplete   = currentWeek > cycleEndWeek;
+    const isActive = currentWeek >= cycleStartWeek && currentWeek <= cycleEndWeek;
+    const isComplete = currentWeek > cycleEndWeek;
     cumWeeks += cycleTotalWeeks;
 
     const cyStart = new Date(startDate); cyStart.setDate(cyStart.getDate() + (cycleStartWeek-1)*7);
     const cyEnd   = new Date(startDate); cyEnd.setDate(cyEnd.getDate() + cycleEndWeek*7);
-    const monthRange = `${cyStart.toLocaleDateString('en-US',{month:'short',year:'numeric'})} – ${cyEnd.toLocaleDateString('en-US',{month:'short',year:'numeric'})}`;
+    const range = `${cyStart.toLocaleDateString('en-US',{month:'short',year:'numeric'})} – ${cyEnd.toLocaleDateString('en-US',{month:'short',year:'numeric'})}`;
 
-    const statusClass = isActive ? 'active' : isComplete ? 'complete' : 'upcoming';
-    const statusLabel = isActive ? 'Active'  : isComplete ? 'Complete'  : 'Upcoming';
+    const tagBg = isActive ? 'rgba(200,49,10,0.15)' : isComplete ? 'rgba(106,122,106,0.12)' : 'rgba(88,80,74,0.1)';
+    const tagColor = isActive ? '#E04418' : isComplete ? '#8A9A8A' : '#58504A';
+    const tagLabel = isActive ? 'Active' : isComplete ? 'Complete' : 'Upcoming';
 
-    let phCumWeeks = cycleStartWeek - 1;
     const phaseRows = c.phases.map(p => {
-      const phStart  = phCumWeeks + 1;
-      const phWeeks  = (p.weeks||0) + (p.deload||0);
-      phCumWeeks    += phWeeks;
-      const isCur    = currentWeek >= phStart && currentWeek <= phCumWeeks;
-      const isPast   = currentWeek > phCumWeeks;
-      const col      = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
-      const gate     = PHASE_DEFINITIONS[p.phase]?.exit_gate || '';
-      const phStatus = isCur ? 'active' : isPast ? 'complete' : 'upcoming';
-      return `<div class="cc-phase-row ${isCur?'current-phase':''}">
-        <div class="cph-dot" style="background:${col.border}"></div>
-        <div class="cph-name" style="color:${col.text}">${p.phase.replace(/_/g,' ')}</div>
-        <div class="cph-weeks">${p.weeks}w + ${p.deload||0}w deload</div>
-        <div class="cph-gate">${gate ? '↳ ' + gate : ''}</div>
-        <div class="cph-status ${phStatus}">${phStatus.toUpperCase()}</div>
+      const col = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
+      return `<div class="phm-phase-row">
+        <div class="phm-phase-dot" style="background:${col.border}"></div>
+        <span class="phm-phase-name" style="color:${col.text}">${p.phase.replace(/_/g,' ')}</span>
+        <span class="phm-phase-weeks">${p.weeks}w + ${p.deload||0}w deload</span>
       </div>`;
     }).join('');
 
-    return `<div class="cycle-card ${isActive?'active-cycle':''}">
-      <div class="cc-head" onclick="this.nextElementSibling.classList.toggle('open')">
-        <div class="cc-head-left">
-          <span class="cc-num">CYCLE ${c.cycle}</span>
-          <span class="cc-name">${c.label||'Training Cycle'}</span>
-          ${isActive ? '<div class="cc-active-pip"></div>' : ''}
+    return `${ci > 0 ? '<div class="phm-divider"></div>' : ''}
+      <div class="phm-cycle">
+        <div class="phm-cycle-head">
+          Cycle ${c.cycle} · ${c.label}
+          <span class="phm-cycle-tag" style="background:${tagBg};color:${tagColor};border:1px solid ${tagColor}40">${tagLabel}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--iron);margin-left:auto">${range}</span>
         </div>
-        <div class="cc-head-right">
-          <span class="cc-months">${monthRange}</span>
-          <span class="cc-status ${statusClass}">${statusLabel}</span>
-        </div>
-      </div>
-      <div class="cc-body ${isActive?'open':''}">
-        <div class="cc-phases">${phaseRows}</div>
-        ${c.note ? `<div class="cc-note">${c.note}</div>` : ''}
-      </div>
-    </div>`;
+        <div class="phm-phases">${phaseRows}</div>
+        ${c.note ? `<div class="phm-note">${c.note}</div>` : ''}
+      </div>`;
   }).join('');
-}
 
-function renderPhaseDetail(cycles, currentWeek) {
-  const cont = document.getElementById('phase-detail-list');
-  if (!cont) return;
-  const seen = new Set();
-  const allPhases = [];
-  let cumWeeks = 0;
-  cycles.forEach(c => {
-    c.phases.forEach(p => {
-      const pw = (p.weeks||0) + (p.deload||0);
-      const start = cumWeeks + 1;
-      cumWeeks += pw;
-      if (!seen.has(p.phase)) {
-        seen.add(p.phase);
-        allPhases.push({ ...p, start, end: cumWeeks });
-      }
-    });
-  });
-
-  cont.innerHTML = allPhases.map(p => {
-    const def    = PHASE_DEFINITIONS[p.phase] || {};
-    const col    = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
-    const isActive = currentWeek >= p.start && currentWeek <= p.end;
-    const isPast   = currentWeek > p.end;
-    const status   = isActive ? 'active' : isPast ? 'complete' : 'upcoming';
-
-    return `<div class="phase-detail-card ${isActive?'active-phase':''}">
-      <div class="pdc-head" onclick="this.nextElementSibling.classList.toggle('open')">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:8px;height:8px;border-radius:50%;background:${col.border};flex-shrink:0"></div>
-          <span class="pdc-name">${p.phase.replace(/_/g,' ')}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--iron)">${p.weeks}w training + ${p.deload||0}w deload</span>
-          <span class="cph-status ${status}">${status.toUpperCase()}</span>
-        </div>
-      </div>
-      <div class="pdc-body ${isActive?'open':''}">
-        <div class="pdc-grid">
-          <div class="pdc-stat"><div class="pdc-stat-label">Running</div><div class="pdc-stat-val">${def.running||'—'}</div></div>
-          <div class="pdc-stat"><div class="pdc-stat-label">Murph Scaling</div><div class="pdc-stat-val">${def.murph||'—'}</div></div>
-          <div class="pdc-stat"><div class="pdc-stat-label">Strength</div><div class="pdc-stat-val">${def.strength||'—'}</div></div>
-          <div class="pdc-stat"><div class="pdc-stat-label">Speed Intervals</div><div class="pdc-stat-val">${def.intervals ? 'Yes — see running notes' : 'No'}</div></div>
-        </div>
-        <div class="pdc-goals">${(def.goals||[]).map(g=>`<div class="pdc-goal-item"><div class="pdc-goal-dot"></div>${g}</div>`).join('')}</div>
-        <div class="pdc-exit"><div class="pdc-exit-label">Exit Gate</div>${def.exit_gate||'Phase complete when duration elapsed.'}</div>
-      </div>
-    </div>`;
-  }).join('');
+  body.innerHTML = html;
 }
 
 // ══════════════════════════════════════════════════════════════
