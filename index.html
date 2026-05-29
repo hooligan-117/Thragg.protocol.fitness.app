@@ -280,45 +280,159 @@ nav {
 .m-delta { font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:500; color:#8A9A8A; white-space:nowrap; }
 .m-delta.baseline { color:var(--iron); }
 
-/* === PROGRAM === */
-.priority-controls { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:12px; }
-.priority-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
-.prio-item { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:14px; }
-.prio-name { font-size:0.6rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; margin-bottom:8px; }
-.prio-name.strong  { color:var(--steel); }
-.prio-name.durable { color:var(--accent); }
-.prio-name.fast    { color:var(--armor); }
-.prio-select {
-  width:100%; background:var(--surface); border:1px solid var(--border2); color:var(--armor);
-  font-family:'DM Sans',sans-serif; font-size:0.72rem; padding:6px 8px; border-radius:6px;
-  cursor:pointer; outline:none; appearance:none;
+/* === PROGRAM EXPLORER === */
+.prog-banner {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  gap: 16px; align-items: center;
+  background: var(--surface); border: 1px solid var(--border3); border-radius: 10px;
+  padding: 18px 22px; margin-bottom: 0; position: relative; overflow: hidden;
 }
-.prio-select:focus { border-color:rgba(200,49,10,0.4); }
-option { background:#1a1614; }
-.regen-btn {
-  margin-top:14px; padding:9px 22px; background:rgba(200,49,10,0.15); border:1px solid rgba(200,49,10,0.35);
-  color:var(--accent2); font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:500;
-  letter-spacing:0.06em; border-radius:8px; cursor:pointer; transition:all 0.15s;
-  display:flex; align-items:center; gap:8px;
+.prog-banner::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,49,10,0.6), transparent);
 }
-.regen-btn:hover { background:rgba(200,49,10,0.25); border-color:var(--accent); }
-.regen-spinner { display:none; width:14px; height:14px; border:2px solid rgba(200,49,10,0.2); border-top-color:var(--accent); border-radius:50%; animation:spin 0.6s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.week-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; margin-bottom:6px; overflow:hidden; }
-.wc-head { display:flex; justify-content:space-between; align-items:center; padding:13px 18px; cursor:pointer; transition:background 0.15s; }
-.wc-head:hover { background:rgba(138,130,120,0.04); }
-.wc-num { font-family:'Playfair Display',serif; font-size:0.9rem; font-weight:700; color:var(--armor); }
-.wc-phase { font-size:0.55rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; padding:2px 9px; border-radius:100px; border:1px solid; }
-.ph-base   { color:var(--iron);   border-color:var(--border2);             background:rgba(88,80,74,0.08); }
-.ph-build  { color:var(--steel);  border-color:rgba(138,130,120,0.3);      background:rgba(138,130,120,0.08); }
-.ph-peak   { color:var(--accent2);border-color:rgba(200,49,10,0.3);        background:rgba(200,49,10,0.08); }
-.ph-deload { color:var(--dim);    border-color:rgba(46,42,39,0.5);         background:transparent; }
-.wc-body { display:none; padding:0 18px 12px; }
-.wc-body.open { display:block; }
-.day-row { display:flex; gap:12px; padding:6px 0; border-bottom:1px solid var(--border); font-size:0.7rem; align-items:baseline; }
-.day-row:last-child { border-bottom:none; }
-.dr-day  { min-width:34px; color:var(--iron); font-family:'DM Mono',monospace; font-size:0.6rem; }
-.dr-work { color:var(--armor); line-height:1.4; }
+.prog-banner::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(200,49,10,0.05) 0%, transparent 65%);
+  pointer-events: none;
+}
+.pb-left { position: relative; z-index: 1; }
+.pb-cycle-label { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--iron); margin-bottom: 5px; }
+.pb-phase-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 100px; border: 1px solid;
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.pb-center { text-align: center; position: relative; z-index: 1; }
+.pb-week-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 900; color: var(--ivory); line-height: 1; }
+.pb-week-sub { font-size: 0.58rem; color: var(--iron); letter-spacing: 0.16em; text-transform: uppercase; margin-top: 3px; }
+.pb-right { text-align: right; position: relative; z-index: 1; }
+.pb-stat-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--armor); line-height: 1; }
+.pb-stat-label { font-size: 0.56rem; color: var(--iron); letter-spacing: 0.16em; text-transform: uppercase; margin-top: 3px; }
+
+.phase-progress-wrap {
+  margin-top: 10px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 12px 16px;
+}
+.phase-progress-track { display: flex; gap: 3px; align-items: center; }
+.pp-segment {
+  height: 6px; border-radius: 3px; transition: opacity 0.3s; position: relative;
+  flex: 1; min-width: 0; cursor: default;
+}
+.pp-segment.past    { opacity: 0.35; }
+.pp-segment.current { opacity: 1; box-shadow: 0 0 8px rgba(200,49,10,0.4); }
+.pp-segment.future  { opacity: 0.15; }
+.pp-label-row { display: flex; gap: 3px; margin-top: 5px; }
+.pp-label { font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; flex: 1; color: var(--iron); overflow: hidden; white-space: nowrap; }
+.pp-label.current { color: var(--accent2); }
+
+/* Cycle roadmap */
+.cycle-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  margin-bottom: 10px; overflow: hidden;
+}
+.cycle-card.active-cycle { border-color: var(--border3); }
+.cycle-card.active-cycle .cc-head { background: rgba(200,49,10,0.05); }
+.cc-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 18px; cursor: pointer; transition: background 0.15s;
+  border-bottom: 1px solid var(--border);
+}
+.cc-head:hover { background: rgba(138,130,120,0.04); }
+.cc-head-left { display: flex; align-items: center; gap: 12px; }
+.cc-num { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--iron); }
+.cc-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--ivory); }
+.cc-active-pip {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  box-shadow: 0 0 8px rgba(200,49,10,0.6); animation: pip-pulse 2.5s ease-in-out infinite;
+}
+.cc-head-right { display: flex; align-items: center; gap: 10px; }
+.cc-months { font-size: 0.6rem; color: var(--iron); font-family: 'DM Mono', monospace; }
+.cc-status {
+  padding: 2px 9px; border-radius: 100px; font-size: 0.52rem;
+  font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid;
+}
+.cc-status.active   { background: rgba(200,49,10,0.12); color: var(--accent2); border-color: rgba(200,49,10,0.3); }
+.cc-status.upcoming { background: rgba(88,80,74,0.1); color: var(--iron); border-color: var(--border2); }
+.cc-status.complete { background: rgba(106,122,106,0.12); color: #8A9A8A; border-color: rgba(106,122,106,0.25); }
+.cc-body { display: none; padding: 14px 18px; }
+.cc-body.open { display: block; }
+.cc-phases { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.cc-phase-row {
+  display: flex; align-items: center; gap: 12px; padding: 8px 12px;
+  background: var(--surface2); border-radius: 6px; border: 1px solid var(--border);
+}
+.cc-phase-row.current-phase { border-color: var(--border3); background: rgba(200,49,10,0.04); }
+.cph-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.cph-name { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; flex: 1; }
+.cph-weeks { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--iron); }
+.cph-gate {
+  font-size: 0.6rem; color: var(--iron); font-style: italic;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;
+}
+.cph-status { font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.cph-status.active   { color: var(--accent2); }
+.cph-status.upcoming { color: var(--iron); }
+.cph-status.complete { color: #8A9A8A; }
+.cc-note { font-size: 0.65rem; color: var(--iron); line-height: 1.5; padding: 6px 0 0; border-top: 1px solid var(--border); margin-top: 6px; }
+
+/* Weekly skeleton card */
+.week-skeleton-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px; overflow: hidden;
+}
+.wsk-title { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--steel); margin-bottom: 14px; }
+.wsk-grid { display: flex; flex-direction: column; gap: 0; }
+.wsk-row {
+  display: grid; grid-template-columns: 80px 100px 1fr;
+  gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+.wsk-row:last-child { border-bottom: none; }
+.wsk-day { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--ivory); padding-top: 2px; }
+.wsk-type { font-size: 0.62rem; color: var(--steel); letter-spacing: 0.05em; padding-top: 2px; }
+.wsk-desc { font-size: 0.7rem; color: var(--armor); line-height: 1.4; }
+.wsk-note { font-size: 0.62rem; color: var(--iron); line-height: 1.6; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-style: italic; }
+
+/* Phase detail */
+.phase-detail-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  margin-bottom: 8px; overflow: hidden;
+}
+.phase-detail-card.active-phase { border-color: var(--border3); }
+.pdc-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 13px 18px; cursor: pointer; transition: background 0.15s;
+}
+.pdc-head:hover { background: rgba(138,130,120,0.04); }
+.pdc-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--ivory); }
+.pdc-body { display: none; padding: 0 18px 14px; }
+.pdc-body.open { display: block; }
+.pdc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.pdc-stat { background: var(--surface2); border-radius: 6px; padding: 10px 12px; }
+.pdc-stat-label { font-size: 0.54rem; color: var(--iron); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+.pdc-stat-val { font-size: 0.8rem; color: var(--armor); font-weight: 500; }
+.pdc-goals { margin-bottom: 10px; }
+.pdc-goal-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 0.68rem; color: var(--armor); }
+.pdc-goal-item:last-child { border-bottom: none; }
+.pdc-goal-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.pdc-exit { background: rgba(200,49,10,0.05); border: 1px solid rgba(200,49,10,0.2); border-radius: 6px; padding: 10px 12px; font-size: 0.66rem; color: var(--armor); line-height: 1.5; }
+.pdc-exit-label { font-size: 0.52rem; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 5px; }
+
+/* Program upload strip */
+.prog-upload-btn {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 16px;
+  background: rgba(138,130,120,0.08); border: 1px solid var(--border2);
+  color: var(--steel); font-family: 'DM Sans', sans-serif; font-size: 0.68rem;
+  font-weight: 500; border-radius: 6px; cursor: pointer; transition: all 0.15s;
+}
+.prog-upload-btn:hover { color: var(--armor); border-color: rgba(138,130,120,0.4); }
+.prog-empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 60px 20px; text-align: center;
+}
+.prog-empty-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ivory); margin-bottom: 6px; }
+.prog-empty-sub { font-size: 0.7rem; color: var(--iron); }
 
 /* === LOG === */
 .filter-bar { display:flex; gap:5px; margin-bottom:18px; flex-wrap:wrap; }
@@ -644,46 +758,79 @@ option { background:#1a1614; }
 <!-- ══════════════ PROGRAM ══════════════ -->
 <div class="panel" id="panel-program">
   <div class="page-head">
-    <h2>12-Week <em>Training Block</em></h2>
-    <p>Periodized across Base, Build, Peak, and Deload. Adjust pillar priorities to regenerate the plan.</p>
+    <h2>Training <em>Program</em></h2>
+    <p>Your active cycle, upcoming phases, and weekly schedule. Upload a program JSON to update.</p>
   </div>
 
-  <div class="priority-controls">
-    <div class="sec-label" style="margin-bottom:10px">Pillar Priority</div>
-    <div class="priority-grid">
-      <div class="prio-item">
-        <div class="prio-name strong">Strong</div>
-        <select class="prio-select" id="prio-strong" onchange="updatePriority()">
-          <option value="1">Priority 1 — Highest</option>
-          <option value="2" selected>Priority 2</option>
-          <option value="3">Priority 3 — Lowest</option>
-        </select>
+  <!-- Current position banner -->
+  <div id="prog-position-banner" style="display:none">
+    <div class="prog-banner">
+      <div class="pb-left">
+        <div class="pb-cycle-label" id="pb-cycle-label">—</div>
+        <div class="pb-phase-badge" id="pb-phase-badge">—</div>
       </div>
-      <div class="prio-item">
-        <div class="prio-name durable">Durable</div>
-        <select class="prio-select" id="prio-durable" onchange="updatePriority()">
-          <option value="1">Priority 1 — Highest</option>
-          <option value="2">Priority 2</option>
-          <option value="3" selected>Priority 3 — Lowest</option>
-        </select>
+      <div class="pb-center">
+        <div class="pb-week-num" id="pb-week-num">—</div>
+        <div class="pb-week-sub" id="pb-week-sub">of program</div>
       </div>
-      <div class="prio-item">
-        <div class="prio-name fast">Fast</div>
-        <select class="prio-select" id="prio-fast" onchange="updatePriority()">
-          <option value="1" selected>Priority 1 — Highest</option>
-          <option value="2">Priority 2</option>
-          <option value="3">Priority 3 — Lowest</option>
-        </select>
+      <div class="pb-right">
+        <div class="pb-stat-val" id="pb-months-remain">—</div>
+        <div class="pb-stat-label">months remaining</div>
       </div>
     </div>
-    <button class="regen-btn" onclick="regenerateProgram()">
-      <svg viewBox="0 0 20 20" width="14" height="14" fill="none"><path d="M4 10 A6 6 0 1 0 10 4" stroke="#E04418" stroke-width="1.5" stroke-linecap="round"/><path d="M10 4 L7 1 M10 4 L13 1" stroke="#E04418" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Regenerate Program
-      <div class="regen-spinner" id="regen-spinner"></div>
-    </button>
+    <!-- Phase progress bar -->
+    <div class="phase-progress-wrap">
+      <div class="phase-progress-track" id="phase-progress-track"></div>
+    </div>
   </div>
 
-  <div id="program-list"></div>
+  <!-- No program loaded state -->
+  <div id="prog-empty" class="prog-empty-state">
+    <svg viewBox="0 0 64 64" width="40" height="40" fill="none" style="opacity:0.3;margin-bottom:12px">
+      <rect x="10" y="8" width="44" height="48" rx="3" stroke="#8A8278" stroke-width="1.2" fill="rgba(138,130,120,0.05)"/>
+      <line x1="18" y1="20" x2="46" y2="20" stroke="#C8310A" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="18" y1="28" x2="38" y2="28" stroke="#8A8278" stroke-width="1" stroke-linecap="round"/>
+      <line x1="18" y1="35" x2="42" y2="35" stroke="#8A8278" stroke-width="1" stroke-linecap="round"/>
+      <line x1="18" y1="42" x2="34" y2="42" stroke="#8A8278" stroke-width="1" stroke-linecap="round"/>
+    </svg>
+    <div class="prog-empty-title">No Program Loaded</div>
+    <div class="prog-empty-sub">Upload a program JSON file to see your training roadmap.</div>
+    <button class="btn-primary" style="margin-top:14px" onclick="document.getElementById('prog-file-input').click()">Upload Program</button>
+    <input type="file" id="prog-file-input" accept=".json" style="display:none">
+  </div>
+
+  <!-- Upload strip (visible when program loaded) -->
+  <div id="prog-upload-strip" style="display:none">
+    <button class="prog-upload-btn" onclick="document.getElementById('prog-file-input2').click()">
+      <svg viewBox="0 0 20 20" width="13" height="13" fill="none"><path d="M10 3 L10 13" stroke="#C8310A" stroke-width="1.6" stroke-linecap="round"/><path d="M6 7 L10 3 L14 7" stroke="#C8310A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="3" y="14" width="14" height="3" rx="1" stroke="#8A8278" stroke-width="1" fill="none"/></svg>
+      Upload New Program
+    </button>
+    <input type="file" id="prog-file-input2" accept=".json" style="display:none">
+    <div class="ok-strip" id="prog-ok-strip" style="display:inline-block;margin-left:10px"></div>
+  </div>
+
+  <!-- Cycle roadmap -->
+  <div id="prog-roadmap" style="display:none">
+    <div class="sec-label" style="margin-top:16px">Training Roadmap</div>
+    <div id="cycle-roadmap"></div>
+  </div>
+
+  <!-- Weekly skeleton -->
+  <div id="prog-skeleton" style="display:none">
+    <div class="sec-label" style="margin-top:16px">Weekly Structure</div>
+    <div class="week-skeleton-card">
+      <div class="wsk-title">Fixed Day Assignments</div>
+      <div class="wsk-grid" id="weekly-skeleton-grid"></div>
+      <div class="wsk-note" id="weekly-skeleton-note"></div>
+    </div>
+  </div>
+
+  <!-- Phase detail drill-down -->
+  <div id="prog-phases" style="display:none">
+    <div class="sec-label" style="margin-top:16px">Phase Detail</div>
+    <div id="phase-detail-list"></div>
+  </div>
+
 </div>
 
 <!-- ══════════════ LOG ══════════════ -->
@@ -849,22 +996,17 @@ option { background:#1a1614; }
     <div class="sb-config-title">Supabase Setup Guide</div>
     <div style="font-size:0.7rem;color:var(--iron);line-height:1.8">
       <p style="margin-bottom:8px">Add a <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;font-family:'DM Mono',monospace;color:var(--armor)">supabase.js</code> file to your GitHub repo with this structure:</p>
-      <pre style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:0.62rem;font-family:'DM Mono',monospace;color:var(--armor);overflow-x:auto;line-height:1.7">// supabase.js
-// Add this script tag to index.html BEFORE closing &lt;/body&gt;:
+    <pre style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:0.62rem;font-family:'DM Mono',monospace;color:var(--armor);overflow-x:auto;line-height:1.7">// supabase.js — add to GitHub repo alongside index.html
+// Then add this line to index.html before &lt;/body&gt;:
 // &lt;script src="supabase.js"&gt;&lt;/script&gt;
 
 const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
 const SUPABASE_KEY = 'YOUR_ANON_KEY';
 
-// Tables needed in your Supabase project:
-// actual_workouts  — main workout records
-// set_logs         — embedded sets (FK: workout_id)
-// lap_logs         — embedded laps (FK: workout_id)
-// pr_ledger        — personal records
-// milestones       — milestone events
-
-// The app reads SUPABASE_URL and SUPABASE_KEY from window scope.
-// It will attempt to connect on load if both are present.</pre>
+// Tables: programs · actual_workouts · pr_ledger · milestones
+// Run schema.sql in Supabase SQL editor first.
+// Programs are stored with full cycles/phases as embedded JSONB.
+// Upload program JSON in the Program tab; it will also push to Supabase.</pre>
       <p style="margin-top:10px;font-size:0.65rem;color:var(--iron)">
         SQL schema file: add <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;font-family:'DM Mono',monospace;color:var(--armor)">schema.sql</code> to your repo root.
         A starter schema is generated below based on the Thragg data model.
@@ -874,59 +1016,91 @@ const SUPABASE_KEY = 'YOUR_ANON_KEY';
 
   <div class="sb-config-card">
     <div class="sb-config-title">Starter SQL Schema (copy into Supabase SQL editor)</div>
-    <pre style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:0.6rem;font-family:'DM Mono',monospace;color:var(--armor);overflow-x:auto;line-height:1.8;white-space:pre-wrap">-- THRAGG PROTOCOL — Supabase Schema v2
+    <pre style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:0.6rem;font-family:'DM Mono',monospace;color:var(--armor);overflow-x:auto;line-height:1.8;white-space:pre-wrap">-- THRAGG PROTOCOL — Supabase Schema v3
 -- Run this in your Supabase project SQL editor
 
-create table if not exists actual_workouts (
+-- ── PROGRAMS ──────────────────────────────────────────────────
+create table if not exists programs (
   id               text primary key,
-  planned_workout_id text,
-  program_id       text,
-  date             date not null,
-  session          int default 1,
-  type             text not null,  -- strength|run|conditioning|mobility
-  pillar           text not null,  -- strong|durable|fast|mobility
-  title            text,
-  duration         int,
+  name             text,
+  start_date       date not null,
+  end_date         date,
+  total_weeks      int,
+  status           text default 'active' check (status in ('active','completed','paused','archived')),
+  pillar_priorities jsonb default '{"strong":1,"durable":2,"fast":3}'::jsonb,
+  cycles           jsonb default '[]'::jsonb,  -- full cycle/phase structure embedded
+  weekly_skeleton  jsonb default '[]'::jsonb,  -- day assignments
   notes            text,
-  vest_weight_lbs  int default 0,
-  mile_time_sec    int,
-  deviation_from_plan text default 'none',
-  sets             jsonb default '[]',
-  laps             jsonb default '[]',
   created_at       timestamptz default now()
 );
 
+-- ── ACTUAL WORKOUTS ───────────────────────────────────────────
+create table if not exists actual_workouts (
+  id                   text primary key,
+  planned_workout_id   text,
+  program_id           text references programs(id) on delete set null,
+  date                 date not null,
+  session              int  default 1,
+  type                 text not null check (type in ('strength','run','conditioning','mobility')),
+  pillar               text not null check (pillar in ('strong','durable','fast','mobility')),
+  title                text,
+  duration             int,
+  notes                text,
+  vest_weight_lbs      int  default 0,
+  mile_time_sec        int,
+  deviation_from_plan  text default 'unplanned' check (deviation_from_plan in ('none','modified','rescheduled','unplanned')),
+  sets                 jsonb default '[]'::jsonb,
+  laps                 jsonb default '[]'::jsonb,
+  created_at           timestamptz default now()
+);
+
+-- ── PR LEDGER ─────────────────────────────────────────────────
 create table if not exists pr_ledger (
-  id               text primary key,
-  workout_id       text references actual_workouts(id),
-  metric           text not null,  -- deadlift|squat|bench|mile_time|murph_time
-  value            float not null,
-  date             date not null,
-  vest_worn        boolean default false,
-  previous_pr      float,
-  created_at       timestamptz default now()
+  id            text primary key,
+  workout_id    text references actual_workouts(id) on delete cascade,
+  metric        text not null check (metric in ('deadlift','squat','bench','mile_time','murph_time')),
+  value         float not null,
+  date          date  not null,
+  vest_weight_lbs int default 0,
+  previous_pr   float,
+  notes         text,
+  created_at    timestamptz default now()
 );
 
+-- ── MILESTONES ────────────────────────────────────────────────
 create table if not exists milestones (
-  id               text primary key,
-  workout_id       text references actual_workouts(id),
-  type             text not null,  -- threshold_met|phase_complete|pr_set|streak
-  pillar           text,
-  label            text not null,
-  date             date not null,
-  threshold_value  float,
-  created_at       timestamptz default now()
+  id              text primary key,
+  workout_id      text references actual_workouts(id) on delete set null,
+  type            text not null check (type in ('threshold_met','phase_complete','pr_set','streak')),
+  pillar          text check (pillar in ('strong','durable','fast','overall','mobility')),
+  label           text not null,
+  date            date not null,
+  threshold_value float,
+  created_at      timestamptz default now()
 );
 
--- Enable Row Level Security (RLS) — single user, no auth needed for personal use
+-- ── RLS (personal single-user) ────────────────────────────────
+alter table programs        enable row level security;
 alter table actual_workouts enable row level security;
 alter table pr_ledger       enable row level security;
 alter table milestones      enable row level security;
 
--- Allow all operations from anon key (personal use only)
-create policy "allow_all" on actual_workouts for all using (true) with check (true);
-create policy "allow_all" on pr_ledger       for all using (true) with check (true);
-create policy "allow_all" on milestones      for all using (true) with check (true);</pre>
+drop policy if exists "thragg_allow_all" on programs;
+drop policy if exists "thragg_allow_all" on actual_workouts;
+drop policy if exists "thragg_allow_all" on pr_ledger;
+drop policy if exists "thragg_allow_all" on milestones;
+
+create policy "thragg_allow_all" on programs        for all using (true) with check (true);
+create policy "thragg_allow_all" on actual_workouts for all using (true) with check (true);
+create policy "thragg_allow_all" on pr_ledger       for all using (true) with check (true);
+create policy "thragg_allow_all" on milestones      for all using (true) with check (true);
+
+-- ── INDEXES ───────────────────────────────────────────────────
+create index if not exists idx_workouts_date      on actual_workouts(date desc);
+create index if not exists idx_workouts_pillar    on actual_workouts(pillar);
+create index if not exists idx_workouts_program   on actual_workouts(program_id);
+create index if not exists idx_pr_metric          on pr_ledger(metric, date desc);
+create index if not exists idx_milestones_date    on milestones(date desc);</pre>
   </div>
 
   <div class="sb-config-card">
@@ -952,7 +1126,7 @@ const GOALS = { deadlift:405, squat:315, bench:225, mileSec:360 };
 let state = {
   workouts: [],
   priorities: { strong:2, durable:3, fast:1 },
-  program: [],
+  program: { cycles: [], start_date: null, name: null, weekly_skeleton: null },
   scores: { overall:0, strong:0, durable:0, fast:0 },
   prs: { deadlift:0, squat:0, bench:0, mileSec:0, murphDone:false, murphTime:0, pullUps:0 },
   prHistory: [],
@@ -975,7 +1149,7 @@ function go(panel, btn) {
   document.getElementById('panel-' + panel).classList.add('active');
   btn.classList.add('active');
   if (panel === 'timeline') { buildTimeline(); buildLoadChart(); buildMilestoneList(); }
-  if (panel === 'program' && !state.program.length) regenerateProgram(true);
+  if (panel === 'program')  { renderProgramExplorer(); }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1291,96 +1465,347 @@ function buildMilestoneList() {
 }
 
 // ══════════════════════════════════════════════════════════════
-// PROGRAM
+// PROGRAM EXPLORER
 // ══════════════════════════════════════════════════════════════
-function updatePriority() {
-  state.priorities.strong  = parseInt(document.getElementById('prio-strong').value);
-  state.priorities.durable = parseInt(document.getElementById('prio-durable').value);
-  state.priorities.fast    = parseInt(document.getElementById('prio-fast').value);
-}
 
-function regenerateProgram(silent=false) {
-  const spinner = document.getElementById('regen-spinner');
-  spinner.style.display = 'inline-block';
-  setTimeout(() => {
-    updatePriority();
-    state.program = buildProgram();
-    renderProgram();
-    spinner.style.display = 'none';
-  }, silent ? 0 : 500);
-}
+// Phase color map
+const PHASE_COLORS = {
+  BASE:           { bg: 'rgba(88,80,74,0.5)',       border: '#58504A', text: '#8A8278'  },
+  DURABILITY:     { bg: 'rgba(200,49,10,0.45)',      border: '#C8310A', text: '#E04418'  },
+  SPEED:          { bg: 'rgba(192,184,176,0.4)',     border: '#C0B8B0', text: '#C0B8B0'  },
+  STRENGTH_PEAK:  { bg: 'rgba(138,130,120,0.5)',     border: '#8A8278', text: '#F0EAE0'  },
+  DELOAD:         { bg: 'rgba(46,42,39,0.5)',        border: '#2E2A27', text: '#58504A'  },
+};
 
-const PHASES = ['BASE','BASE','BASE','BASE','BUILD','BUILD','BUILD','BUILD','PEAK','PEAK','PEAK','DELOAD'];
+const WEEKLY_SKELETON = [
+  { day: 'Monday',    type: 'Strength',        desc: 'Bench (heavy or volume) + upper push/pull accessory' },
+  { day: 'Tuesday',   type: 'Conditioning',    desc: 'Murph simulation — scaled to current phase volume' },
+  { day: 'Wednesday', type: 'Strength',        desc: 'Deadlift (heavy or volume) + upper pull accessory' },
+  { day: 'Thursday',  type: 'Speed / Aerobic', desc: 'Zone 2 in BASE → 400m intervals in SPEED / STRENGTH_PEAK' },
+  { day: 'Friday',    type: 'Strength',        desc: 'Squat (heavy or volume) + lower accessory' },
+  { day: 'Saturday',  type: 'Active Recovery', desc: 'KOT session: ATG splits, tibialis, nordics, hip 90/90, thoracic' },
+  { day: 'Sunday',    type: 'Rest',            desc: 'Full rest. Non-negotiable.' },
+];
 
-function buildProgram() {
-  const w = priorityWeights();
-  const total = 5;
-  const sS = Math.max(1,Math.round(w.strong*total));
-  const dS = Math.max(1,Math.round(w.durable*total));
-  const fS = Math.max(1,Math.round(w.fast*total));
+const PHASE_DEFINITIONS = {
+  BASE: {
+    goals: ['Establish aerobic base', 'Build pull-up volume', 'Maintain strength at 70% 1RM'],
+    running: 'Zone 2 only · 3–4×/week · build to 15–20 miles/week',
+    murph: '25–50% simulation volume',
+    strength: 'Maintenance at 70% 1RM · technique focus',
+    intervals: false,
+    exit_gate: '3 miles easy with no injury flags + 50 pull-ups per session achievable across sets',
+  },
+  DURABILITY: {
+    goals: ['Full Murph completion (no vest)', 'Increase pull-up capacity', 'Begin tempo running'],
+    running: 'Zone 2 base + weekly tempo run',
+    murph: '75–100% volume · no vest',
+    strength: 'Progressive overload resumes',
+    intervals: false,
+    exit_gate: 'Full Murph completed (no vest) + 5K comfortable',
+  },
+  SPEED: {
+    goals: ['Sub 6:30 mile time trial', 'Vest Murph introduction', 'Strength maintained'],
+    running: '400m intervals: start 6–8 reps · build to 12 · taper before test',
+    murph: 'Introduce vest at reduced volume',
+    strength: 'Maintained, not peaked',
+    intervals: true,
+    exit_gate: 'Sub 6:30 mile time trial',
+  },
+  STRENGTH_PEAK: {
+    goals: ['Deadlift 405 lb', 'Squat 315 lb', 'Bench 225 lb', 'PR test week at end'],
+    running: 'Reduced — 2× Zone 2 only',
+    murph: '1×/week maintenance only',
+    strength: 'Max intensity · wave loading · test week at end',
+    intervals: false,
+    exit_gate: 'DL / Squat / Bench PRs tested',
+  },
+  DELOAD: {
+    goals: ['Active recovery', 'Volume reduction 40–50%', 'Keep weights, drop sets and reps'],
+    running: 'Easy movement only',
+    murph: 'Skip or light calisthenics only',
+    strength: 'Same weights · 40–50% of normal volume',
+    intervals: false,
+    exit_gate: 'Feel recovered and ready for next phase',
+  },
+};
 
-  return Array.from({length:12},(_,i) => {
-    const phase = PHASES[i];
-    const intMod = i<4?0.7:i<8?0.85:i<11?1.0:0.6;
-    return { week:i+1, phase, days: buildWeekDays(sS,dS,fS,phase,intMod,i+1) };
+function initProgramUploads() {
+  ['prog-file-input', 'prog-file-input2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', e => { if (e.target.files[0]) readProgramFile(e.target.files[0]); });
   });
 }
 
-function buildWeekDays(ss,ds,fs,phase,intMod,wk) {
-  const tpl = {
-    strong:{
-      BASE:['Deadlift 5×5 @60% + RDL 3×8','Squat 5×5 @60% + Pull-ups 4×6','Bench 5×5 @60% + Row 4×8'],
-      BUILD:['Deadlift 4×3 @75% + Deficit DL 3×5','Squat 4×4 @75% + Front Squat 3×5','Bench 4×4 @75% + DB Incline 3×8'],
-      PEAK:['Deadlift wave 3/2/1 @85/90/95%','Squat 3×3 @85% + Box Squat 3×3','Bench 3×3 @87% + Board Press 3×3'],
-      DELOAD:['Deadlift 3×5 @50%','Squat 3×5 @50%']
-    },
-    durable:{
-      BASE:['Murph Sim 50% — 5/10/15 ×10','Pull-up ladder + 100 push-ups + 150 squats'],
-      BUILD:['Murph Sim 75% (no vest) — 5/10/15 ×15','Vest Murph sim 50% — 5/10/15 ×10'],
-      PEAK:['Full Murph (no vest) — time trial','Full Murph with 20 lb vest'],
-      DELOAD:['30-min easy calisthenics circuit']
-    },
-    fast:{
-      BASE:['Zone 2 — 3 miles easy','4×400m @ 5K effort + strides'],
-      BUILD:['Tempo: 1mi easy + 1mi hard + 1mi easy','6×400m @ goal pace + 10 sec'],
-      PEAK:['Mile time trial','8×200m @ goal pace, 90-sec rest'],
-      DELOAD:['2mi easy jog','Strides 6×50m']
-    },
-    mobility:{ BASE:['ATG: tibialis + split squat + nordic'],BUILD:['Loaded mobility + hip 90/90'],PEAK:['Full ROM pre-lift circuit'],DELOAD:['Restorative stretch 20 min'] }
+function readProgramFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.cycles || !Array.isArray(data.cycles)) throw new Error('Missing "cycles" array in JSON');
+      mergeProgramData(data);
+      const strip = document.getElementById('prog-ok-strip');
+      if (strip) { strip.textContent = `✓ ${file.name} loaded`; strip.style.display='inline-block'; strip.style.color='#8A9A8A'; setTimeout(()=>strip.style.display='none',4000); }
+    } catch(err) {
+      alert('Program JSON error: ' + err.message);
+    }
   };
-  const pool = [];
-  for(let i=0;i<ss;i++) pool.push({pillar:'strong',  label:(tpl.strong[phase]||tpl.strong.BASE)[wk%((tpl.strong[phase]||tpl.strong.BASE).length)]});
-  for(let i=0;i<ds;i++) pool.push({pillar:'durable', label:(tpl.durable[phase]||tpl.durable.BASE)[wk%((tpl.durable[phase]||tpl.durable.BASE).length)]});
-  for(let i=0;i<fs;i++) pool.push({pillar:'fast',    label:(tpl.fast[phase]||tpl.fast.BASE)[wk%((tpl.fast[phase]||tpl.fast.BASE).length)]});
-  pool.push({pillar:'mobility', label:(tpl.mobility[phase]||tpl.mobility.BASE)[0]});
-
-  const days = Array.from({length:7},(_,i)=>({day:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i],workouts:[]}));
-  const slots = [0,2,4,1,5,3,6];
-  pool.slice(0,7).forEach((w,i) => days[slots[i]%7].workouts.push(w));
-  return days;
+  reader.readAsText(file);
 }
 
-const PILLAR_COLORS = { strong:'#8A8278', durable:'#C8310A', fast:'#C0B8B0', mobility:'#6A7A6A' };
+function mergeProgramData(data) {
+  // Merge cycles — upsert by cycle number
+  if (data.cycles) {
+    const existing = new Map((state.program.cycles||[]).map(c=>[c.cycle,c]));
+    data.cycles.forEach(c => existing.set(c.cycle, c));
+    state.program.cycles = [...existing.values()].sort((a,b)=>a.cycle-b.cycle);
+  }
+  if (data.start_date) state.program.start_date = data.start_date;
+  if (data.name)       state.program.name = data.name;
+  if (data.weekly_skeleton) state.program.weekly_skeleton = data.weekly_skeleton;
+  renderProgramExplorer();
+}
 
-function renderProgram() {
-  const cont = document.getElementById('program-list');
-  if (!state.program.length) { cont.innerHTML = ''; return; }
-  cont.innerHTML = state.program.map(wk => `
-    <div class="week-card">
-      <div class="wc-head" onclick="this.nextElementSibling.classList.toggle('open')">
-        <span class="wc-num">Week ${wk.week}</span>
-        <span class="wc-phase ph-${wk.phase.toLowerCase()}">${wk.phase}</span>
+function renderProgramExplorer() {
+  const prog = state.program;
+  const hasCycles = prog.cycles && prog.cycles.length > 0;
+
+  document.getElementById('prog-empty').style.display          = hasCycles ? 'none' : 'flex';
+  document.getElementById('prog-upload-strip').style.display   = hasCycles ? 'block' : 'none';
+  document.getElementById('prog-roadmap').style.display        = hasCycles ? 'block' : 'none';
+  document.getElementById('prog-skeleton').style.display       = hasCycles ? 'block' : 'none';
+  document.getElementById('prog-phases').style.display         = hasCycles ? 'block' : 'none';
+  document.getElementById('prog-position-banner').style.display = hasCycles ? 'block' : 'none';
+
+  if (!hasCycles) return;
+
+  const today = new Date();
+  const startDate = prog.start_date ? new Date(prog.start_date) : today;
+
+  // Compute current position
+  const totalDaysElapsed = Math.floor((today - startDate) / 86400000);
+  const totalWeeksElapsed = Math.floor(totalDaysElapsed / 7) + 1;
+  const { currentCycle, currentPhaseObj, currentCycleWeek, totalProgramWeeks, weeksRemaining } = computePosition(prog.cycles, totalWeeksElapsed);
+
+  // Position banner
+  if (currentCycle) {
+    document.getElementById('pb-cycle-label').textContent = currentCycle.label || `Cycle ${currentCycle.cycle}`;
+    const phaseColor = currentPhaseObj ? PHASE_COLORS[currentPhaseObj.phase] || PHASE_COLORS.BASE : PHASE_COLORS.BASE;
+    const phaseBadge = document.getElementById('pb-phase-badge');
+    phaseBadge.textContent = currentPhaseObj ? currentPhaseObj.phase.replace('_',' ') : '—';
+    phaseBadge.style.borderColor = phaseColor.border;
+    phaseBadge.style.background = phaseColor.bg;
+    phaseBadge.style.color = phaseColor.text;
+    document.getElementById('pb-week-num').textContent = `Wk ${totalWeeksElapsed}`;
+    document.getElementById('pb-week-sub').textContent = 'of program';
+    const monthsLeft = Math.ceil(weeksRemaining / 4.33);
+    document.getElementById('pb-months-remain').textContent = monthsLeft > 0 ? monthsLeft : '—';
+  }
+
+  // Phase progress bar
+  renderPhaseProgressBar(prog.cycles, totalWeeksElapsed);
+
+  // Cycle roadmap
+  renderCycleRoadmap(prog.cycles, startDate, totalWeeksElapsed);
+
+  // Weekly skeleton
+  renderWeeklySkeleton();
+
+  // Phase detail
+  renderPhaseDetail(prog.cycles, totalWeeksElapsed);
+}
+
+function computePosition(cycles, weekNum) {
+  let cumWeeks = 0;
+  let totalProgramWeeks = 0;
+  let currentCycle = null, currentPhaseObj = null, currentCycleWeek = 0, weeksRemaining = 0;
+
+  // Total program weeks
+  cycles.forEach(c => {
+    c.phases.forEach(p => { totalProgramWeeks += (p.weeks||0) + (p.deload||0); });
+  });
+
+  cycles.forEach(c => {
+    c.phases.forEach(p => {
+      const phaseWeeks = (p.weeks||0) + (p.deload||0);
+      if (weekNum > cumWeeks && weekNum <= cumWeeks + phaseWeeks) {
+        currentCycle    = c;
+        currentPhaseObj = p;
+        currentCycleWeek = weekNum - cumWeeks;
+      }
+      cumWeeks += phaseWeeks;
+    });
+  });
+
+  weeksRemaining = Math.max(0, totalProgramWeeks - weekNum);
+  return { currentCycle, currentPhaseObj, currentCycleWeek, totalProgramWeeks, weeksRemaining };
+}
+
+function renderPhaseProgressBar(cycles, currentWeek) {
+  const track = document.getElementById('phase-progress-track');
+  const allPhases = [];
+  cycles.forEach(c => c.phases.forEach(p => {
+    allPhases.push({ ...p, cycleLabel: c.label || `C${c.cycle}` });
+    if (p.deload) allPhases.push({ phase: 'DELOAD', weeks: p.deload, cycleLabel: c.label, isDeload: true });
+  }));
+
+  let cumW = 0;
+  const segments = allPhases.map(p => {
+    const w = p.isDeload ? p.weeks : (p.weeks || 0);
+    const start = cumW + 1;
+    cumW += w;
+    const isPast    = currentWeek > cumW;
+    const isCurrent = currentWeek >= start && currentWeek <= cumW;
+    return { ...p, weeks: w, start, end: cumW, isPast, isCurrent };
+  });
+
+  const total = segments.reduce((s,p)=>s+p.weeks, 0);
+  const colors = { BASE:'#58504A', DURABILITY:'#C8310A', SPEED:'#C0B8B0', STRENGTH_PEAK:'#8A8278', DELOAD:'#2E2A27' };
+
+  track.innerHTML = segments.map(s => {
+    const pct = (s.weeks / total * 100).toFixed(1);
+    const cls = s.isPast ? 'past' : s.isCurrent ? 'current' : 'future';
+    return `<div class="pp-segment ${cls}" style="background:${colors[s.phase]||'#58504A'};flex-basis:${pct}%" title="${s.phase.replace('_',' ')} — Wk ${s.start}–${s.end}"></div>`;
+  }).join('');
+
+  // Label row
+  const labelRow = document.createElement('div');
+  labelRow.className = 'pp-label-row';
+  labelRow.innerHTML = segments.map(s => {
+    const cls = s.isCurrent ? 'current' : '';
+    return `<div class="pp-label ${cls}" style="flex-basis:${(s.weeks/total*100).toFixed(1)}%">${s.isCurrent ? s.phase.replace('_',' ') : ''}</div>`;
+  }).join('');
+  track.parentNode.appendChild(labelRow);
+}
+
+function renderCycleRoadmap(cycles, startDate, currentWeek) {
+  const cont = document.getElementById('cycle-roadmap');
+  let cumWeeks = 0;
+
+  cont.innerHTML = cycles.map(c => {
+    const cycleStartWeek = cumWeeks + 1;
+    let cycleTotalWeeks = 0;
+    c.phases.forEach(p => { cycleTotalWeeks += (p.weeks||0) + (p.deload||0); });
+    const cycleEndWeek = cumWeeks + cycleTotalWeeks;
+    const isActive   = currentWeek >= cycleStartWeek && currentWeek <= cycleEndWeek;
+    const isComplete = currentWeek > cycleEndWeek;
+    cumWeeks += cycleTotalWeeks;
+
+    const cycleStart = new Date(startDate);
+    cycleStart.setDate(cycleStart.getDate() + (cycleStartWeek - 1) * 7);
+    const cycleEnd = new Date(startDate);
+    cycleEnd.setDate(cycleEnd.getDate() + cycleEndWeek * 7);
+    const monthRange = `${cycleStart.toLocaleDateString('en-US',{month:'short',year:'numeric'})} – ${cycleEnd.toLocaleDateString('en-US',{month:'short',year:'numeric'})}`;
+
+    const statusClass = isActive ? 'active' : isComplete ? 'complete' : 'upcoming';
+    const statusLabel = isActive ? 'Active' : isComplete ? 'Complete' : 'Upcoming';
+
+    // Phase rows
+    let phCumWeeks = cycleStartWeek - 1;
+    const phaseRows = c.phases.map(p => {
+      const phStart = phCumWeeks + 1;
+      const phWeeks = (p.weeks||0) + (p.deload||0);
+      phCumWeeks += phWeeks;
+      const isCurrentPhase = currentWeek >= phStart && currentWeek <= phCumWeeks;
+      const isPastPhase    = currentWeek > phCumWeeks;
+      const col = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
+      const gate = PHASE_DEFINITIONS[p.phase]?.exit_gate || '';
+      const phStatus = isCurrentPhase ? 'active' : isPastPhase ? 'complete' : 'upcoming';
+      return `<div class="cc-phase-row ${isCurrentPhase?'current-phase':''}">
+        <div class="cph-dot" style="background:${col.border}"></div>
+        <div class="cph-name" style="color:${col.text}">${p.phase.replace(/_/g,' ')}</div>
+        <div class="cph-weeks">${p.weeks}w + ${p.deload||0}w deload</div>
+        <div class="cph-gate">${gate ? '↳ ' + gate : ''}</div>
+        <div class="cph-status ${phStatus}">${phStatus.toUpperCase()}</div>
+      </div>`;
+    }).join('');
+
+    return `<div class="cycle-card ${isActive?'active-cycle':''}">
+      <div class="cc-head" onclick="this.nextElementSibling.classList.toggle('open')">
+        <div class="cc-head-left">
+          <span class="cc-num">CYCLE ${c.cycle}</span>
+          <span class="cc-name">${c.label||'Training Cycle'}</span>
+          ${isActive ? '<div class="cc-active-pip"></div>' : ''}
+        </div>
+        <div class="cc-head-right">
+          <span class="cc-months">${monthRange}</span>
+          <span class="cc-status ${statusClass}">${statusLabel}</span>
+        </div>
       </div>
-      <div class="wc-body">
-        ${wk.days.map(d => `
-          <div class="day-row">
-            <span class="dr-day">${d.day}</span>
-            <span class="dr-work" style="color:${d.workouts.length ? PILLAR_COLORS[d.workouts[0].pillar] : 'var(--iron)'}">
-              ${d.workouts.length ? d.workouts.map(w=>w.label).join(' + ') : 'Rest / Recovery'}
-            </span>
-          </div>`).join('')}
+      <div class="cc-body ${isActive?'open':''}">
+        <div class="cc-phases">${phaseRows}</div>
+        ${c.note ? `<div class="cc-note">${c.note}</div>` : ''}
       </div>
+    </div>`;
+  }).join('');
+}
+
+function renderWeeklySkeleton() {
+  const grid = document.getElementById('weekly-skeleton-grid');
+  const skeleton = state.program.weekly_skeleton || WEEKLY_SKELETON;
+  grid.innerHTML = skeleton.map(row => `
+    <div class="wsk-row">
+      <span class="wsk-day">${row.day}</span>
+      <span class="wsk-type">${row.type}</span>
+      <span class="wsk-desc">${row.desc}</span>
     </div>`).join('');
+  document.getElementById('weekly-skeleton-note').textContent =
+    'Deadlift and Squat never on the same day. Pull-ups are a primary movement, not accessory — the Murph limiter. Deload every 4th week, non-negotiable.';
+}
+
+function renderPhaseDetail(cycles, currentWeek) {
+  const cont = document.getElementById('phase-detail-list');
+  const seen = new Set();
+  const allPhases = [];
+  let cumWeeks = 0;
+  cycles.forEach(c => {
+    c.phases.forEach(p => {
+      const phWeeks = (p.weeks||0) + (p.deload||0);
+      const start = cumWeeks + 1;
+      cumWeeks += phWeeks;
+      const key = p.phase;
+      if (!seen.has(key)) {
+        seen.add(key);
+        allPhases.push({ ...p, start, end: cumWeeks });
+      }
+    });
+  });
+
+  cont.innerHTML = allPhases.map(p => {
+    const def = PHASE_DEFINITIONS[p.phase] || {};
+    const col = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
+    const isActive = currentWeek >= p.start && currentWeek <= p.end;
+    const isPast   = currentWeek > p.end;
+    const status   = isActive ? 'active' : isPast ? 'complete' : 'upcoming';
+
+    return `<div class="phase-detail-card ${isActive?'active-phase':''}">
+      <div class="pdc-head" onclick="this.nextElementSibling.classList.toggle('open')">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:${col.border};flex-shrink:0"></div>
+          <span class="pdc-name">${p.phase.replace(/_/g,' ')}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--iron)">${p.weeks}w training + ${p.deload||0}w deload</span>
+          <span class="cph-status ${status}">${status.toUpperCase()}</span>
+        </div>
+      </div>
+      <div class="pdc-body ${isActive?'open':''}">
+        <div class="pdc-grid">
+          <div class="pdc-stat"><div class="pdc-stat-label">Running</div><div class="pdc-stat-val">${def.running||'—'}</div></div>
+          <div class="pdc-stat"><div class="pdc-stat-label">Murph Scaling</div><div class="pdc-stat-val">${def.murph||'—'}</div></div>
+          <div class="pdc-stat"><div class="pdc-stat-label">Strength</div><div class="pdc-stat-val">${def.strength||'—'}</div></div>
+          <div class="pdc-stat"><div class="pdc-stat-label">Speed Intervals</div><div class="pdc-stat-val">${def.intervals ? 'Yes — see running notes' : 'No'}</div></div>
+        </div>
+        <div class="pdc-goals">
+          ${(def.goals||[]).map(g=>`<div class="pdc-goal-item"><div class="pdc-goal-dot"></div>${g}</div>`).join('')}
+        </div>
+        <div class="pdc-exit">
+          <div class="pdc-exit-label">Exit Gate</div>
+          ${def.exit_gate||'Phase complete when duration elapsed.'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1633,12 +2058,30 @@ async function testSupabase() {
 async function loadFromSupabase() {
   if (!state.supabase.connected) return;
   try {
-    const res = await fetch(`${state.supabase.url}/rest/v1/actual_workouts?select=*&order=date.asc`, {
+    // Load workouts
+    const wRes = await fetch(`${state.supabase.url}/rest/v1/actual_workouts?select=*&order=date.asc`, {
       headers: { 'apikey': state.supabase.key, 'Authorization': `Bearer ${state.supabase.key}` }
     });
-    if (res.ok) {
-      const rows = await res.json();
+    if (wRes.ok) {
+      const rows = await wRes.json();
       if (rows.length) { mergeWorkouts(rows); showOk(`Loaded ${rows.length} workouts from Supabase`); }
+    }
+    // Load active program
+    const pRes = await fetch(`${state.supabase.url}/rest/v1/programs?select=*&status=eq.active&limit=1`, {
+      headers: { 'apikey': state.supabase.key, 'Authorization': `Bearer ${state.supabase.key}` }
+    });
+    if (pRes.ok) {
+      const programs = await pRes.json();
+      if (programs.length) {
+        const p = programs[0];
+        state.program = {
+          cycles: p.cycles || [],
+          start_date: p.start_date,
+          name: p.name,
+          weekly_skeleton: p.weekly_skeleton || null,
+        };
+        renderProgramExplorer();
+      }
     }
   } catch(e) { console.warn('Supabase load error:', e); }
 }
@@ -1691,8 +2134,11 @@ document.addEventListener('DOMContentLoaded', () => {
     testSupabase();
   }
 
-  // Program init
-  state.program = buildProgram();
+  // Program upload listeners
+  initProgramUploads();
+
+  // Render empty program state
+  renderProgramExplorer();
 });
 
 // Save Supabase config on page unload
