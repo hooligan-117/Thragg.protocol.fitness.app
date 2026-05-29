@@ -160,10 +160,10 @@ nav {
 .pc-durable::after { background:linear-gradient(90deg,transparent,var(--durable-c),transparent); }
 .pc-fast::after    { background:linear-gradient(90deg,transparent,var(--fast-c),transparent); }
 .pc-strong  { border-color:rgba(138,130,120,0.18); }
-.pc-durable { border-color:rgba(200,49,10,0.2); }
+.pc-durable { border-color:rgba(138,130,120,0.18); }
 .pc-fast    { border-color:rgba(192,184,176,0.15); }
 .pc-strong:hover  { border-color:rgba(138,130,120,0.32); }
-.pc-durable:hover { border-color:rgba(200,49,10,0.35); }
+.pc-durable:hover { border-color:rgba(138,130,120,0.32); }
 .pc-fast:hover    { border-color:rgba(192,184,176,0.28); }
 .pc-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
 .pc-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--ivory); }
@@ -497,21 +497,6 @@ nav {
 .pdc-exit { background: rgba(200,49,10,0.05); border: 1px solid rgba(200,49,10,0.2); border-radius: 6px; padding: 10px 12px; font-size: 0.66rem; color: var(--armor); line-height: 1.5; }
 .pdc-exit-label { font-size: 0.52rem; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 5px; }
 
-/* Program upload strip */
-.prog-upload-btn {
-  display: inline-flex; align-items: center; gap: 7px; padding: 7px 16px;
-  background: rgba(138,130,120,0.08); border: 1px solid var(--border2);
-  color: var(--steel); font-family: 'DM Sans', sans-serif; font-size: 0.68rem;
-  font-weight: 500; border-radius: 6px; cursor: pointer; transition: all 0.15s;
-}
-.prog-upload-btn:hover { color: var(--armor); border-color: rgba(138,130,120,0.4); }
-.prog-empty-state {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 60px 20px; text-align: center;
-}
-.prog-empty-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ivory); margin-bottom: 6px; }
-.prog-empty-sub { font-size: 0.7rem; color: var(--iron); }
-
 /* === LOG === */
 .filter-bar { display:flex; gap:5px; margin-bottom:18px; flex-wrap:wrap; }
 .fpill { padding:5px 13px; border-radius:100px; font-size:0.63rem; font-weight:500; letter-spacing:0.06em; background:var(--surface); border:1px solid var(--border2); color:var(--iron); cursor:pointer; transition:all 0.15s; }
@@ -818,11 +803,11 @@ nav {
 <div class="panel" id="panel-program">
   <div class="page-head">
     <h2>Training <em>Program</em></h2>
-    <p>Your active cycle, upcoming phases, and weekly schedule. Upload a program JSON to update.</p>
+    <p>Your active cycle, upcoming phases, and where you stand in the 18–24 month arc.</p>
   </div>
 
   <!-- Current position banner -->
-  <div id="prog-position-banner" style="display:none">
+  <div id="prog-position-banner">
     <div class="prog-banner">
       <div class="pb-left">
         <div class="pb-cycle-label" id="pb-cycle-label">—</div>
@@ -843,49 +828,14 @@ nav {
     </div>
   </div>
 
-  <!-- No program loaded state -->
-  <div id="prog-empty" class="prog-empty-state">
-    <svg viewBox="0 0 64 64" width="40" height="40" fill="none" style="opacity:0.3;margin-bottom:12px">
-      <rect x="10" y="8" width="44" height="48" rx="3" stroke="#8A8278" stroke-width="1.2" fill="rgba(138,130,120,0.05)"/>
-      <line x1="18" y1="20" x2="46" y2="20" stroke="#C8310A" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="18" y1="28" x2="38" y2="28" stroke="#8A8278" stroke-width="1" stroke-linecap="round"/>
-      <line x1="18" y1="35" x2="42" y2="35" stroke="#8A8278" stroke-width="1" stroke-linecap="round"/>
-      <line x1="18" y1="42" x2="34" y2="42" stroke="#8A8278" stroke-width="1" stroke-linecap="round"/>
-    </svg>
-    <div class="prog-empty-title">No Program Loaded</div>
-    <div class="prog-empty-sub">Upload a program JSON file to see your training roadmap.</div>
-    <button class="btn-primary" style="margin-top:14px" onclick="document.getElementById('prog-file-input').click()">Upload Program</button>
-    <input type="file" id="prog-file-input" accept=".json" style="display:none">
-  </div>
-
-  <!-- Upload strip (visible when program loaded) -->
-  <div id="prog-upload-strip" style="display:none">
-    <button class="prog-upload-btn" onclick="document.getElementById('prog-file-input2').click()">
-      <svg viewBox="0 0 20 20" width="13" height="13" fill="none"><path d="M10 3 L10 13" stroke="#C8310A" stroke-width="1.6" stroke-linecap="round"/><path d="M6 7 L10 3 L14 7" stroke="#C8310A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="3" y="14" width="14" height="3" rx="1" stroke="#8A8278" stroke-width="1" fill="none"/></svg>
-      Upload New Program
-    </button>
-    <input type="file" id="prog-file-input2" accept=".json" style="display:none">
-    <div class="ok-strip" id="prog-ok-strip" style="display:inline-block;margin-left:10px"></div>
-  </div>
-
   <!-- Cycle roadmap -->
-  <div id="prog-roadmap" style="display:none">
+  <div id="prog-roadmap">
     <div class="sec-label" style="margin-top:16px">Training Roadmap</div>
     <div id="cycle-roadmap"></div>
   </div>
 
-  <!-- Weekly skeleton -->
-  <div id="prog-skeleton" style="display:none">
-    <div class="sec-label" style="margin-top:16px">Weekly Structure</div>
-    <div class="week-skeleton-card">
-      <div class="wsk-title">Fixed Day Assignments</div>
-      <div class="wsk-grid" id="weekly-skeleton-grid"></div>
-      <div class="wsk-note" id="weekly-skeleton-note"></div>
-    </div>
-  </div>
-
   <!-- Phase detail drill-down -->
-  <div id="prog-phases" style="display:none">
+  <div id="prog-phases">
     <div class="sec-label" style="margin-top:16px">Phase Detail</div>
     <div id="phase-detail-list"></div>
   </div>
@@ -1728,10 +1678,9 @@ function buildMilestoneList() {
 }
 
 // ══════════════════════════════════════════════════════════════
-// PROGRAM EXPLORER
+// PROGRAM EXPLORER — hard-coded Foundation → Peak program
 // ══════════════════════════════════════════════════════════════
 
-// Phase color map
 const PHASE_COLORS = {
   BASE:           { bg: 'rgba(88,80,74,0.5)',       border: '#58504A', text: '#8A8278'  },
   DURABILITY:     { bg: 'rgba(200,49,10,0.45)',      border: '#C8310A', text: '#E04418'  },
@@ -1739,16 +1688,6 @@ const PHASE_COLORS = {
   STRENGTH_PEAK:  { bg: 'rgba(138,130,120,0.5)',     border: '#8A8278', text: '#F0EAE0'  },
   DELOAD:         { bg: 'rgba(46,42,39,0.5)',        border: '#2E2A27', text: '#58504A'  },
 };
-
-const WEEKLY_SKELETON = [
-  { day: 'Monday',    type: 'Strength',        desc: 'Bench (heavy or volume) + upper push/pull accessory' },
-  { day: 'Tuesday',   type: 'Conditioning',    desc: 'Murph simulation — scaled to current phase volume' },
-  { day: 'Wednesday', type: 'Strength',        desc: 'Deadlift (heavy or volume) + upper pull accessory' },
-  { day: 'Thursday',  type: 'Speed / Aerobic', desc: 'Zone 2 in BASE → 400m intervals in SPEED / STRENGTH_PEAK' },
-  { day: 'Friday',    type: 'Strength',        desc: 'Squat (heavy or volume) + lower accessory' },
-  { day: 'Saturday',  type: 'Active Recovery', desc: 'KOT session: ATG splits, tibialis, nordics, hip 90/90, thoracic' },
-  { day: 'Sunday',    type: 'Rest',            desc: 'Full rest. Non-negotiable.' },
-];
 
 const PHASE_DEFINITIONS = {
   BASE: {
@@ -1793,188 +1732,181 @@ const PHASE_DEFINITIONS = {
   },
 };
 
-function initProgramUploads() {
-  ['prog-file-input', 'prog-file-input2'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('change', e => { if (e.target.files[0]) readProgramFile(e.target.files[0]); });
-  });
-}
-
-function readProgramFile(file) {
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      const data = JSON.parse(ev.target.result);
-      if (!data.cycles || !Array.isArray(data.cycles)) throw new Error('Missing "cycles" array in JSON');
-      mergeProgramData(data);
-      const strip = document.getElementById('prog-ok-strip');
-      if (strip) { strip.textContent = `✓ ${file.name} loaded`; strip.style.display='inline-block'; strip.style.color='#8A9A8A'; setTimeout(()=>strip.style.display='none',4000); }
-    } catch(err) {
-      alert('Program JSON error: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-function mergeProgramData(data) {
-  // Merge cycles — upsert by cycle number
-  if (data.cycles) {
-    const existing = new Map((state.program.cycles||[]).map(c=>[c.cycle,c]));
-    data.cycles.forEach(c => existing.set(c.cycle, c));
-    state.program.cycles = [...existing.values()].sort((a,b)=>a.cycle-b.cycle);
-  }
-  if (data.start_date) state.program.start_date = data.start_date;
-  if (data.name)       state.program.name = data.name;
-  if (data.weekly_skeleton) state.program.weekly_skeleton = data.weekly_skeleton;
-  renderProgramExplorer();
-}
+// Hard-coded program — edit start_date to your actual program start
+const HARD_CODED_PROGRAM = {
+  id: 'prog_001',
+  name: 'Thragg Protocol — Foundation to Peak',
+  start_date: '2026-06-02',
+  cycles: [
+    {
+      cycle: 1, label: 'Foundation Cycle', approx_months: '1–10',
+      note: 'Only cycle that includes BASE. Aerobic base does not need rebuilding after this.',
+      phases: [
+        { phase: 'BASE',          weeks: 10, deload: 2 },
+        { phase: 'DURABILITY',    weeks: 10, deload: 2 },
+        { phase: 'SPEED',         weeks: 10, deload: 2 },
+        { phase: 'STRENGTH_PEAK', weeks: 8,  deload: 2 },
+      ]
+    },
+    {
+      cycle: 2, label: 'Build Cycle', approx_months: '11–18',
+      note: 'BASE dropped. Phases compressed. Vest Murph introduced seriously. Threshold window opens at end of this cycle.',
+      phases: [
+        { phase: 'DURABILITY',    weeks: 9, deload: 2 },
+        { phase: 'SPEED',         weeks: 9, deload: 2 },
+        { phase: 'STRENGTH_PEAK', weeks: 8, deload: 2 },
+      ]
+    },
+    {
+      cycle: 3, label: 'Peak Expression Cycle', approx_months: '19–24',
+      note: 'Threshold attempt window. Compress phases where benchmarks are close; extend where gaps remain.',
+      phases: [
+        { phase: 'DURABILITY',    weeks: 6, deload: 1 },
+        { phase: 'SPEED',         weeks: 6, deload: 1 },
+        { phase: 'STRENGTH_PEAK', weeks: 6, deload: 2 },
+      ]
+    },
+  ]
+};
 
 function renderProgramExplorer() {
-  const prog = state.program;
-  const hasCycles = prog.cycles && prog.cycles.length > 0;
+  // Always use the hard-coded program; state.program is kept for Supabase sync if added later
+  const prog = state.program.cycles && state.program.cycles.length > 0
+    ? state.program
+    : HARD_CODED_PROGRAM;
 
-  document.getElementById('prog-empty').style.display          = hasCycles ? 'none' : 'flex';
-  document.getElementById('prog-upload-strip').style.display   = hasCycles ? 'block' : 'none';
-  document.getElementById('prog-roadmap').style.display        = hasCycles ? 'block' : 'none';
-  document.getElementById('prog-skeleton').style.display       = hasCycles ? 'block' : 'none';
-  document.getElementById('prog-phases').style.display         = hasCycles ? 'block' : 'none';
-  document.getElementById('prog-position-banner').style.display = hasCycles ? 'block' : 'none';
+  const today     = new Date();
+  const startDate = new Date(prog.start_date || HARD_CODED_PROGRAM.start_date);
 
-  if (!hasCycles) return;
+  const totalDaysElapsed  = Math.floor((today - startDate) / 86400000);
+  const totalWeeksElapsed = Math.max(1, Math.floor(totalDaysElapsed / 7) + 1);
 
-  const today = new Date();
-  const startDate = prog.start_date ? new Date(prog.start_date) : today;
+  const { currentCycle, currentPhaseObj, weeksRemaining } =
+    computePosition(prog.cycles, totalWeeksElapsed);
 
-  // Compute current position
-  const totalDaysElapsed = Math.floor((today - startDate) / 86400000);
-  const totalWeeksElapsed = Math.floor(totalDaysElapsed / 7) + 1;
-  const { currentCycle, currentPhaseObj, currentCycleWeek, totalProgramWeeks, weeksRemaining } = computePosition(prog.cycles, totalWeeksElapsed);
+  // ── Banner ──────────────────────────────────────────────────
+  const cycleLabel  = currentCycle  ? (currentCycle.label  || `Cycle ${currentCycle.cycle}`) : 'Program Complete';
+  const phaseColor  = currentPhaseObj ? (PHASE_COLORS[currentPhaseObj.phase] || PHASE_COLORS.BASE) : PHASE_COLORS.DELOAD;
+  const phaseText   = currentPhaseObj ? currentPhaseObj.phase.replace(/_/g,' ') : '—';
+  const monthsLeft  = Math.ceil(weeksRemaining / 4.33);
 
-  // Position banner
-  if (currentCycle) {
-    document.getElementById('pb-cycle-label').textContent = currentCycle.label || `Cycle ${currentCycle.cycle}`;
-    const phaseColor = currentPhaseObj ? PHASE_COLORS[currentPhaseObj.phase] || PHASE_COLORS.BASE : PHASE_COLORS.BASE;
-    const phaseBadge = document.getElementById('pb-phase-badge');
-    phaseBadge.textContent = currentPhaseObj ? currentPhaseObj.phase.replace('_',' ') : '—';
-    phaseBadge.style.borderColor = phaseColor.border;
-    phaseBadge.style.background = phaseColor.bg;
-    phaseBadge.style.color = phaseColor.text;
-    document.getElementById('pb-week-num').textContent = `Wk ${totalWeeksElapsed}`;
-    document.getElementById('pb-week-sub').textContent = 'of program';
-    const monthsLeft = Math.ceil(weeksRemaining / 4.33);
-    document.getElementById('pb-months-remain').textContent = monthsLeft > 0 ? monthsLeft : '—';
-  }
+  document.getElementById('pb-cycle-label').textContent  = cycleLabel;
+  document.getElementById('pb-week-num').textContent      = `Wk ${totalWeeksElapsed}`;
+  document.getElementById('pb-week-sub').textContent      = 'of program';
+  document.getElementById('pb-months-remain').textContent = monthsLeft > 0 ? monthsLeft : '0';
 
-  // Phase progress bar
+  const badge = document.getElementById('pb-phase-badge');
+  badge.textContent        = phaseText;
+  badge.style.borderColor  = phaseColor.border;
+  badge.style.background   = phaseColor.bg;
+  badge.style.color        = phaseColor.text;
+
+  // ── Phase progress bar ──────────────────────────────────────
   renderPhaseProgressBar(prog.cycles, totalWeeksElapsed);
 
-  // Cycle roadmap
+  // ── Cycle roadmap ───────────────────────────────────────────
   renderCycleRoadmap(prog.cycles, startDate, totalWeeksElapsed);
 
-  // Weekly skeleton
-  renderWeeklySkeleton();
-
-  // Phase detail
+  // ── Phase detail ────────────────────────────────────────────
   renderPhaseDetail(prog.cycles, totalWeeksElapsed);
 }
 
 function computePosition(cycles, weekNum) {
-  let cumWeeks = 0;
-  let totalProgramWeeks = 0;
-  let currentCycle = null, currentPhaseObj = null, currentCycleWeek = 0, weeksRemaining = 0;
+  let cumWeeks = 0, totalProgramWeeks = 0;
+  let currentCycle = null, currentPhaseObj = null, weeksRemaining = 0;
 
-  // Total program weeks
   cycles.forEach(c => {
     c.phases.forEach(p => { totalProgramWeeks += (p.weeks||0) + (p.deload||0); });
   });
 
   cycles.forEach(c => {
     c.phases.forEach(p => {
-      const phaseWeeks = (p.weeks||0) + (p.deload||0);
-      if (weekNum > cumWeeks && weekNum <= cumWeeks + phaseWeeks) {
+      const pw = (p.weeks||0) + (p.deload||0);
+      if (weekNum > cumWeeks && weekNum <= cumWeeks + pw) {
         currentCycle    = c;
         currentPhaseObj = p;
-        currentCycleWeek = weekNum - cumWeeks;
       }
-      cumWeeks += phaseWeeks;
+      cumWeeks += pw;
     });
   });
 
   weeksRemaining = Math.max(0, totalProgramWeeks - weekNum);
-  return { currentCycle, currentPhaseObj, currentCycleWeek, totalProgramWeeks, weeksRemaining };
+  return { currentCycle, currentPhaseObj, weeksRemaining, totalProgramWeeks };
 }
 
 function renderPhaseProgressBar(cycles, currentWeek) {
-  const track = document.getElementById('phase-progress-track');
-  const allPhases = [];
-  cycles.forEach(c => c.phases.forEach(p => {
-    allPhases.push({ ...p, cycleLabel: c.label || `C${c.cycle}` });
-    if (p.deload) allPhases.push({ phase: 'DELOAD', weeks: p.deload, cycleLabel: c.label, isDeload: true });
-  }));
+  const wrap  = document.getElementById('phase-progress-track');
+  if (!wrap) return;
+  // Clear any previously appended label rows
+  wrap.innerHTML = '';
+  const parent = wrap.parentNode;
+  const oldLabelRow = parent.querySelector('.pp-label-row');
+  if (oldLabelRow) oldLabelRow.remove();
 
+  const segments = [];
   let cumW = 0;
-  const segments = allPhases.map(p => {
-    const w = p.isDeload ? p.weeks : (p.weeks || 0);
-    const start = cumW + 1;
-    cumW += w;
-    const isPast    = currentWeek > cumW;
-    const isCurrent = currentWeek >= start && currentWeek <= cumW;
-    return { ...p, weeks: w, start, end: cumW, isPast, isCurrent };
+  cycles.forEach(c => {
+    c.phases.forEach(p => {
+      const pw = p.weeks || 0;
+      segments.push({ phase: p.phase, weeks: pw, start: cumW+1, end: cumW+pw });
+      cumW += pw;
+      if (p.deload) {
+        segments.push({ phase: 'DELOAD', weeks: p.deload, start: cumW+1, end: cumW+p.deload, isDeload: true });
+        cumW += p.deload;
+      }
+    });
   });
 
-  const total = segments.reduce((s,p)=>s+p.weeks, 0);
+  const total  = segments.reduce((s,p) => s + p.weeks, 0);
   const colors = { BASE:'#58504A', DURABILITY:'#C8310A', SPEED:'#C0B8B0', STRENGTH_PEAK:'#8A8278', DELOAD:'#2E2A27' };
 
-  track.innerHTML = segments.map(s => {
+  wrap.innerHTML = segments.map(s => {
     const pct = (s.weeks / total * 100).toFixed(1);
-    const cls = s.isPast ? 'past' : s.isCurrent ? 'current' : 'future';
-    return `<div class="pp-segment ${cls}" style="background:${colors[s.phase]||'#58504A'};flex-basis:${pct}%" title="${s.phase.replace('_',' ')} — Wk ${s.start}–${s.end}"></div>`;
+    const cls = currentWeek > s.end ? 'past' : (currentWeek >= s.start && currentWeek <= s.end ? 'current' : 'future');
+    return `<div class="pp-segment ${cls}" style="background:${colors[s.phase]||'#58504A'};flex-basis:${pct}%" title="${s.phase.replace(/_/g,' ')} — Wk ${s.start}–${s.end}"></div>`;
   }).join('');
 
-  // Label row
   const labelRow = document.createElement('div');
   labelRow.className = 'pp-label-row';
   labelRow.innerHTML = segments.map(s => {
-    const cls = s.isCurrent ? 'current' : '';
-    return `<div class="pp-label ${cls}" style="flex-basis:${(s.weeks/total*100).toFixed(1)}%">${s.isCurrent ? s.phase.replace('_',' ') : ''}</div>`;
+    const isCur = currentWeek >= s.start && currentWeek <= s.end;
+    return `<div class="pp-label ${isCur?'current':''}" style="flex-basis:${(s.weeks/total*100).toFixed(1)}%">${isCur ? s.phase.replace(/_/g,' ') : ''}</div>`;
   }).join('');
-  track.parentNode.appendChild(labelRow);
+  parent.appendChild(labelRow);
 }
 
 function renderCycleRoadmap(cycles, startDate, currentWeek) {
   const cont = document.getElementById('cycle-roadmap');
+  if (!cont) return;
   let cumWeeks = 0;
 
   cont.innerHTML = cycles.map(c => {
     const cycleStartWeek = cumWeeks + 1;
-    let cycleTotalWeeks = 0;
+    let cycleTotalWeeks  = 0;
     c.phases.forEach(p => { cycleTotalWeeks += (p.weeks||0) + (p.deload||0); });
     const cycleEndWeek = cumWeeks + cycleTotalWeeks;
-    const isActive   = currentWeek >= cycleStartWeek && currentWeek <= cycleEndWeek;
-    const isComplete = currentWeek > cycleEndWeek;
+    const isActive     = currentWeek >= cycleStartWeek && currentWeek <= cycleEndWeek;
+    const isComplete   = currentWeek > cycleEndWeek;
     cumWeeks += cycleTotalWeeks;
 
-    const cycleStart = new Date(startDate);
-    cycleStart.setDate(cycleStart.getDate() + (cycleStartWeek - 1) * 7);
-    const cycleEnd = new Date(startDate);
-    cycleEnd.setDate(cycleEnd.getDate() + cycleEndWeek * 7);
-    const monthRange = `${cycleStart.toLocaleDateString('en-US',{month:'short',year:'numeric'})} – ${cycleEnd.toLocaleDateString('en-US',{month:'short',year:'numeric'})}`;
+    const cyStart = new Date(startDate); cyStart.setDate(cyStart.getDate() + (cycleStartWeek-1)*7);
+    const cyEnd   = new Date(startDate); cyEnd.setDate(cyEnd.getDate() + cycleEndWeek*7);
+    const monthRange = `${cyStart.toLocaleDateString('en-US',{month:'short',year:'numeric'})} – ${cyEnd.toLocaleDateString('en-US',{month:'short',year:'numeric'})}`;
 
     const statusClass = isActive ? 'active' : isComplete ? 'complete' : 'upcoming';
-    const statusLabel = isActive ? 'Active' : isComplete ? 'Complete' : 'Upcoming';
+    const statusLabel = isActive ? 'Active'  : isComplete ? 'Complete'  : 'Upcoming';
 
-    // Phase rows
     let phCumWeeks = cycleStartWeek - 1;
     const phaseRows = c.phases.map(p => {
-      const phStart = phCumWeeks + 1;
-      const phWeeks = (p.weeks||0) + (p.deload||0);
-      phCumWeeks += phWeeks;
-      const isCurrentPhase = currentWeek >= phStart && currentWeek <= phCumWeeks;
-      const isPastPhase    = currentWeek > phCumWeeks;
-      const col = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
-      const gate = PHASE_DEFINITIONS[p.phase]?.exit_gate || '';
-      const phStatus = isCurrentPhase ? 'active' : isPastPhase ? 'complete' : 'upcoming';
-      return `<div class="cc-phase-row ${isCurrentPhase?'current-phase':''}">
+      const phStart  = phCumWeeks + 1;
+      const phWeeks  = (p.weeks||0) + (p.deload||0);
+      phCumWeeks    += phWeeks;
+      const isCur    = currentWeek >= phStart && currentWeek <= phCumWeeks;
+      const isPast   = currentWeek > phCumWeeks;
+      const col      = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
+      const gate     = PHASE_DEFINITIONS[p.phase]?.exit_gate || '';
+      const phStatus = isCur ? 'active' : isPast ? 'complete' : 'upcoming';
+      return `<div class="cc-phase-row ${isCur?'current-phase':''}">
         <div class="cph-dot" style="background:${col.border}"></div>
         <div class="cph-name" style="color:${col.text}">${p.phase.replace(/_/g,' ')}</div>
         <div class="cph-weeks">${p.weeks}w + ${p.deload||0}w deload</div>
@@ -2003,40 +1935,27 @@ function renderCycleRoadmap(cycles, startDate, currentWeek) {
   }).join('');
 }
 
-function renderWeeklySkeleton() {
-  const grid = document.getElementById('weekly-skeleton-grid');
-  const skeleton = state.program.weekly_skeleton || WEEKLY_SKELETON;
-  grid.innerHTML = skeleton.map(row => `
-    <div class="wsk-row">
-      <span class="wsk-day">${row.day}</span>
-      <span class="wsk-type">${row.type}</span>
-      <span class="wsk-desc">${row.desc}</span>
-    </div>`).join('');
-  document.getElementById('weekly-skeleton-note').textContent =
-    'Deadlift and Squat never on the same day. Pull-ups are a primary movement, not accessory — the Murph limiter. Deload every 4th week, non-negotiable.';
-}
-
 function renderPhaseDetail(cycles, currentWeek) {
   const cont = document.getElementById('phase-detail-list');
+  if (!cont) return;
   const seen = new Set();
   const allPhases = [];
   let cumWeeks = 0;
   cycles.forEach(c => {
     c.phases.forEach(p => {
-      const phWeeks = (p.weeks||0) + (p.deload||0);
+      const pw = (p.weeks||0) + (p.deload||0);
       const start = cumWeeks + 1;
-      cumWeeks += phWeeks;
-      const key = p.phase;
-      if (!seen.has(key)) {
-        seen.add(key);
+      cumWeeks += pw;
+      if (!seen.has(p.phase)) {
+        seen.add(p.phase);
         allPhases.push({ ...p, start, end: cumWeeks });
       }
     });
   });
 
   cont.innerHTML = allPhases.map(p => {
-    const def = PHASE_DEFINITIONS[p.phase] || {};
-    const col = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
+    const def    = PHASE_DEFINITIONS[p.phase] || {};
+    const col    = PHASE_COLORS[p.phase] || PHASE_COLORS.BASE;
     const isActive = currentWeek >= p.start && currentWeek <= p.end;
     const isPast   = currentWeek > p.end;
     const status   = isActive ? 'active' : isPast ? 'complete' : 'upcoming';
@@ -2059,13 +1978,8 @@ function renderPhaseDetail(cycles, currentWeek) {
           <div class="pdc-stat"><div class="pdc-stat-label">Strength</div><div class="pdc-stat-val">${def.strength||'—'}</div></div>
           <div class="pdc-stat"><div class="pdc-stat-label">Speed Intervals</div><div class="pdc-stat-val">${def.intervals ? 'Yes — see running notes' : 'No'}</div></div>
         </div>
-        <div class="pdc-goals">
-          ${(def.goals||[]).map(g=>`<div class="pdc-goal-item"><div class="pdc-goal-dot"></div>${g}</div>`).join('')}
-        </div>
-        <div class="pdc-exit">
-          <div class="pdc-exit-label">Exit Gate</div>
-          ${def.exit_gate||'Phase complete when duration elapsed.'}
-        </div>
+        <div class="pdc-goals">${(def.goals||[]).map(g=>`<div class="pdc-goal-item"><div class="pdc-goal-dot"></div>${g}</div>`).join('')}</div>
+        <div class="pdc-exit"><div class="pdc-exit-label">Exit Gate</div>${def.exit_gate||'Phase complete when duration elapsed.'}</div>
       </div>
     </div>`;
   }).join('');
@@ -2397,10 +2311,7 @@ document.addEventListener('DOMContentLoaded', () => {
     testSupabase();
   }
 
-  // Program upload listeners
-  initProgramUploads();
-
-  // Render empty program state
+  // Render program on load (uses hard-coded data)
   renderProgramExplorer();
 });
 
