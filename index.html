@@ -1728,62 +1728,6 @@ function buildMilestoneList() {
 // ══════════════════════════════════════════════════════════════
 
 const PHASE_COLORS = {
-  BASE:           { bg: 'rgba(88,80,74,0.5)',       border: '#58504A', text: '#8A8278'  },
-  DURABILITY:     { bg: 'rgba(200,49,10,0.45)',      border: '#C8310A', text: '#E04418'  },
-  SPEED:          { bg: 'rgba(192,184,176,0.4)',     border: '#C0B8B0', text: '#C0B8B0'  },
-  STRENGTH_PEAK:  { bg: 'rgba(138,130,120,0.5)',     border: '#8A8278', text: '#F0EAE0'  },
-  DELOAD:         { bg: 'rgba(46,42,39,0.5)',        border: '#2E2A27', text: '#58504A'  },
-};
-
-const PHASE_DEFINITIONS = {
-  BASE: {
-    goals: ['Establish aerobic base', 'Build pull-up volume', 'Maintain strength at 70% 1RM'],
-    running: 'Zone 2 only · 3–4×/week · build to 15–20 miles/week',
-    murph: '25–50% simulation volume',
-    strength: 'Maintenance at 70% 1RM · technique focus',
-    intervals: false,
-    exit_gate: '3 miles easy with no injury flags + 50 pull-ups per session achievable across sets',
-  },
-  DURABILITY: {
-    goals: ['Full Murph completion (no vest)', 'Increase pull-up capacity', 'Begin tempo running'],
-    running: 'Zone 2 base + weekly tempo run',
-    murph: '75–100% volume · no vest',
-    strength: 'Progressive overload resumes',
-    intervals: false,
-    exit_gate: 'Full Murph completed (no vest) + 5K comfortable',
-  },
-  SPEED: {
-    goals: ['Sub 6:30 mile time trial', 'Vest Murph introduction', 'Strength maintained'],
-    running: '400m intervals: start 6–8 reps · build to 12 · taper before test',
-    murph: 'Introduce vest at reduced volume',
-    strength: 'Maintained, not peaked',
-    intervals: true,
-    exit_gate: 'Sub 6:30 mile time trial',
-  },
-  STRENGTH_PEAK: {
-    goals: ['Deadlift 405 lb', 'Squat 315 lb', 'Bench 225 lb', 'PR test week at end'],
-    running: 'Reduced — 2× Zone 2 only',
-    murph: '1×/week maintenance only',
-    strength: 'Max intensity · wave loading · test week at end',
-    intervals: false,
-    exit_gate: 'DL / Squat / Bench PRs tested',
-  },
-  DELOAD: {
-    goals: ['Active recovery', 'Volume reduction 40–50%', 'Keep weights, drop sets and reps'],
-    running: 'Easy movement only',
-    murph: 'Skip or light calisthenics only',
-    strength: 'Same weights · 40–50% of normal volume',
-    intervals: false,
-    exit_gate: 'Feel recovered and ready for next phase',
-  },
-};
-
-
-// ══════════════════════════════════════════════════════════════
-// PROGRAM EXPLORER — hard-coded Foundation → Peak program
-// ══════════════════════════════════════════════════════════════
-
-const PHASE_COLORS = {
   BASE:           { bg: 'rgba(88,80,74,0.5)',     border: '#58504A', text: '#8A8278' },
   DURABILITY:     { bg: 'rgba(200,49,10,0.45)',   border: '#C8310A', text: '#E04418' },
   SPEED:          { bg: 'rgba(192,184,176,0.4)',  border: '#C0B8B0', text: '#C0B8B0' },
